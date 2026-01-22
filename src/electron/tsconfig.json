@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    // Require strict types
+    "strict": true,
+    // Tell typescript to generate ESM syntax
+    "target": "esnext",
+    // Tell typescript to require ESM syntax as input (including .js file imports)
+    "module": "nodenext",
+    // Output directory path
+    "outDir": "../../dist-electron",
+    // Ignore type checking node_modules files
+    "skipLibCheck": true
+  }
+}

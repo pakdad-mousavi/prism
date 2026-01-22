@@ -1,0 +1,15 @@
+{
+  "appId": "work.pakdadmousavi.prism",
+  "files": ["dist-electron", "dist-vue"],
+  "icon": "./logo.png",
+  "mac": {
+    "target": "dmg"
+  },
+  "linux": {
+    "target": "AppImage",
+    "category": "Utility"
+  },
+  "win": {
+    "target": ["portable", "msi"]
+  }
+}
