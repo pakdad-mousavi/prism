@@ -1,5 +1,5 @@
-import { type Database as TDatabase } from 'better-sqlite3';
-import { type SchemaMeta } from '../../shared/types/schemaMeta.js';
+import type { Database as TDatabase } from 'better-sqlite3';
+import type { SchemaMeta } from '../../shared/types/schemaMeta.js';
 
 export type Migration = {
   version: number;
