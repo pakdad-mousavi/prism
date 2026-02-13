@@ -1,7 +1,10 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
-import { Utils } from './utils.js';
 import 'dotenv/config';
+import { Utils } from './utils.js';
+import { initDb } from './database/initDb.js';
+
+let db;
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -17,8 +20,13 @@ const createWindow = () => {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.maximize();
-    mainWindow.show();
   });
 };
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  // Initialize database
+  db = initDb();
+
+  // Show UI
+  createWindow();
+});
