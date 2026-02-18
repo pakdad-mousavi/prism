@@ -1,10 +1,10 @@
 import { app, BrowserWindow } from 'electron';
-import path from 'path';
 import 'dotenv/config';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { Utils } from './utils.js';
-import { initDb } from './database/initDb.js';
-
-let db;
+import { getDb } from './db/db.js';
+import { migrate } from 'drizzle-orm/libsql/migrator';
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -24,9 +24,14 @@ const createWindow = () => {
   });
 };
 
-app.whenReady().then(() => {
-  // Initialize database
-  db = initDb();
+app.whenReady().then(async () => {
+  // Run any database migrations
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+
+  await migrate(getDb(), {
+    migrationsFolder: path.join(__dirname, '../drizzle'),
+  });
 
   // Show UI
   createWindow();
