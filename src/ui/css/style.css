@@ -9,7 +9,7 @@
 
 @layer base {
   body {
-    background-image: radial-gradient(circle, #000, #170a0b);
+    background-image: radial-gradient(circle, #000, #3D0C12);
     @apply min-h-svh w-full;
   }
 }
