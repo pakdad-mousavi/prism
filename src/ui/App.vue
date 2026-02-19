@@ -10,7 +10,7 @@ const shape = {
 
 <template>
   <RouterView />
-  <div class="flex items-center justify-center w-full h-svh ">
+  <div class="flex items-center justify-center w-full h-svh bg-radial from-black to-[#3D0C12]">
     <div class="absolute top-0 w-full h-16 lg:h-20">
       <div class="absolute top-0 left-0 flex w-full px-10 py-6">
         <div class="w-1/2 -scale-x-100">
