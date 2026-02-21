@@ -1,6 +1,10 @@
-import { createMemoryHistory, createRouter } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
+import Dashboard from '../views/Dashboard.vue';
 
 export const router = createRouter({
-  history: createMemoryHistory(),
-  routes: [{ path: '/', component: () => import('../views/HomeView.vue') }],
+  history: createWebHistory(),
+  routes: [
+    { path: '/', component: () => import('../views/LoadingScreenView.vue') },
+    { path: '/dashboard', component: Dashboard },
+  ],
 });

@@ -1,10 +1,32 @@
 @import 'tailwindcss';
 @import './fonts.css';
 
+:root {
+  --color-primary: #f7374f;
+  --color-secondary: #e4e4e4;
+  --color-tertiary: #707070;
+  --color-surface-primary: #161616;
+  --color-surface-secondary: #07080d;
+  --color-surface-tertiary: #303030;
+  --color-surface-auxilary: #707070;
+}
+
 @theme {
-  --color-crimson: oklch(65.5% 0.235 25.5);
-  --font-tomorrow: "Tomorrow", sans-serif;
-  --font-sans: "Inter", sans-serif;
+  /* COLORS */
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-tertiary: var(--color-tertiary);
+  --color-surface-primary: var(--color-surface-primary);
+  --color-surface-secondary: var(--color-surface-secondary);
+  --color-surface-tertiary: var(--color-surface-tertiary);
+  --color-surface-auxilary: var(--color-surface-auxilary);
+
+  /* FONTS */
+  --font-tomorrow: 'Tomorrow', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+
+  /* TEXT SIZES */
+  --text-2xs: 0.625rem;
 }
 
 @layer base {
@@ -14,10 +36,13 @@
 }
 
 @utility reverse-drop-shadow {
-  filter: drop-shadow(var(--color-crimson) 0px -5px 5px);
+  filter: drop-shadow(var(--color-primary) 0px -5px 5px);
 }
 
 @utility glow {
-  filter: drop-shadow(var(--color-crimson) 0px 0px 5px);
-  /* F7374F */
+  filter: drop-shadow(var(--color-primary) 0px 0px 5px);
+}
+
+@utility cut-corners {
+  corner-shape: superellipse(0);
 }
