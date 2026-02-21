@@ -1,10 +1,25 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Dashboard from '../views/Dashboard.vue';
+import Dashboard from '../views/dashboard/Dashboard.vue';
+import CommandCenter from '../views/dashboard/CommandCenter.vue';
+import Missions from '../views/dashboard/Missions.vue';
 
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', component: () => import('../views/LoadingScreenView.vue') },
-    { path: '/dashboard', component: Dashboard },
+    { path: '/', component: () => import('../views/main/LoadingScreenView.vue') },
+    {
+      path: '/dashboard',
+      component: Dashboard,
+      children: [
+        {
+          path: 'command-center',
+          component: CommandCenter,
+        },
+        {
+          path: 'missions',
+          component: Missions,
+        },
+      ],
+    },
   ],
 });

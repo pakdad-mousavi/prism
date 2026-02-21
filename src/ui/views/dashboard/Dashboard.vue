@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import { RouterLink, RouterView } from 'vue-router';
 
 const year = new Date().getFullYear();
 </script>
 
 <template>
-  <div class="flex w-full h-svh bg-surface-primary text-secondary">
-    <aside class="h-full border-r w-72 bg-aside-area/70 border-tertiary">
+  <div class="flex w-full h-svh text-secondary">
+    <aside class="h-full border-r w-72 border-tertiary bg-surface-primary">
       <div class="flex items-center h-16 gap-4 p-4 border-b border-tertiary">
         <div class="relative">
           <div class="absolute w-4 h-4 -translate-x-1/2 top-1/2 left-1/2 -translate-y-1/3 bg-primary blur-md"></div>
-          <img src="../assets/images/logo.svg" alt="Prism Logo" class="w-6" />
+          <img src="../../assets/images/logo.svg" alt="Prism Logo" class="w-6" />
         </div>
         <h1 class="text-xl uppercase font-tomorrow text-primary">Prism</h1>
       </div>
@@ -20,7 +20,7 @@ const year = new Date().getFullYear();
           <span class="text-primary text-xs ml-2.5 block font-medium font-tomorrow">MAIN</span>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-primary bg-surface-tertiary px-2.5 py-2 font-tomorrow font-light text-sm"
+              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
               to="/dashboard/command-center"
             >
               COMMAND CENTER
@@ -30,24 +30,24 @@ const year = new Date().getFullYear();
           <span class="text-primary text-xs ml-2.5 block font-medium font-tomorrow mt-6">FOCUS</span>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm"
-              to="/dashboard/command-center"
+              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              to="/dashboard/missions"
             >
               MISSIONS
             </RouterLink>
           </div>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm"
-              to="/dashboard/command-center"
+              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              to="/dashboard/campaigns"
             >
               CAMPAIGNS
             </RouterLink>
           </div>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm"
-              to="/dashboard/command-center"
+              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              to="/dashboard/focus-run"
             >
               FOCUS RUN
             </RouterLink>
@@ -56,16 +56,16 @@ const year = new Date().getFullYear();
           <span class="text-primary text-xs ml-2.5 block font-medium font-tomorrow mt-6">RECONNAISSANCE</span>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm"
-              to="/dashboard/command-center"
+              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              to="/dashboard/signals"
             >
               SIGNALS
             </RouterLink>
           </div>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm"
-              to="/dashboard/command-center"
+              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              to="/dashboard/progress"
             >
               PROGRESS
             </RouterLink>
@@ -75,16 +75,16 @@ const year = new Date().getFullYear();
         <div class="p-4">
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm"
-              to="/dashboard/command-center"
+              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              to="/dashboard/settings"
             >
               SETTINGS
             </RouterLink>
           </div>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm"
-              to="/dashboard/command-center"
+              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              to="/dashboard/help"
             >
               HELP
             </RouterLink>
@@ -114,6 +114,7 @@ const year = new Date().getFullYear();
     </aside>
     <main class="w-[calc(100%-288px)] h-full bg-surface-secondary">
       <menu class="w-full h-16 border-b border-tertiary"></menu>
+      <RouterView></RouterView>
     </main>
   </div>
 </template>
