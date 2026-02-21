@@ -46,3 +46,7 @@
 @utility cut-corners {
   corner-shape: superellipse(0);
 }
+
+.router-link-exact-active {
+  @apply border-primary bg-surface-tertiary glow;
+}
