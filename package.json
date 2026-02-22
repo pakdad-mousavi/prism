@@ -30,6 +30,7 @@
     "@types/node": "^25.0.10",
     "@vicons/antd": "^0.13.0",
     "@vicons/carbon": "^0.13.0",
+    "@vicons/fa": "^0.13.0",
     "@vicons/fluent": "^0.13.0",
     "@vicons/ionicons4": "^0.13.0",
     "@vicons/ionicons5": "^0.13.0",

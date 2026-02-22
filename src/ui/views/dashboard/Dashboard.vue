@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
+import { Dashboard, ConnectionSignal, ProgressBarRound, Help } from '@vicons/carbon';
+import { CompassRegular } from '@vicons/fa';
+import { Flag, Bolt } from '@vicons/tabler';
+import { Cog } from '@vicons/ionicons5';
 
 const year = new Date().getFullYear();
 </script>
@@ -20,54 +24,60 @@ const year = new Date().getFullYear();
           <span class="text-primary text-xs ml-2.5 block font-medium font-tomorrow">MAIN</span>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
               to="/dashboard/command-center"
             >
-              COMMAND CENTER
+              <Dashboard class="w-5 mr-2 text-secondary"></Dashboard>
+              <span>COMMAND CENTER</span>
             </RouterLink>
           </div>
 
           <span class="text-primary text-xs ml-2.5 block font-medium font-tomorrow mt-6">FOCUS</span>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
               to="/dashboard/missions"
             >
-              MISSIONS
+              <CompassRegular class="w-5 mr-2 text-secondary"></CompassRegular>
+              <span>MISSIONS</span>
             </RouterLink>
           </div>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
               to="/dashboard/campaigns"
             >
-              CAMPAIGNS
+              <Flag class="w-5 mr-2 text-secondary"></Flag>
+              <span>CAMPAIGNS</span>
             </RouterLink>
           </div>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
               to="/dashboard/focus-run"
             >
-              FOCUS RUN
+              <Bolt class="w-5 mr-2 text-secondary"></Bolt>
+              <span>FOCUS RUN</span>
             </RouterLink>
           </div>
 
           <span class="text-primary text-xs ml-2.5 block font-medium font-tomorrow mt-6">RECONNAISSANCE</span>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
               to="/dashboard/signals"
             >
-              SIGNALS
+              <ConnectionSignal class="w-5 mr-2 text-secondary"></ConnectionSignal>
+              <span>SIGNALS</span>
             </RouterLink>
           </div>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
               to="/dashboard/progress"
             >
-              PROGRESS
+              <ProgressBarRound class="w-5 mr-2 text-secondary"></ProgressBarRound>
+              <span>PROGRESS</span>
             </RouterLink>
           </div>
         </div>
@@ -75,18 +85,20 @@ const year = new Date().getFullYear();
         <div class="p-4">
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
               to="/dashboard/settings"
             >
-              SETTINGS
+              <Cog class="w-5 mr-2 text-secondary"></Cog>
+              <span>SETTINGS</span>
             </RouterLink>
           </div>
           <div>
             <RouterLink
-              class="block cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
+              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary"
               to="/dashboard/help"
             >
-              HELP
+              <Help class="w-5 mr-2 text-secondary"></Help>
+              <span>HELP</span>
             </RouterLink>
           </div>
 
