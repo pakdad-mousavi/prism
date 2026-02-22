@@ -1,17 +1,25 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
-import { Dashboard, ConnectionSignal, ProgressBarRound, Help } from '@vicons/carbon';
-import { CompassRegular } from '@vicons/fa';
-import { Flag, Bolt } from '@vicons/tabler';
-import { Cog } from '@vicons/ionicons5';
+import Dashboard from '../../components/icons/Dashboard.vue';
+import Compass from '../../components/icons/Compass.vue';
+import Flag from '../../components/icons/Flag.vue';
+import Bolt from '../../components/icons/Bolt.vue';
+import Signal from '../../components/icons/Signal.vue';
+import Progress from '../../components/icons/Progress.vue';
+import Cog from '../../components/icons/Cog.vue';
+import Help from '../../components/icons/Help.vue';
+// import { Dashboard, ConnectionSignal, ProgressBarRound, Help } from '@vicons/carbon';
+// import { CompassRegular } from '@vicons/fa';
+// import { Flag, Bolt } from '@vicons/tabler';
+// import { Cog } from '@vicons/ionicons5';
 
 const year = new Date().getFullYear();
 </script>
 
 <template>
-  <div class="flex w-full h-svh text-secondary relative">
-    <div class="absolute w-60 h-72 rounded-full bg-primary/60 left-48 top-4 blur-3xl"></div>
-    <aside class="h-full border-r w-72 border-surface-tertiary bg-surface-primary/85 z-10">
+  <div class="relative flex w-full h-svh text-secondary">
+    <div class="absolute rounded-full w-60 h-72 bg-primary/60 left-48 top-4 blur-3xl"></div>
+    <aside class="z-10 h-full border-r w-72 border-surface-tertiary bg-surface-primary/85">
       <div class="flex items-center h-16 gap-4 p-4 border-b border-surface-tertiary">
         <div class="relative">
           <div class="absolute w-4 h-4 -translate-x-1/2 top-1/2 left-1/2 -translate-y-1/3 bg-primary blur-md"></div>
@@ -25,10 +33,10 @@ const year = new Date().getFullYear();
           <span class="text-primary text-xs ml-2.5 block font-medium font-tomorrow">MAIN</span>
           <div>
             <RouterLink
-              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+              class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
               to="/dashboard/command-center"
             >
-              <Dashboard class="w-5 mr-2 text-secondary"></Dashboard>
+              <Dashboard class="w-5 h-5 mr-2 text-secondary"></Dashboard>
               <span>COMMAND CENTER</span>
             </RouterLink>
           </div>
@@ -36,28 +44,28 @@ const year = new Date().getFullYear();
           <span class="text-primary text-xs ml-2.5 block font-medium font-tomorrow mt-6">FOCUS</span>
           <div>
             <RouterLink
-              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+              class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
               to="/dashboard/missions"
             >
-              <CompassRegular class="w-5 mr-2 text-secondary"></CompassRegular>
+              <Compass class="w-5 h-5 mr-2 text-secondary"></Compass>
               <span>MISSIONS</span>
             </RouterLink>
           </div>
           <div>
             <RouterLink
-              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+              class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
               to="/dashboard/campaigns"
             >
-              <Flag class="w-5 mr-2 text-secondary"></Flag>
+              <Flag class="w-5 h-5 mr-2 text-secondary"></Flag>
               <span>CAMPAIGNS</span>
             </RouterLink>
           </div>
           <div>
             <RouterLink
-              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+              class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
               to="/dashboard/focus-run"
             >
-              <Bolt class="w-5 mr-2 text-secondary"></Bolt>
+              <Bolt class="w-5 h-5 mr-2 text-secondary"></Bolt>
               <span>FOCUS RUN</span>
             </RouterLink>
           </div>
@@ -65,19 +73,19 @@ const year = new Date().getFullYear();
           <span class="text-primary text-xs ml-2.5 block font-medium font-tomorrow mt-6">RECONNAISSANCE</span>
           <div>
             <RouterLink
-              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+              class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
               to="/dashboard/signals"
             >
-              <ConnectionSignal class="w-5 mr-2 text-secondary"></ConnectionSignal>
+              <Signal class="w-5 h-5 mr-2 text-secondary"></Signal>
               <span>SIGNALS</span>
             </RouterLink>
           </div>
           <div>
             <RouterLink
-              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+              class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
               to="/dashboard/progress"
             >
-              <ProgressBarRound class="w-5 mr-2 text-secondary"></ProgressBarRound>
+              <Progress class="w-5 h-5 mr-2 text-secondary"></Progress>
               <span>PROGRESS</span>
             </RouterLink>
           </div>
@@ -86,19 +94,19 @@ const year = new Date().getFullYear();
         <div class="p-4">
           <div>
             <RouterLink
-              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+              class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
               to="/dashboard/settings"
             >
-              <Cog class="w-5 mr-2 text-secondary"></Cog>
+              <Cog class="w-5 h-5 mr-2 text-secondary"></Cog>
               <span>SETTINGS</span>
             </RouterLink>
           </div>
           <div>
             <RouterLink
-              class="flex cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+              class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
               to="/dashboard/help"
             >
-              <Help class="w-5 mr-2 text-secondary"></Help>
+              <Help class="w-5 h-5 mr-2 text-secondary"></Help>
               <span>HELP</span>
             </RouterLink>
           </div>
