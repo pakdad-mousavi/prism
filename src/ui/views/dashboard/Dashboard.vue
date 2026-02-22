@@ -11,8 +11,8 @@ const year = new Date().getFullYear();
 <template>
   <div class="flex w-full h-svh text-secondary relative">
     <div class="absolute w-60 h-72 rounded-full bg-primary/60 left-48 top-4 blur-3xl"></div>
-    <aside class="h-full border-r w-72 border-tertiary bg-surface-primary/85 z-10">
-      <div class="flex items-center h-16 gap-4 p-4 border-b border-tertiary">
+    <aside class="h-full border-r w-72 border-surface-tertiary bg-surface-primary/85 z-10">
+      <div class="flex items-center h-16 gap-4 p-4 border-b border-surface-tertiary">
         <div class="relative">
           <div class="absolute w-4 h-4 -translate-x-1/2 top-1/2 left-1/2 -translate-y-1/3 bg-primary blur-md"></div>
           <img src="../../assets/images/logo.svg" alt="Prism Logo" class="w-6" />
@@ -126,7 +126,7 @@ const year = new Date().getFullYear();
       </div>
     </aside>
     <main class="w-[calc(100%-288px)] h-full bg-surface-secondary/85 z-10">
-      <menu class="w-full h-16 border-b border-tertiary"></menu>
+      <menu class="w-full h-16 border-b border-surface-tertiary"></menu>
       <RouterView></RouterView>
     </main>
   </div>
