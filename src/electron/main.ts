@@ -9,7 +9,7 @@ import { migrate } from 'drizzle-orm/libsql/migrator';
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
     show: false,
-    backgroundColor: '#1c1917',
+    backgroundColor: '#07080d',
   });
 
   if (Utils.isDev()) {
