@@ -19,7 +19,7 @@ const year = new Date().getFullYear();
 <template>
   <div class="relative flex w-full h-svh text-secondary">
     <div class="absolute rounded-full w-60 h-72 bg-primary/60 left-48 top-4 blur-3xl"></div>
-    <aside class="z-10 h-full border-r w-72 border-surface-tertiary bg-surface-primary/85">
+    <aside class="z-10 h-full border-r w-64 border-surface-tertiary bg-surface-primary/85">
       <div class="flex items-center h-16 gap-4 p-4 border-b border-surface-tertiary">
         <div class="relative">
           <div class="absolute w-4 h-4 -translate-x-1/2 top-1/2 left-1/2 -translate-y-1/3 bg-primary blur-md"></div>
@@ -133,7 +133,7 @@ const year = new Date().getFullYear();
         </div>
       </div>
     </aside>
-    <main class="w-[calc(100%-288px)] h-full bg-surface-secondary/85 z-10">
+    <main class="w-[calc(100%-256px)] h-full bg-surface-secondary/85 z-10 overflow-y-scroll">
       <menu class="w-full h-16 border-b border-surface-tertiary"></menu>
       <RouterView></RouterView>
     </main>

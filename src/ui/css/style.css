@@ -17,6 +17,7 @@
   --color-primary: var(--color-primary);
   --color-secondary: var(--color-secondary);
   --color-tertiary: var(--color-tertiary);
+  --color-auxilary: var(--color-auxilary);
   --color-surface-primary: var(--color-surface-primary);
   --color-surface-secondary: var(--color-surface-secondary);
   --color-surface-tertiary: var(--color-surface-tertiary);
@@ -28,6 +29,7 @@
 
   /* TEXT SIZES */
   --text-2xs: 0.625rem;
+  --text-md: 0.8125rem;
 }
 
 @layer base {
@@ -50,4 +52,8 @@
 
 .router-link-exact-active {
   @apply border-primary bg-surface-tertiary glow;
+}
+
+@utility selected-mission {
+  @apply bg-linear-to-r from-primary/10 to-primary/5;
 }
