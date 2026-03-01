@@ -10,6 +10,10 @@ import Type from '../../components/icons/Type.vue';
 import Time from '../../components/icons/Time.vue';
 import Target from '../../components/icons/Target.vue';
 
+(async () => {
+console.log(await window.electronApi.createMission())
+})();
+
 const controls = useDragControls();
 const draggingId = ref<number | null>(null);
 
