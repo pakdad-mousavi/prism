@@ -50,10 +50,23 @@
   corner-shape: superellipse(0);
 }
 
-.router-link-exact-active {
-  @apply border-primary bg-surface-tertiary glow;
+/* For all browsers */
+@utility no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
-@utility selected-mission {
-  @apply bg-linear-to-r from-primary/10 to-primary/5;
+/* For Chrome, Safari, and Opera */
+@utility no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@layer components {
+  .selected-mission {
+    @apply bg-linear-to-r from-primary/10 to-primary/5;
+  }
+
+  .router-link-exact-active {
+    @apply border-primary bg-surface-tertiary glow;
+  }
 }
