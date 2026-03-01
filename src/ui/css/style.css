@@ -50,17 +50,6 @@
   corner-shape: superellipse(0);
 }
 
-/* For all browsers */
-@utility no-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-}
-
-/* For Chrome, Safari, and Opera */
-@utility no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
 @layer components {
   .selected-mission {
     @apply bg-linear-to-r from-primary/10 to-primary/5;
