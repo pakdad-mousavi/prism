@@ -1,13 +1,15 @@
 import { Utils } from '../utils.js';
 
 export const validateSender = (frame: Electron.WebFrameMain | null) => {
-  if (!frame) return false;
+  if (!frame) throw new Error('Missing sender');
 
   const url = new URL(frame.url);
 
-  if (Utils.isDev()) {
-    return url.host === 'localhost:5123';
-  }
+  const isValid = Utils.isDev()
+    ? url.host === 'localhost:5123'
+    : url.protocol === 'file:';
 
-  return url.protocol === 'file:' && url.pathname.endsWith('/dist-vue/index.html');
+  if (!isValid) {
+    throw new Error('Forbidden IPC sender');
+  }
 };
