@@ -56,6 +56,6 @@
   }
 
   .router-link-exact-active {
-    @apply border-primary bg-surface-tertiary glow;
+    @apply border-primary! bg-surface-tertiary glow;
   }
 }
