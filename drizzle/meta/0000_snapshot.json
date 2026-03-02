@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "eb85b1da-a64d-4975-92e4-8d4039c3c1a8",
+  "id": "08e7a406-5ba8-4f81-83a1-6e43c1698e05",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "campaign": {
