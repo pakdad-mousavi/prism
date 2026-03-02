@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Reorder, useDragControls } from 'motion-v';
-import { onMounted, ref, watch } from 'vue';
+import { onBeforeMount, ref, watch } from 'vue';
 import type { Mission } from '../../../shared/types/mission';
 
 // ICONS
@@ -14,45 +14,35 @@ import Time from '../../components/icons/Time.vue';
 import Target from '../../components/icons/Target.vue';
 import DottedCircle from '../../components/icons/DottedCircle.vue';
 
-const missions = ref<Mission[]>([]);
+const allMissions = ref<Mission[]>([]);
+const activeMissions = ref<Mission[]>([]);
+const onHoldMissions = ref<Mission[]>([]);
+const completedMissions = ref<Mission[]>([]);
 
-onMounted(async () => {
-  missions.value = await window.electronApi.getMissions();
+const currentMission = ref<Mission | null>(null);
+
+onBeforeMount(async () => {
+  allMissions.value = await window.electronApi.getMissions();
+  activeMissions.value = allMissions.value.filter((m) => m.status === 'active');
+  onHoldMissions.value = allMissions.value.filter((m) => m.status === 'on hold');
+  completedMissions.value = allMissions.value.filter((m) => m.status === 'completed');
+  console.log(allMissions.value);
 });
 
 const controls = useDragControls();
 const draggingId = ref<number | null>(null);
 
-watch(missions, (newMissions) => {
+watch(activeMissions, (newMissions) => {
   console.log(newMissions);
 });
 
-// const values = ref([
-//   {
-//     id: 1,
-//     mission: 'Architect and Implement Full Offline-First Sync Engine with Conflict Resolution',
-//     priority: 3,
-//     scale: 'operation',
-//     estimatedMinutes: 480, // 8 hours total
-//     targetSessions: 12,
-//   },
-//   {
-//     id: 2,
-//     mission: 'Design and Ship Complete PRISM Focus Momentum System with Visual States and Reward Scaling',
-//     priority: 2,
-//     scale: 'operation',
-//     estimatedMinutes: 360, // 6 hours total
-//     targetSessions: 8,
-//   },
-//   {
-//     id: 3,
-//     mission: 'Refactor Mission Table UI Styling',
-//     priority: 1,
-//     scale: 'task',
-//     estimatedMinutes: 45,
-//     targetSessions: 1,
-//   },
-// ]);
+watch(onHoldMissions, (newMissions) => {
+  console.log(newMissions);
+});
+
+watch(completedMissions, (newMissions) => {
+  console.log(newMissions);
+});
 
 const priorities = [
   {
@@ -104,7 +94,7 @@ const getIdxFromPriority = (p: number | null) => {
       </div>
 
       <div class="w-full min-w-200 border-t border-x rounded-md cut-corners border-surface-tertiary">
-        <Reorder.Group as="table" v-model:values="missions" class="w-full text-md text-left font-tomorrow">
+        <Reorder.Group as="table" v-model:values="activeMissions" class="w-full text-md text-left font-tomorrow">
           <thead class="bg-surface-primary">
             <tr>
               <th class="border-b border-surface-tertiary"></th>
@@ -143,7 +133,7 @@ const getIdxFromPriority = (p: number | null) => {
 
           <tbody class="font-light">
             <Reorder.Item
-              v-for="item in missions"
+              v-for="item in activeMissions"
               :key="item.id"
               :value="item"
               as="tr"
@@ -187,25 +177,194 @@ const getIdxFromPriority = (p: number | null) => {
     </section>
 
     <!-- ON HOLD MISSIONS -->
-    <div class="flex gap-2 mb-2">
-      <div class="flex items-center gap-4 border rounded-md cut-corners border-auxilary py-1.5 px-4">
-        <div class="w-2.5 h-2.5 rounded-full border border-auxilary"></div>
-        <span class="text-sm text-auxilary font-tomorrow">ON HOLD</span>
+    <section>
+      <div class="flex gap-2 mb-2">
+        <div class="flex items-center gap-4 border rounded-md cut-corners border-auxilary py-1.5 px-4">
+          <div class="w-2.5 h-2.5 rounded-full border border-auxilary"></div>
+          <span class="text-sm text-auxilary font-tomorrow">ON HOLD</span>
+        </div>
+        <div class="flex items-center justify-center py-1.5 px-3 border rounded-md cut-corners border-auxilary">
+          <span class="text-sm text-auxilary font-tomorrow">3</span>
+        </div>
       </div>
-      <div class="flex items-center justify-center py-1.5 px-3 border rounded-md cut-corners border-auxilary">
-        <span class="text-sm text-auxilary font-tomorrow">3</span>
+
+      <div class="w-full min-w-200 border-t border-x rounded-md cut-corners border-surface-tertiary">
+        <Reorder.Group as="table" v-model:values="onHoldMissions" class="w-full text-md text-left font-tomorrow">
+          <thead class="bg-surface-primary">
+            <tr>
+              <th class="border-b border-surface-tertiary"></th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80">
+                <div class="flex items-center gap-x-2">
+                  <Compass width="20px" class="min-w-5"></Compass>
+                  <span class="whitespace-nowrap">MISSION</span>
+                </div>
+              </th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+                <div class="flex items-center gap-x-2">
+                  <HighPriority width="20px" class="min-w-5 fill-secondary"></HighPriority>
+                  <span class="whitespace-nowrap">PRIORITY</span>
+                </div>
+              </th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+                <div class="flex items-center gap-x-2">
+                  <Type width="20px" class="min-w-5"></Type>
+                  <span class="whitespace-nowrap">TYPE</span>
+                </div>
+              </th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+                <div class="flex items-center gap-x-2">
+                  <Time width="20px" class="min-w-5"></Time>
+                  <span class="whitespace-nowrap">EST. MINUTES</span>
+                </div>
+              </th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary">
+                <div class="flex items-center gap-x-2">
+                  <Target width="20px" class="min-w-5"></Target>
+                  <span class="whitespace-nowrap">TARGET SESSIONS</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody class="font-light">
+            <Reorder.Item
+              v-for="item in onHoldMissions"
+              :key="item.id"
+              :value="item"
+              as="tr"
+              class="cursor-pointer select-none"
+              :transition="{ opacity: { duration: 1000 } }"
+              @drag-start="() => (draggingId = item.id)"
+              @drag-end="() => (draggingId = null)"
+              :style="{ opacity: draggingId === item.id ? 0.5 : 1 }"
+              :dragControls="controls"
+              :dragListener="false"
+            >
+              <td
+                class="py-2.5 border-b border-surface-tertiary hover:cursor-grab active:cursor-grabbing"
+                @pointerdown="(e) => controls.start(e)"
+                @click="currentMission = item"
+              >
+                <SixDots class="mx-auto"></SixDots>
+              </td>
+              <td class="px-2 py-2.5 font-sans border-b border-l border-surface-tertiary w-80">
+                <p class="line-clamp-1">
+                  {{ item.title }}
+                </p>
+              </td>
+              <td class="px-2 py-1.5 uppercase border-b border-l border-surface-tertiary">
+                <div
+                  :class="`flex gap-x-1 border p-1 cut-corners rounded-sm max-w-max pr-2 ${getIdxFromPriority(item.priority).containerColorClass}`"
+                >
+                  <component
+                    :is="getIdxFromPriority(item.priority).IconComponent"
+                    :class="getIdxFromPriority(item.priority).iconColorClass"
+                  ></component>
+                  <span>{{ getIdxFromPriority(item.priority).label }}</span>
+                </div>
+              </td>
+              <td class="px-2 py-2.5 uppercase border-b border-l border-surface-tertiary">{{ item.scale }}</td>
+              <td class="px-2 py-2.5 border-b border-l border-surface-tertiary">{{ item.estimatedMinutes || '---' }}</td>
+              <td class="px-2 py-2.5 border-b border-l border-surface-tertiary">{{ item.targetSessions || '---' }}</td>
+            </Reorder.Item>
+          </tbody>
+        </Reorder.Group>
       </div>
-    </div>
+    </section>
 
     <!-- COMPLETED MISSIONS -->
-    <div class="flex gap-2 mb-2">
-      <div class="flex items-center gap-4 border rounded-md cut-corners border-surface-auxilary py-1.5 px-4">
-        <div class="w-2.5 h-0.5 bg-surface-auxilary"></div>
-        <span class="text-sm text-surface-auxilary font-tomorrow">COMPLETED</span>
+    <section>
+      <div class="flex gap-2 mb-2">
+        <div class="flex items-center gap-4 border rounded-md cut-corners border-surface-auxilary py-1.5 px-4">
+          <div class="w-2.5 h-0.5 bg-surface-auxilary"></div>
+          <span class="text-sm text-surface-auxilary font-tomorrow">COMPLETED</span>
+        </div>
+        <div class="flex items-center justify-center py-1.5 px-3 border rounded-md cut-corners border-surface-auxilary">
+          <span class="text-sm text-surface-auxilary font-tomorrow">3</span>
+        </div>
       </div>
-      <div class="flex items-center justify-center py-1.5 px-3 border rounded-md cut-corners border-surface-auxilary">
-        <span class="text-sm text-surface-auxilary font-tomorrow">3</span>
+
+      <div class="w-full min-w-200 border-t border-x rounded-md cut-corners border-surface-tertiary">
+        <Reorder.Group as="table" v-model:values="completedMissions" class="w-full text-md text-left font-tomorrow">
+          <thead class="bg-surface-primary">
+            <tr>
+              <th class="border-b border-surface-tertiary"></th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80">
+                <div class="flex items-center gap-x-2">
+                  <Compass width="20px" class="min-w-5"></Compass>
+                  <span class="whitespace-nowrap">MISSION</span>
+                </div>
+              </th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+                <div class="flex items-center gap-x-2">
+                  <HighPriority width="20px" class="min-w-5 fill-secondary"></HighPriority>
+                  <span class="whitespace-nowrap">PRIORITY</span>
+                </div>
+              </th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+                <div class="flex items-center gap-x-2">
+                  <Type width="20px" class="min-w-5"></Type>
+                  <span class="whitespace-nowrap">TYPE</span>
+                </div>
+              </th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+                <div class="flex items-center gap-x-2">
+                  <Time width="20px" class="min-w-5"></Time>
+                  <span class="whitespace-nowrap">EST. MINUTES</span>
+                </div>
+              </th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary">
+                <div class="flex items-center gap-x-2">
+                  <Target width="20px" class="min-w-5"></Target>
+                  <span class="whitespace-nowrap">TARGET SESSIONS</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody class="font-light">
+            <Reorder.Item
+              v-for="item in completedMissions"
+              :key="item.id"
+              :value="item"
+              as="tr"
+              class="cursor-pointer select-none"
+              :transition="{ opacity: { duration: 1000 } }"
+              @drag-start="() => (draggingId = item.id)"
+              @drag-end="() => (draggingId = null)"
+              :style="{ opacity: draggingId === item.id ? 0.5 : 1 }"
+              :dragControls="controls"
+              :dragListener="false"
+            >
+              <td
+                class="py-2.5 border-b border-surface-tertiary hover:cursor-grab active:cursor-grabbing"
+                @pointerdown="(e) => controls.start(e)"
+              >
+                <SixDots class="mx-auto"></SixDots>
+              </td>
+              <td class="px-2 py-2.5 font-sans border-b border-l border-surface-tertiary w-80">
+                <p class="line-clamp-1">
+                  {{ item.title }}
+                </p>
+              </td>
+              <td class="px-2 py-1.5 uppercase border-b border-l border-surface-tertiary">
+                <div
+                  :class="`flex gap-x-1 border p-1 cut-corners rounded-sm max-w-max pr-2 ${getIdxFromPriority(item.priority).containerColorClass}`"
+                >
+                  <component
+                    :is="getIdxFromPriority(item.priority).IconComponent"
+                    :class="getIdxFromPriority(item.priority).iconColorClass"
+                  ></component>
+                  <span>{{ getIdxFromPriority(item.priority).label }}</span>
+                </div>
+              </td>
+              <td class="px-2 py-2.5 uppercase border-b border-l border-surface-tertiary">{{ item.scale }}</td>
+              <td class="px-2 py-2.5 border-b border-l border-surface-tertiary">{{ item.estimatedMinutes || '---' }}</td>
+              <td class="px-2 py-2.5 border-b border-l border-surface-tertiary">{{ item.targetSessions || '---' }}</td>
+            </Reorder.Item>
+          </tbody>
+        </Reorder.Group>
       </div>
-    </div>
+    </section>
   </div>
 </template>

@@ -8,6 +8,6 @@ export const registerMissionHandlers = () => {
   ipcMain.handle('mission:getAll', async (e) => {
     validateSender(e.senderFrame);
 
-    return await getDb().select().from(mission).orderBy(asc(mission.orderIndex), desc(mission.priority));
+    return await getDb().select().from(mission).orderBy(asc(mission.status), asc(mission.orderIndex));
   });
 };

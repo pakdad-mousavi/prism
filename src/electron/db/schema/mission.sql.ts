@@ -16,7 +16,7 @@ export const mission = sqliteTable('mission', {
   status: text({ enum: ['active', 'on hold', 'completed', 'archived'] })
     .notNull()
     .default('active'),
-  orderIndex: int('order_index', { mode: 'number' }).default(0),
+  orderIndex: int('order_index', { mode: 'number' }).notNull().default(0),
   createdAt,
   updatedAt,
   completedAt,
