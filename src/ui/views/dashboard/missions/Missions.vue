@@ -1,25 +1,27 @@
 <script setup lang="ts">
-import { Reorder, useDragControls } from 'motion-v';
+import { Reorder, useDomRef } from 'motion-v';
 import { onBeforeMount, ref, watch } from 'vue';
-import type { Mission } from '../../../shared/types/mission';
+import type { Mission as TMission } from '../../../../shared/types/mission';
 
 // ICONS
-import Compass from '../../components/icons/Compass.vue';
-import LowPriority from '../../components/icons/LowPriority.vue';
-import MediumPriority from '../../components/icons/MediumPriority.vue';
-import HighPriority from '../../components/icons/HighPriority.vue';
-import SixDots from '../../components/icons/SixDots.vue';
-import Type from '../../components/icons/Type.vue';
-import Time from '../../components/icons/Time.vue';
-import Target from '../../components/icons/Target.vue';
-import DottedCircle from '../../components/icons/DottedCircle.vue';
+import Compass from '../../../components/icons/Compass.vue';
+import LowPriority from '../../../components/icons/LowPriority.vue';
+import MediumPriority from '../../../components/icons/MediumPriority.vue';
+import HighPriority from '../../../components/icons/HighPriority.vue';
+import Type from '../../../components/icons/Type.vue';
+import Time from '../../../components/icons/Time.vue';
+import Target from '../../../components/icons/Target.vue';
+import DottedCircle from '../../../components/icons/DottedCircle.vue';
+import Mission from '../../../components/missions/Mission.vue';
 
-const allMissions = ref<Mission[]>([]);
-const activeMissions = ref<Mission[]>([]);
-const onHoldMissions = ref<Mission[]>([]);
-const completedMissions = ref<Mission[]>([]);
+const activeMissionsConstraintsRef = useDomRef();
+const onHoldMissionsConstraintsRef = useDomRef();
+const completedMissionsConstraintsRef = useDomRef();
 
-const currentMission = ref<Mission | null>(null);
+const allMissions = ref<TMission[]>([]);
+const activeMissions = ref<TMission[]>([]);
+const onHoldMissions = ref<TMission[]>([]);
+const completedMissions = ref<TMission[]>([]);
 
 onBeforeMount(async () => {
   allMissions.value = await window.electronApi.getMissions();
@@ -29,7 +31,6 @@ onBeforeMount(async () => {
   console.log(allMissions.value);
 });
 
-const controls = useDragControls();
 const draggingId = ref<number | null>(null);
 
 watch(activeMissions, (newMissions) => {
@@ -42,6 +43,10 @@ watch(onHoldMissions, (newMissions) => {
 
 watch(completedMissions, (newMissions) => {
   console.log(newMissions);
+});
+
+watch(draggingId, (id) => {
+  console.log(id);
 });
 
 const priorities = [
@@ -94,7 +99,7 @@ const getIdxFromPriority = (p: number | null) => {
       </div>
 
       <div class="w-full min-w-200 border-t border-x rounded-md cut-corners border-surface-tertiary">
-        <Reorder.Group as="table" v-model:values="activeMissions" class="w-full text-md text-left font-tomorrow">
+        <Reorder.Group as="table" v-model:values="activeMissions" class="w-full text-md text-left font-tomorrow overflow-hidden">
           <thead class="bg-surface-primary">
             <tr>
               <th class="border-b border-surface-tertiary"></th>
@@ -131,46 +136,15 @@ const getIdxFromPriority = (p: number | null) => {
             </tr>
           </thead>
 
-          <tbody class="font-light">
-            <Reorder.Item
-              v-for="item in activeMissions"
-              :key="item.id"
-              :value="item"
-              as="tr"
-              class="cursor-pointer select-none"
-              :transition="{ opacity: { duration: 1000 } }"
-              @drag-start="() => (draggingId = item.id)"
-              @drag-end="() => (draggingId = null)"
-              :style="{ opacity: draggingId === item.id ? 0.5 : 1 }"
-              :dragControls="controls"
-              :dragListener="false"
-            >
-              <td
-                class="py-2.5 border-b border-surface-tertiary hover:cursor-grab active:cursor-grabbing"
-                @pointerdown="(e) => controls.start(e)"
-              >
-                <SixDots class="mx-auto"></SixDots>
-              </td>
-              <td class="px-2 py-2.5 font-sans border-b border-l border-surface-tertiary w-80">
-                <p class="line-clamp-1">
-                  {{ item.title }}
-                </p>
-              </td>
-              <td class="px-2 py-1.5 uppercase border-b border-l border-surface-tertiary">
-                <div
-                  :class="`flex gap-x-1 border p-1 cut-corners rounded-sm max-w-max pr-2 ${getIdxFromPriority(item.priority).containerColorClass}`"
-                >
-                  <component
-                    :is="getIdxFromPriority(item.priority).IconComponent"
-                    :class="getIdxFromPriority(item.priority).iconColorClass"
-                  ></component>
-                  <span>{{ getIdxFromPriority(item.priority).label }}</span>
-                </div>
-              </td>
-              <td class="px-2 py-2.5 uppercase border-b border-l border-surface-tertiary">{{ item.scale }}</td>
-              <td class="px-2 py-2.5 border-b border-l border-surface-tertiary">{{ item.estimatedMinutes || '---' }}</td>
-              <td class="px-2 py-2.5 border-b border-l border-surface-tertiary">{{ item.targetSessions || '---' }}</td>
-            </Reorder.Item>
+          <tbody class="font-light" ref="activeMissionsConstraintsRef">
+            <Mission
+              v-for="(mission, index) in activeMissions"
+              :key="mission.id"
+              :data-index="index"
+              :mission="mission"
+              :getIdxFromPriority="getIdxFromPriority"
+              :constraintsRef="activeMissionsConstraintsRef"
+            ></Mission>
           </tbody>
         </Reorder.Group>
       </div>
@@ -226,47 +200,15 @@ const getIdxFromPriority = (p: number | null) => {
             </tr>
           </thead>
 
-          <tbody class="font-light">
-            <Reorder.Item
-              v-for="item in onHoldMissions"
-              :key="item.id"
-              :value="item"
-              as="tr"
-              class="cursor-pointer select-none"
-              :transition="{ opacity: { duration: 1000 } }"
-              @drag-start="() => (draggingId = item.id)"
-              @drag-end="() => (draggingId = null)"
-              :style="{ opacity: draggingId === item.id ? 0.5 : 1 }"
-              :dragControls="controls"
-              :dragListener="false"
-            >
-              <td
-                class="py-2.5 border-b border-surface-tertiary hover:cursor-grab active:cursor-grabbing"
-                @pointerdown="(e) => controls.start(e)"
-                @click="currentMission = item"
-              >
-                <SixDots class="mx-auto"></SixDots>
-              </td>
-              <td class="px-2 py-2.5 font-sans border-b border-l border-surface-tertiary w-80">
-                <p class="line-clamp-1">
-                  {{ item.title }}
-                </p>
-              </td>
-              <td class="px-2 py-1.5 uppercase border-b border-l border-surface-tertiary">
-                <div
-                  :class="`flex gap-x-1 border p-1 cut-corners rounded-sm max-w-max pr-2 ${getIdxFromPriority(item.priority).containerColorClass}`"
-                >
-                  <component
-                    :is="getIdxFromPriority(item.priority).IconComponent"
-                    :class="getIdxFromPriority(item.priority).iconColorClass"
-                  ></component>
-                  <span>{{ getIdxFromPriority(item.priority).label }}</span>
-                </div>
-              </td>
-              <td class="px-2 py-2.5 uppercase border-b border-l border-surface-tertiary">{{ item.scale }}</td>
-              <td class="px-2 py-2.5 border-b border-l border-surface-tertiary">{{ item.estimatedMinutes || '---' }}</td>
-              <td class="px-2 py-2.5 border-b border-l border-surface-tertiary">{{ item.targetSessions || '---' }}</td>
-            </Reorder.Item>
+          <tbody class="font-light" ref="onHoldMissionsConstraintsRef">
+            <Mission
+              v-for="(mission, index) in onHoldMissions"
+              :key="mission.id"
+              :data-index="index"
+              :mission="mission"
+              :getIdxFromPriority="getIdxFromPriority"
+              :constraintsRef="onHoldMissionsConstraintsRef"
+            ></Mission>
           </tbody>
         </Reorder.Group>
       </div>
@@ -322,46 +264,15 @@ const getIdxFromPriority = (p: number | null) => {
             </tr>
           </thead>
 
-          <tbody class="font-light">
-            <Reorder.Item
-              v-for="item in completedMissions"
-              :key="item.id"
-              :value="item"
-              as="tr"
-              class="cursor-pointer select-none"
-              :transition="{ opacity: { duration: 1000 } }"
-              @drag-start="() => (draggingId = item.id)"
-              @drag-end="() => (draggingId = null)"
-              :style="{ opacity: draggingId === item.id ? 0.5 : 1 }"
-              :dragControls="controls"
-              :dragListener="false"
-            >
-              <td
-                class="py-2.5 border-b border-surface-tertiary hover:cursor-grab active:cursor-grabbing"
-                @pointerdown="(e) => controls.start(e)"
-              >
-                <SixDots class="mx-auto"></SixDots>
-              </td>
-              <td class="px-2 py-2.5 font-sans border-b border-l border-surface-tertiary w-80">
-                <p class="line-clamp-1">
-                  {{ item.title }}
-                </p>
-              </td>
-              <td class="px-2 py-1.5 uppercase border-b border-l border-surface-tertiary">
-                <div
-                  :class="`flex gap-x-1 border p-1 cut-corners rounded-sm max-w-max pr-2 ${getIdxFromPriority(item.priority).containerColorClass}`"
-                >
-                  <component
-                    :is="getIdxFromPriority(item.priority).IconComponent"
-                    :class="getIdxFromPriority(item.priority).iconColorClass"
-                  ></component>
-                  <span>{{ getIdxFromPriority(item.priority).label }}</span>
-                </div>
-              </td>
-              <td class="px-2 py-2.5 uppercase border-b border-l border-surface-tertiary">{{ item.scale }}</td>
-              <td class="px-2 py-2.5 border-b border-l border-surface-tertiary">{{ item.estimatedMinutes || '---' }}</td>
-              <td class="px-2 py-2.5 border-b border-l border-surface-tertiary">{{ item.targetSessions || '---' }}</td>
-            </Reorder.Item>
+          <tbody class="font-light" ref="completedMissionsConstraintsRef">
+            <Mission
+              v-for="(mission, index) in completedMissions"
+              :key="mission.id"
+              :data-index="index"
+              :mission="mission"
+              :getIdxFromPriority="getIdxFromPriority"
+              :constraintsRef="completedMissionsConstraintsRef"
+            ></Mission>
           </tbody>
         </Reorder.Group>
       </div>

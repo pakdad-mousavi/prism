@@ -134,8 +134,11 @@ const year = new Date().getFullYear();
       </div>
     </aside>
     <main class="w-[calc(100%-256px)] h-full bg-surface-secondary/85 z-10 overflow-y-scroll">
-      <menu class="w-full h-16 border-b border-surface-tertiary"></menu>
-      <RouterView></RouterView>
+      <RouterView
+        name="menu"
+        class="absolute w-[calc(100%-256px)] h-16 border-b border-surface-tertiary bg-surface-secondary"
+      ></RouterView>
+      <RouterView class="mt-17" name="main"></RouterView>
     </main>
   </div>
 </template>
