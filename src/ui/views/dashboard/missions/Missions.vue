@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Reorder, useDomRef } from 'motion-v';
-import { onBeforeMount, ref, watch } from 'vue';
-import type { Mission as TMission } from '../../../../shared/types/mission';
+import { onMounted, ref, watch } from 'vue';
+// import type { Mission as TMission } from '../../../../shared/types/mission';
 
 // ICONS
 import Compass from '../../../components/icons/Compass.vue';
@@ -13,35 +12,21 @@ import Time from '../../../components/icons/Time.vue';
 import Target from '../../../components/icons/Target.vue';
 import DottedCircle from '../../../components/icons/DottedCircle.vue';
 import Mission from '../../../components/missions/Mission.vue';
+import { useMissionsStore } from '../../../stores/missions';
 
-const activeMissionsConstraintsRef = useDomRef();
-const onHoldMissionsConstraintsRef = useDomRef();
-const completedMissionsConstraintsRef = useDomRef();
-
-const allMissions = ref<TMission[]>([]);
-const activeMissions = ref<TMission[]>([]);
-const onHoldMissions = ref<TMission[]>([]);
-const completedMissions = ref<TMission[]>([]);
-
-onBeforeMount(async () => {
-  allMissions.value = await window.electronApi.getMissions();
-  activeMissions.value = allMissions.value.filter((m) => m.status === 'active');
-  onHoldMissions.value = allMissions.value.filter((m) => m.status === 'on hold');
-  completedMissions.value = allMissions.value.filter((m) => m.status === 'completed');
-  console.log(allMissions.value);
-});
+const missionsStore = useMissionsStore();
 
 const draggingId = ref<number | null>(null);
 
-watch(activeMissions, (newMissions) => {
+watch(missionsStore.activeMissions, (newMissions) => {
+  console.log(newMissions.map((m) => m.id));
+});
+
+watch(missionsStore.onHoldMissions, (newMissions) => {
   console.log(newMissions);
 });
 
-watch(onHoldMissions, (newMissions) => {
-  console.log(newMissions);
-});
-
-watch(completedMissions, (newMissions) => {
+watch(missionsStore.completedMissions, (newMissions) => {
   console.log(newMissions);
 });
 
@@ -82,6 +67,12 @@ const getIdxFromPriority = (p: number | null) => {
   }
   return priorities[p] as (typeof priorities)[number];
 };
+
+onMounted(async () => {
+  if (!missionsStore.loaded) {
+    await missionsStore.loadMissions();
+  }
+});
 </script>
 
 <template>
@@ -90,7 +81,7 @@ const getIdxFromPriority = (p: number | null) => {
     <section>
       <div class="flex gap-2 mb-2">
         <div class="flex items-center gap-4 border rounded-md cut-corners border-primary py-1.5 px-4">
-          <div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+          <div class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></div>
           <span class="text-sm text-primary font-tomorrow">ACTIVE</span>
         </div>
         <div class="flex items-center justify-center py-1.5 px-3 border rounded-md cut-corners border-primary">
@@ -99,7 +90,7 @@ const getIdxFromPriority = (p: number | null) => {
       </div>
 
       <div class="w-full min-w-200 border-t border-x rounded-md cut-corners border-surface-tertiary">
-        <Reorder.Group as="table" v-model:values="activeMissions" class="w-full text-md text-left font-tomorrow overflow-hidden">
+        <table class="w-full text-md text-left font-tomorrow overflow-hidden">
           <thead class="bg-surface-primary">
             <tr>
               <th class="border-b border-surface-tertiary"></th>
@@ -136,17 +127,15 @@ const getIdxFromPriority = (p: number | null) => {
             </tr>
           </thead>
 
-          <tbody class="font-light" ref="activeMissionsConstraintsRef">
+          <tbody class="font-light">
             <Mission
-              v-for="(mission, index) in activeMissions"
+              v-for="mission in missionsStore.activeMissions"
               :key="mission.id"
-              :data-index="index"
               :mission="mission"
               :getIdxFromPriority="getIdxFromPriority"
-              :constraintsRef="activeMissionsConstraintsRef"
             ></Mission>
           </tbody>
-        </Reorder.Group>
+        </table>
       </div>
     </section>
 
@@ -163,7 +152,7 @@ const getIdxFromPriority = (p: number | null) => {
       </div>
 
       <div class="w-full min-w-200 border-t border-x rounded-md cut-corners border-surface-tertiary">
-        <Reorder.Group as="table" v-model:values="onHoldMissions" class="w-full text-md text-left font-tomorrow">
+        <table class="w-full text-md text-left font-tomorrow overflow-hidden">
           <thead class="bg-surface-primary">
             <tr>
               <th class="border-b border-surface-tertiary"></th>
@@ -200,17 +189,15 @@ const getIdxFromPriority = (p: number | null) => {
             </tr>
           </thead>
 
-          <tbody class="font-light" ref="onHoldMissionsConstraintsRef">
+          <tbody class="font-light">
             <Mission
-              v-for="(mission, index) in onHoldMissions"
+              v-for="mission in missionsStore.onHoldMissions"
               :key="mission.id"
-              :data-index="index"
               :mission="mission"
               :getIdxFromPriority="getIdxFromPriority"
-              :constraintsRef="onHoldMissionsConstraintsRef"
             ></Mission>
           </tbody>
-        </Reorder.Group>
+        </table>
       </div>
     </section>
 
@@ -227,7 +214,7 @@ const getIdxFromPriority = (p: number | null) => {
       </div>
 
       <div class="w-full min-w-200 border-t border-x rounded-md cut-corners border-surface-tertiary">
-        <Reorder.Group as="table" v-model:values="completedMissions" class="w-full text-md text-left font-tomorrow">
+        <table class="w-full text-md text-left font-tomorrow overflow-hidden">
           <thead class="bg-surface-primary">
             <tr>
               <th class="border-b border-surface-tertiary"></th>
@@ -264,17 +251,15 @@ const getIdxFromPriority = (p: number | null) => {
             </tr>
           </thead>
 
-          <tbody class="font-light" ref="completedMissionsConstraintsRef">
+          <tbody class="font-light">
             <Mission
-              v-for="(mission, index) in completedMissions"
+              v-for="mission in missionsStore.completedMissions"
               :key="mission.id"
-              :data-index="index"
               :mission="mission"
               :getIdxFromPriority="getIdxFromPriority"
-              :constraintsRef="completedMissionsConstraintsRef"
             ></Mission>
           </tbody>
-        </Reorder.Group>
+        </table>
       </div>
     </section>
   </div>

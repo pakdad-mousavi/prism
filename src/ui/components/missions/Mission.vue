@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { Reorder, useDragControls } from 'motion-v';
 import type { Mission } from '../../../shared/types/mission';
-import { ref, type Component } from 'vue';
-import SixDots from '../icons/SixDots.vue';
+import { type Component } from 'vue';
 
 defineProps<{
   mission: Mission;
@@ -12,28 +10,13 @@ defineProps<{
     containerColorClass: string;
     IconComponent: Component;
   };
-  constraintsRef: HTMLElement;
 }>();
-
-const draggingId = ref<number | null>(null);
-const controls = useDragControls();
 </script>
 
 <template>
-  <Reorder.Item
-    :value="mission"
-    as="tr"
-    class="cursor-pointer select-none"
-    @drag-start="draggingId = mission.id"
-    @drag-end="draggingId = null"
-    :style="{ opacity: draggingId === mission.id ? 0.5 : 1 }"
-    :dragControls="controls"
-    :dragListener="false"
-    :dragConstraints="constraintsRef"
-    :dragElastic="0.1"
-  >
-    <td class="py-2.5 border-b border-surface-tertiary hover:cursor-grab active:cursor-grabbing" @pointerdown="controls.start">
-      <SixDots class="mx-auto"></SixDots>
+  <tr class="cursor-pointer select-none hover:bg-surface-primary/50 duration-100">
+    <td class="py-2.5 px-1.5 border-b border-surface-tertiary">
+      <div class="w-3.5 h-3.5 cut-corners rounded-xs border border-surface-auxilary mx-auto"></div>
     </td>
     <td class="px-2 py-2.5 font-sans border-b border-l border-surface-tertiary w-80">
       <p class="line-clamp-1">
@@ -54,5 +37,5 @@ const controls = useDragControls();
     <td class="px-2 py-2.5 uppercase border-b border-l border-surface-tertiary">{{ mission.scale }}</td>
     <td class="px-2 py-2.5 border-b border-l border-surface-tertiary">{{ mission.estimatedMinutes || '---' }}</td>
     <td class="px-2 py-2.5 border-b border-l border-surface-tertiary">{{ mission.targetSessions || '---' }}</td>
-  </Reorder.Item>
+  </tr>
 </template>
