@@ -136,7 +136,7 @@ const year = new Date().getFullYear();
     <main class="w-[calc(100%-256px)] h-full bg-surface-secondary/85 z-10 overflow-y-scroll">
       <RouterView
         name="menu"
-        class="absolute w-[calc(100%-256px)] h-16 border-b border-surface-tertiary bg-surface-secondary"
+        class="absolute w-[calc(100%-256px)] h-16 border-b border-surface-tertiary z-999"
       ></RouterView>
       <RouterView class="mt-17" name="main"></RouterView>
     </main>
