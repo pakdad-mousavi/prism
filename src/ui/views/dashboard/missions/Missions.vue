@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted } from 'vue';
 // import type { Mission as TMission } from '../../../../shared/types/mission';
 
 // ICONS
@@ -15,24 +15,6 @@ import Mission from '../../../components/missions/Mission.vue';
 import { useMissionsStore } from '../../../stores/missions';
 
 const missionsStore = useMissionsStore();
-
-const draggingId = ref<number | null>(null);
-
-watch(missionsStore.activeMissions, (newMissions) => {
-  console.log(newMissions.map((m) => m.id));
-});
-
-watch(missionsStore.onHoldMissions, (newMissions) => {
-  console.log(newMissions);
-});
-
-watch(missionsStore.completedMissions, (newMissions) => {
-  console.log(newMissions);
-});
-
-watch(draggingId, (id) => {
-  console.log(id);
-});
 
 const priorities = [
   {
@@ -79,13 +61,13 @@ onMounted(async () => {
   <div class="p-4 space-y-10">
     <!-- ACTIVE MISSIONS -->
     <section>
-      <div class="flex gap-2 mb-2">
-        <div class="flex items-center gap-4 border rounded-md cut-corners border-primary py-1.5 px-4">
-          <div class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></div>
-          <span class="text-sm text-primary font-tomorrow">ACTIVE</span>
+      <div class="flex gap-2 mb-2 text-xs">
+        <div class="flex items-center gap-2 border rounded-md cut-corners border-primary py-1.5 px-4">
+          <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+          <span class="text-primary font-tomorrow">ACTIVE</span>
         </div>
-        <div class="flex items-center justify-center py-1.5 px-3 border rounded-md cut-corners border-primary">
-          <span class="text-sm text-primary font-tomorrow">3</span>
+        <div class="flex items-center justify-center py-1.5 px-2.5 border rounded-md cut-corners border-surface-tertiary">
+          <span class="text-surface-auxilary font-tomorrow">3</span>
         </div>
       </div>
 
@@ -150,13 +132,13 @@ onMounted(async () => {
 
     <!-- ON HOLD MISSIONS -->
     <section>
-      <div class="flex gap-2 mb-2">
-        <div class="flex items-center gap-4 border rounded-md cut-corners border-auxilary py-1.5 px-4">
-          <div class="w-2.5 h-2.5 rounded-full border border-auxilary"></div>
-          <span class="text-sm text-auxilary font-tomorrow">ON HOLD</span>
+      <div class="flex gap-2 mb-2 text-xs">
+        <div class="flex items-center gap-2 border rounded-md cut-corners border-auxilary py-1.5 px-4">
+          <div class="w-2 h-2 rounded-full border border-auxilary animate-pulse"></div>
+          <span class="text-auxilary font-tomorrow">ON HOLD</span>
         </div>
-        <div class="flex items-center justify-center py-1.5 px-3 border rounded-md cut-corners border-auxilary">
-          <span class="text-sm text-auxilary font-tomorrow">3</span>
+        <div class="flex items-center justify-center py-1.5 px-2.5 border rounded-md cut-corners border-surface-tertiary">
+          <span class="text-surface-auxilary font-tomorrow">3</span>
         </div>
       </div>
 
@@ -221,13 +203,13 @@ onMounted(async () => {
 
     <!-- COMPLETED MISSIONS -->
     <section>
-      <div class="flex gap-2 mb-2">
-        <div class="flex items-center gap-4 border rounded-md cut-corners border-surface-auxilary py-1.5 px-4">
-          <div class="w-2.5 h-0.5 bg-surface-auxilary"></div>
-          <span class="text-sm text-surface-auxilary font-tomorrow">COMPLETED</span>
+      <div class="flex gap-2 mb-2 text-xs">
+        <div class="flex items-center border gap-2 rounded-md cut-corners border-surface-tertiary py-1.5 px-4">
+          <div class="w-2 h-0.5 bg-surface-auxilary rounded-full animate-pulse"></div>
+          <span class="text-surface-auxilary font-tomorrow">COMPLETED</span>
         </div>
-        <div class="flex items-center justify-center py-1.5 px-3 border rounded-md cut-corners border-surface-auxilary">
-          <span class="text-sm text-surface-auxilary font-tomorrow">3</span>
+        <div class="flex items-center justify-center py-1.5 px-2.5 border rounded-md cut-corners border-surface-tertiary">
+          <span class="text-surface-auxilary font-tomorrow">3</span>
         </div>
       </div>
 
