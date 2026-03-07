@@ -89,8 +89,8 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="w-full min-w-200 border-t border-x rounded-md cut-corners border-surface-tertiary">
-        <table class="w-full text-md text-left font-tomorrow overflow-hidden">
+      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary overflow-hidden">
+        <table class="w-full text-md text-left font-tomorrow">
           <thead class="bg-surface-primary">
             <tr>
               <th class="border-b border-surface-tertiary"></th>
@@ -134,6 +134,15 @@ onMounted(async () => {
               :mission="mission"
               :getIdxFromPriority="getIdxFromPriority"
             ></Mission>
+            <tr>
+              <td colspan="6" class="w-full text-center cursor-pointer">
+                <div
+                  class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-200 hover:bg-surface-primary"
+                >
+                  +
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -151,8 +160,8 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="w-full min-w-200 border-t border-x rounded-md cut-corners border-surface-tertiary">
-        <table class="w-full text-md text-left font-tomorrow overflow-hidden">
+      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary overflow-hidden">
+        <table class="w-full text-md text-left font-tomorrow">
           <thead class="bg-surface-primary">
             <tr>
               <th class="border-b border-surface-tertiary"></th>
@@ -196,6 +205,15 @@ onMounted(async () => {
               :mission="mission"
               :getIdxFromPriority="getIdxFromPriority"
             ></Mission>
+            <tr>
+              <td colspan="6" class="w-full text-center cursor-pointer">
+                <div
+                  class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-100 hover:bg-surface-primary"
+                >
+                  +
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -213,8 +231,8 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="w-full min-w-200 border-t border-x rounded-md cut-corners border-surface-tertiary">
-        <table class="w-full text-md text-left font-tomorrow overflow-hidden">
+      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary overflow-hidden">
+        <table class="w-full text-md text-left font-tomorrow">
           <thead class="bg-surface-primary">
             <tr>
               <th class="border-b border-surface-tertiary"></th>
@@ -258,6 +276,15 @@ onMounted(async () => {
               :mission="mission"
               :getIdxFromPriority="getIdxFromPriority"
             ></Mission>
+            <tr>
+              <td colspan="6" class="w-full text-center cursor-pointer">
+                <div
+                  class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-100 hover:bg-surface-primary"
+                >
+                  +
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

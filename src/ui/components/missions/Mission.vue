@@ -14,7 +14,7 @@ defineProps<{
 </script>
 
 <template>
-  <tr class="cursor-pointer select-none hover:bg-surface-primary/50 duration-100">
+  <tr class="cursor-pointer select-none hover:bg-surface-primary/50 duration-100 last:[&>td]:border-b-0">
     <td class="py-2.5 px-1.5 border-b border-surface-tertiary">
       <div class="w-3.5 h-3.5 cut-corners rounded-xs border border-surface-auxilary mx-auto"></div>
     </td>
