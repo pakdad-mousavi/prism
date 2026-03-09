@@ -8,12 +8,11 @@ import Signal from '../../components/icons/Signal.vue';
 import Progress from '../../components/icons/Progress.vue';
 import Cog from '../../components/icons/Cog.vue';
 import Help from '../../components/icons/Help.vue';
-// import { Dashboard, ConnectionSignal, ProgressBarRound, Help } from '@vicons/carbon';
-// import { CompassRegular } from '@vicons/fa';
-// import { Flag, Bolt } from '@vicons/tabler';
-// import { Cog } from '@vicons/ionicons5';
+import { ref } from 'vue';
 
 const year = new Date().getFullYear();
+
+const enableScroll = ref(true);
 </script>
 
 <template>
@@ -133,12 +132,15 @@ const year = new Date().getFullYear();
         </div>
       </div>
     </aside>
-    <main class="w-[calc(100%-256px)] h-full bg-surface-secondary/85 z-10 overflow-y-scroll">
+    <main
+      class="w-[calc(100%-256px)] h-full bg-surface-secondary/85 z-10"
+      :class="enableScroll ? 'overflow-y-scroll' : 'overflow-hidden'"
+    >
       <RouterView
         name="menu"
         class="absolute w-[calc(100%-256px)] h-16 border-b border-surface-tertiary z-999"
       ></RouterView>
-      <RouterView class="mt-17" name="main"></RouterView>
+      <RouterView class="mt-17 relative" name="main" @toggleScroll="enableScroll = !enableScroll"></RouterView>
     </main>
   </div>
 </template>

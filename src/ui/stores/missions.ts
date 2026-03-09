@@ -4,6 +4,7 @@ import type { Mission } from '../../shared/types/mission';
 export const useMissionsStore = defineStore('missions', {
   state: () => ({
     missions: [] as Mission[],
+    selectedMission: null as Mission | null,
     loaded: false,
   }),
 

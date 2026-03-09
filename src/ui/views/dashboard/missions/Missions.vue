@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-// import type { Mission as TMission } from '../../../../shared/types/mission';
+
+const emit = defineEmits<{
+  (e: 'toggleScroll'): void;
+}>();
 
 // ICONS
 import Compass from '../../../components/icons/Compass.vue';
@@ -11,10 +14,16 @@ import Type from '../../../components/icons/Type.vue';
 import Time from '../../../components/icons/Time.vue';
 import Target from '../../../components/icons/Target.vue';
 import DottedCircle from '../../../components/icons/DottedCircle.vue';
-import Mission from '../../../components/missions/Mission.vue';
+import MissionRow from '../../../components/missions/MissionRow.vue';
+import { type Mission as TMission } from '../../../../shared/types/mission.ts';
 import { useMissionsStore } from '../../../stores/missions';
 
 const missionsStore = useMissionsStore();
+
+const updateSelectedMission = (m: TMission | null) => {
+  missionsStore.selectedMission = m;
+  emit('toggleScroll');
+};
 
 const priorities = [
   {
@@ -71,7 +80,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary overflow-hidden">
+      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary">
         <table class="w-full text-md text-left font-tomorrow">
           <thead class="bg-surface-primary">
             <tr>
@@ -110,12 +119,13 @@ onMounted(async () => {
           </thead>
 
           <tbody class="font-light">
-            <Mission
+            <MissionRow
+              @click="updateSelectedMission(mission)"
               v-for="mission in missionsStore.activeMissions"
               :key="mission.id"
               :mission="mission"
               :getIdxFromPriority="getIdxFromPriority"
-            ></Mission>
+            ></MissionRow>
             <tr>
               <td colspan="6" class="w-full text-center cursor-pointer">
                 <div
@@ -142,7 +152,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary overflow-hidden">
+      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary">
         <table class="w-full text-md text-left font-tomorrow">
           <thead class="bg-surface-primary">
             <tr>
@@ -181,12 +191,13 @@ onMounted(async () => {
           </thead>
 
           <tbody class="font-light">
-            <Mission
+            <MissionRow
+              @click="updateSelectedMission(mission)"
               v-for="mission in missionsStore.onHoldMissions"
               :key="mission.id"
               :mission="mission"
               :getIdxFromPriority="getIdxFromPriority"
-            ></Mission>
+            ></MissionRow>
             <tr>
               <td colspan="6" class="w-full text-center cursor-pointer">
                 <div
@@ -213,7 +224,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary overflow-hidden">
+      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary">
         <table class="w-full text-md text-left font-tomorrow">
           <thead class="bg-surface-primary">
             <tr>
@@ -252,12 +263,13 @@ onMounted(async () => {
           </thead>
 
           <tbody class="font-light">
-            <Mission
+            <MissionRow
+              @click="updateSelectedMission(mission)"
               v-for="mission in missionsStore.completedMissions"
               :key="mission.id"
               :mission="mission"
               :getIdxFromPriority="getIdxFromPriority"
-            ></Mission>
+            ></MissionRow>
             <tr>
               <td colspan="6" class="w-full text-center cursor-pointer">
                 <div
