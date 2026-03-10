@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { toRaw, watch } from 'vue';
 import type { Mission } from '../../../shared/types/mission';
 import { type Component } from 'vue';
 import PrioritySelect from './PrioritySelect.vue';
 import CustomSelect from './CustomSelect.vue';
 
-defineProps<{
+const props = defineProps<{
   mission: Mission;
   getIdxFromPriority: (i: number | null) => {
     label: string;
@@ -26,9 +27,12 @@ const ensureNumberInput = (e: KeyboardEvent) => {
   }
 };
 
-const onMissionChange = (m: Mission) => {
-  console.log(m);
+const onMissionChange = async (m: Mission) => {
+  const plainMission = toRaw(m);
+  await window.electronApi.updateMission(plainMission);
 };
+
+watch([() => props.mission.scale, () => props.mission.priority], () => onMissionChange(props.mission));
 </script>
 
 <template>
@@ -37,7 +41,11 @@ const onMissionChange = (m: Mission) => {
       <div class="w-3.5 h-3.5 cut-corners rounded-xs border border-surface-auxilary mx-auto"></div>
     </td>
     <td class="font-sans border-b border-l border-surface-tertiary w-80">
-      <input class="line-clamp-1 px-2 py-2.5 w-full outline-0 focus:bg-surface-primary duration-100" v-model="mission.title" />
+      <input
+        class="line-clamp-1 px-2 py-2.5 w-full outline-0 focus:bg-surface-primary duration-100"
+        v-model="mission.title"
+        @change="onMissionChange(props.mission)"
+      />
     </td>
     <td class="uppercase border-b border-l border-surface-tertiary">
       <PrioritySelect
