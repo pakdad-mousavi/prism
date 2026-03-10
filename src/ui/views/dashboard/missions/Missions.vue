@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 
-const emit = defineEmits<{
-  (e: 'toggleScroll'): void;
-}>();
-
 // ICONS
 import Compass from '../../../components/icons/Compass.vue';
 import LowPriority from '../../../components/icons/LowPriority.vue';
@@ -15,16 +11,40 @@ import Time from '../../../components/icons/Time.vue';
 import Target from '../../../components/icons/Target.vue';
 import DottedCircle from '../../../components/icons/DottedCircle.vue';
 import MissionRow from '../../../components/missions/MissionRow.vue';
-import { type Mission as TMission } from '../../../../shared/types/mission.ts';
+import { type MissionDraft, type Mission as TMission } from '../../../../shared/types/mission.ts';
 import { useMissionsStore } from '../../../stores/missions';
 
+// ----------------
+// MISSION HANDLING
+// ----------------
 const missionsStore = useMissionsStore();
 
 const updateSelectedMission = (m: TMission | null) => {
   missionsStore.selectedMission = m;
-  emit('toggleScroll');
 };
 
+const createDraftMission = (status: 'active' | 'on hold' | 'completed') => {
+  missionsStore.missionDraft = {
+    title: '',
+    estimatedMinutes: null,
+    targetSessions: null,
+    status,
+    priority: 2,
+    scale: 'task',
+    isAutoMission: false,
+  };
+};
+
+const saveDraft = async (m: MissionDraft) => {
+  console.log('XXX');
+  await window.electronApi.createMission(m);
+  missionsStore.missionDraft = null;
+  missionsStore.loadMissions();
+};
+
+// --------------------
+// PRIORITY UI HANDLING
+// --------------------
 const priorities = [
   {
     label: 'low',
@@ -59,6 +79,7 @@ const getIdxFromPriority = (p: number | null) => {
   return priorities[p] as (typeof priorities)[number];
 };
 
+// Load mission store data
 onMounted(async () => {
   if (!missionsStore.loaded) {
     await missionsStore.loadMissions();
@@ -120,14 +141,24 @@ onMounted(async () => {
 
           <tbody class="font-light">
             <MissionRow
+              :isDraft="false"
               @click="updateSelectedMission(mission)"
               v-for="mission in missionsStore.activeMissions"
               :key="mission.id"
               :mission="mission"
               :getIdxFromPriority="getIdxFromPriority"
+              @refreshStore="missionsStore.loadMissions"
+            ></MissionRow>
+            <MissionRow
+              :isDraft="true"
+              v-if="missionsStore.missionDraft && missionsStore.missionDraft.status === 'active'"
+              :mission="missionsStore.missionDraft"
+              :getIdxFromPriority="getIdxFromPriority"
+              @saveDraft="saveDraft"
+              @discardDraft="missionsStore.missionDraft = null"
             ></MissionRow>
             <tr>
-              <td colspan="6" class="w-full text-center cursor-pointer">
+              <td colspan="6" class="w-full text-center cursor-pointer" @click="createDraftMission('active')">
                 <div
                   class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-200 hover:bg-surface-primary"
                 >
@@ -192,21 +223,29 @@ onMounted(async () => {
 
           <tbody class="font-light">
             <MissionRow
+              :isDraft="false"
               @click="updateSelectedMission(mission)"
               v-for="mission in missionsStore.onHoldMissions"
               :key="mission.id"
               :mission="mission"
               :getIdxFromPriority="getIdxFromPriority"
+              @refreshStore="missionsStore.loadMissions"
             ></MissionRow>
-            <tr>
-              <td colspan="6" class="w-full text-center cursor-pointer">
-                <div
-                  class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-100 hover:bg-surface-primary"
-                >
-                  +
-                </div>
-              </td>
-            </tr>
+            <MissionRow
+              :isDraft="true"
+              v-if="missionsStore.missionDraft && missionsStore.missionDraft.status === 'on hold'"
+              :mission="missionsStore.missionDraft"
+              :getIdxFromPriority="getIdxFromPriority"
+              @saveDraft="saveDraft"
+              @discardDraft="missionsStore.missionDraft = null"
+            ></MissionRow>
+            <td colspan="6" class="w-full text-center cursor-pointer" @click="createDraftMission('on hold')">
+              <div
+                class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-200 hover:bg-surface-primary"
+              >
+                +
+              </div>
+            </td>
           </tbody>
         </table>
       </div>
@@ -264,21 +303,29 @@ onMounted(async () => {
 
           <tbody class="font-light">
             <MissionRow
+              :isDraft="false"
               @click="updateSelectedMission(mission)"
               v-for="mission in missionsStore.completedMissions"
               :key="mission.id"
               :mission="mission"
               :getIdxFromPriority="getIdxFromPriority"
+              @refreshStore="missionsStore.loadMissions"
             ></MissionRow>
-            <tr>
-              <td colspan="6" class="w-full text-center cursor-pointer">
-                <div
-                  class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-100 hover:bg-surface-primary"
-                >
-                  +
-                </div>
-              </td>
-            </tr>
+            <MissionRow
+              :isDraft="true"
+              v-if="missionsStore.missionDraft && missionsStore.missionDraft.status === 'completed'"
+              :mission="missionsStore.missionDraft"
+              :getIdxFromPriority="getIdxFromPriority"
+              @saveDraft="saveDraft"
+              @discardDraft="missionsStore.missionDraft = null"
+            ></MissionRow>
+            <td colspan="6" class="w-full text-center cursor-pointer" @click="createDraftMission('completed')">
+              <div
+                class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-200 hover:bg-surface-primary"
+              >
+                +
+              </div>
+            </td>
           </tbody>
         </table>
       </div>

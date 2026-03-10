@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia';
-import type { Mission } from '../../shared/types/mission';
+import type { Mission, MissionDraft } from '../../shared/types/mission';
 
 export const useMissionsStore = defineStore('missions', {
   state: () => ({
     missions: [] as Mission[],
     selectedMission: null as Mission | null,
+    missionDraft: null as MissionDraft | null,
     loaded: false,
   }),
 
@@ -19,5 +20,6 @@ export const useMissionsStore = defineStore('missions', {
       this.missions = await window.electronApi.getMissions();
       this.loaded = true;
     },
+    async createDraftMission() {},
   },
 });
