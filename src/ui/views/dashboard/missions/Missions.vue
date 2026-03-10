@@ -239,13 +239,15 @@ onMounted(async () => {
               @saveDraft="saveDraft"
               @discardDraft="missionsStore.missionDraft = null"
             ></MissionRow>
-            <td colspan="6" class="w-full text-center cursor-pointer" @click="createDraftMission('on hold')">
-              <div
-                class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-200 hover:bg-surface-primary"
-              >
-                +
-              </div>
-            </td>
+            <tr>
+              <td colspan="6" class="w-full text-center cursor-pointer" @click="createDraftMission('on hold')">
+                <div
+                  class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-200 hover:bg-surface-primary"
+                >
+                  +
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -319,13 +321,15 @@ onMounted(async () => {
               @saveDraft="saveDraft"
               @discardDraft="missionsStore.missionDraft = null"
             ></MissionRow>
-            <td colspan="6" class="w-full text-center cursor-pointer" @click="createDraftMission('completed')">
-              <div
-                class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-200 hover:bg-surface-primary"
-              >
-                +
-              </div>
-            </td>
+            <tr>
+              <td colspan="6" class="w-full text-center cursor-pointer" @click="createDraftMission('completed')">
+                <div
+                  class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-200 hover:bg-surface-primary"
+                >
+                  +
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
