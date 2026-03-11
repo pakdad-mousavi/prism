@@ -16,8 +16,11 @@ import { useMissionsStore } from '../../../stores/missions';
 // ----------------
 const missionsStore = useMissionsStore();
 
-const updateSelectedMission = (m: TMission | null) => {
-  missionsStore.selectedMission = m;
+const handleMissionSelect = (m: TMission) => {
+  if (missionsStore.selectedMissions.includes(m.id)) {
+    return missionsStore.removeSelectedMission(m.id);
+  }
+  return missionsStore.addSelectedMission(m.id);
 };
 
 const createDraftMission = (status: 'active' | 'on hold' | 'completed') => {
@@ -104,13 +107,15 @@ onMounted(async () => {
           <tbody class="font-light">
             <MissionRow
               :isDraft="false"
-              @click="updateSelectedMission(mission)"
               v-for="mission in missionsStore.activeMissions"
               :key="mission.id"
               :mission="mission"
               @refreshStore="missionsStore.loadMissions"
+              :isSelected="missionsStore.selectedMissions.includes(mission.id)"
+              @onToggleSelect="handleMissionSelect(mission)"
             ></MissionRow>
             <MissionRow
+              :isSelected="false"
               :isDraft="true"
               v-if="missionsStore.missionDraft && missionsStore.missionDraft.status === 'active'"
               :mission="missionsStore.missionDraft"
@@ -186,13 +191,15 @@ onMounted(async () => {
           <tbody class="font-light">
             <MissionRow
               :isDraft="false"
-              @click="updateSelectedMission(mission)"
               v-for="mission in missionsStore.onHoldMissions"
               :key="mission.id"
               :mission="mission"
               @refreshStore="missionsStore.loadMissions"
+              :isSelected="missionsStore.selectedMissions.includes(mission.id)"
+              @onToggleSelect="handleMissionSelect(mission)"
             ></MissionRow>
             <MissionRow
+              :isSelected="false"
               :isDraft="true"
               v-if="missionsStore.missionDraft && missionsStore.missionDraft.status === 'on hold'"
               :mission="missionsStore.missionDraft"
@@ -268,13 +275,15 @@ onMounted(async () => {
           <tbody class="font-light">
             <MissionRow
               :isDraft="false"
-              @click="updateSelectedMission(mission)"
               v-for="mission in missionsStore.completedMissions"
               :key="mission.id"
               :mission="mission"
               @refreshStore="missionsStore.loadMissions"
+              :isSelected="missionsStore.selectedMissions.includes(mission.id)"
+              @onToggleSelect="handleMissionSelect(mission)"
             ></MissionRow>
             <MissionRow
+              :isSelected="false"
               :isDraft="true"
               v-if="missionsStore.missionDraft && missionsStore.missionDraft.status === 'completed'"
               :mission="missionsStore.missionDraft"

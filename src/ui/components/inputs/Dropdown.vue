@@ -86,7 +86,7 @@ onUnmounted(() => {
         :exit="{ opacity: 0, translateY: -10 }"
         :transition="{ duration: 0.1 }"
         v-if="open"
-        class="absolute left-0 bg-surface-primary z-10"
+        class="absolute left-0 z-10"
         :class="placement === 'bottom' ? 'top-full' : 'bottom-full'"
       >
         <div

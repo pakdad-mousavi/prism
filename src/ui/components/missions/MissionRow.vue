@@ -7,16 +7,19 @@ import MediumPriority from '../icons/MediumPriority.vue';
 import HighPriority from '../icons/HighPriority.vue';
 import DottedCircle from '../icons/DottedCircle.vue';
 import Dropdown from '../inputs/Dropdown.vue';
+import Check from '../icons/Check.vue';
 
 const props = defineProps<{
   isDraft: boolean;
   mission: Mission | MissionDraft;
+  isSelected: boolean;
 }>();
 
 const emit = defineEmits<{
   saveDraft: [mission: MissionDraft];
   discardDraft: [];
   refreshStore: [];
+  onToggleSelect: [];
 }>();
 
 /*
@@ -99,7 +102,6 @@ const ensureNumberInput = (e: KeyboardEvent) => {
 // -----------
 // UI HANDLING
 // -----------
-
 const getStatusStyleFromStatus = (status: string) => {
   switch (status) {
     case 'active':
@@ -158,27 +160,40 @@ const getPriorityComponent = (p: number | null) => {
 <template>
   <tr
     class="cursor-pointer select-none hover:bg-surface-primary/50 duration-100 last:[&>td]:border-b-0"
+    :class="{ 'bg-surface-primary/70 hover:bg-surface-primary/70!': isSelected }"
     @focusout="handleDraftBlur"
   >
     <!-- STATUS -->
     <td class="border-b border-surface-tertiary">
-      <Dropdown :options="['active', 'on hold', 'completed', 'archived']" v-model="localMission.status">
-        <template #selected="{ option }">
-          <div class="flex items-center justify-center w-full h-full py-2.5 rounded-none">
-            <div
-              class="w-2 h-2 rounded-full border mx-auto animate-pulse"
-              :class="getStatusStyleFromStatus(option)?.indicator"
-            ></div>
-          </div>
-        </template>
+      <div class="flex items-center gap-x-2">
+        <div
+          class="w-4 h-4 border-surface-tertiary rounded-xs cut-corners border ml-2 relative duration-100"
+          @click="emit('onToggleSelect')"
+          :class="{ 'selected-mission': isSelected }"
+        >
+          <Check
+            class="absolute w-3 h-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 stroke-surface-auxilary stroke-2"
+            :class="{ block: isSelected, hidden: !isSelected }"
+          ></Check>
+        </div>
+        <Dropdown :options="['active', 'on hold', 'completed', 'archived']" v-model="localMission.status">
+          <template #selected="{ option }">
+            <div class="flex items-center justify-center w-full h-full py-2.5 rounded-none">
+              <div
+                class="w-2 h-2 rounded-full border mx-auto animate-pulse"
+                :class="getStatusStyleFromStatus(option)?.indicator"
+              ></div>
+            </div>
+          </template>
 
-        <template #option="{ option }">
-          <div class="flex items-center gap-x-2 px-1 py-1 justify-start">
-            <div class="w-2 h-2 rounded-full border animate-pulse" :class="getStatusStyleFromStatus(option)?.indicator"></div>
-            <span class="uppercase" :class="getStatusStyleFromStatus(option)?.label">{{ option }}</span>
-          </div>
-        </template>
-      </Dropdown>
+          <template #option="{ option }">
+            <div class="flex items-center gap-x-2 px-1 py-1 justify-start">
+              <div class="w-2 h-2 rounded-full border animate-pulse" :class="getStatusStyleFromStatus(option)?.indicator"></div>
+              <span class="uppercase" :class="getStatusStyleFromStatus(option)?.label">{{ option }}</span>
+            </div>
+          </template>
+        </Dropdown>
+      </div>
     </td>
 
     <!-- TITLE -->

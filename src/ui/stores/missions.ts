@@ -7,6 +7,7 @@ export const useMissionsStore = defineStore('missions', {
     selectedMission: null as Mission | null,
     missionDraft: null as MissionDraft | null,
     loaded: false,
+    selectedMissions: [] as number[],
   }),
 
   getters: {
@@ -20,6 +21,17 @@ export const useMissionsStore = defineStore('missions', {
       this.missions = await window.electronApi.getMissions();
       this.loaded = true;
     },
-    async createDraftMission() {},
+    addSelectedMission(id: number) {
+      // Only add the mission id if not already added
+      if (!this.selectedMissions.includes(id)) {
+        this.selectedMissions.push(id);
+      }
+    },
+    removeSelectedMission(id: number) {
+      const index = this.selectedMissions.findIndex((mid) => mid === id);
+      if (index > -1) {
+        this.selectedMissions.splice(index, 1);
+      }
+    },
   },
 });

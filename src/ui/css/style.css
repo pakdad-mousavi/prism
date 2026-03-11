@@ -51,8 +51,16 @@
 }
 
 @layer components {
-  .selected-mission {
+  .selected-focus-mission {
     @apply bg-linear-to-r from-primary/10 to-primary/5;
+  }
+
+  .selected-mission {
+    @apply bg-surface-tertiary/50;
+  }
+
+  .menu-button {
+    @apply cut-corners border border-primary px-4 py-1.5 bg-surface-tertiary/50 rounded-sm cursor-pointer hover:bg-surface-primary duration-100 flex gap-x-2 origin-left;
   }
 
   .router-link-exact-active {
