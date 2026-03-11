@@ -3,13 +3,10 @@ import { onMounted } from 'vue';
 
 // ICONS
 import Compass from '../../../components/icons/Compass.vue';
-import LowPriority from '../../../components/icons/LowPriority.vue';
-import MediumPriority from '../../../components/icons/MediumPriority.vue';
 import HighPriority from '../../../components/icons/HighPriority.vue';
 import Type from '../../../components/icons/Type.vue';
 import Time from '../../../components/icons/Time.vue';
 import Target from '../../../components/icons/Target.vue';
-import DottedCircle from '../../../components/icons/DottedCircle.vue';
 import MissionRow from '../../../components/missions/MissionRow.vue';
 import { type MissionDraft, type Mission as TMission } from '../../../../shared/types/mission.ts';
 import { useMissionsStore } from '../../../stores/missions';
@@ -40,43 +37,6 @@ const saveDraft = async (m: MissionDraft) => {
   await window.electronApi.createMission(m);
   missionsStore.missionDraft = null;
   missionsStore.loadMissions();
-};
-
-// --------------------
-// PRIORITY UI HANDLING
-// --------------------
-const priorities = [
-  {
-    label: 'low',
-    iconColorClass: 'fill-surface-auxilary',
-    containerColorClass: 'border-surface-auxilary text-surface-auxilary',
-    IconComponent: LowPriority,
-  },
-  {
-    label: 'medium',
-    iconColorClass: 'fill-auxilary',
-    containerColorClass: 'border-auxilary text-auxilary',
-    IconComponent: MediumPriority,
-  },
-  {
-    label: 'high',
-    iconColorClass: 'fill-primary',
-    containerColorClass: 'border-primary text-primary',
-    IconComponent: HighPriority,
-  },
-  {
-    label: 'no priority',
-    iconColorClass: 'fill-surface-auxilary',
-    containerColorClass: 'border-surface-auxilary text-surface-auxilary',
-    IconComponent: DottedCircle,
-  },
-];
-
-const getIdxFromPriority = (p: number | null) => {
-  if (p === null) {
-    return priorities[3] as (typeof priorities)[number];
-  }
-  return priorities[p] as (typeof priorities)[number];
 };
 
 // Load mission store data
@@ -146,14 +106,12 @@ onMounted(async () => {
               v-for="mission in missionsStore.activeMissions"
               :key="mission.id"
               :mission="mission"
-              :getIdxFromPriority="getIdxFromPriority"
               @refreshStore="missionsStore.loadMissions"
             ></MissionRow>
             <MissionRow
               :isDraft="true"
               v-if="missionsStore.missionDraft && missionsStore.missionDraft.status === 'active'"
               :mission="missionsStore.missionDraft"
-              :getIdxFromPriority="getIdxFromPriority"
               @saveDraft="saveDraft"
               @discardDraft="missionsStore.missionDraft = null"
             ></MissionRow>
@@ -228,14 +186,12 @@ onMounted(async () => {
               v-for="mission in missionsStore.onHoldMissions"
               :key="mission.id"
               :mission="mission"
-              :getIdxFromPriority="getIdxFromPriority"
               @refreshStore="missionsStore.loadMissions"
             ></MissionRow>
             <MissionRow
               :isDraft="true"
               v-if="missionsStore.missionDraft && missionsStore.missionDraft.status === 'on hold'"
               :mission="missionsStore.missionDraft"
-              :getIdxFromPriority="getIdxFromPriority"
               @saveDraft="saveDraft"
               @discardDraft="missionsStore.missionDraft = null"
             ></MissionRow>
@@ -310,14 +266,12 @@ onMounted(async () => {
               v-for="mission in missionsStore.completedMissions"
               :key="mission.id"
               :mission="mission"
-              :getIdxFromPriority="getIdxFromPriority"
               @refreshStore="missionsStore.loadMissions"
             ></MissionRow>
             <MissionRow
               :isDraft="true"
               v-if="missionsStore.missionDraft && missionsStore.missionDraft.status === 'completed'"
               :mission="missionsStore.missionDraft"
-              :getIdxFromPriority="getIdxFromPriority"
               @saveDraft="saveDraft"
               @discardDraft="missionsStore.missionDraft = null"
             ></MissionRow>

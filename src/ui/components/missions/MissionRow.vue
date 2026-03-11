@@ -1,20 +1,17 @@
 <script setup lang="ts">
 import { reactive, toRaw, watch } from 'vue';
 import type { Mission, MissionDraft } from '../../../shared/types/mission';
-import type { Component } from 'vue';
 
 import PrioritySelect from './PrioritySelect.vue';
 import CustomSelect from './CustomSelect.vue';
+import LowPriority from '../icons/LowPriority.vue';
+import MediumPriority from '../icons/MediumPriority.vue';
+import HighPriority from '../icons/HighPriority.vue';
+import DottedCircle from '../icons/DottedCircle.vue';
 
 const props = defineProps<{
   isDraft: boolean;
   mission: Mission | MissionDraft;
-  getIdxFromPriority: (i: number | null) => {
-    label: string;
-    iconColorClass: string;
-    containerColorClass: string;
-    IconComponent: Component;
-  };
 }>();
 
 const emit = defineEmits<{
@@ -42,7 +39,6 @@ const vFocus = {
 | Local editable state
 |---------------------
 */
-
 const localMission = reactive({ ...props.mission });
 
 /*
@@ -50,7 +46,6 @@ const localMission = reactive({ ...props.mission });
 | Draft handling
 |---------------
 */
-
 const isDraftValid = () => {
   return localMission.title?.trim() !== '';
 };
@@ -72,7 +67,6 @@ const handleDraftBlur = () => {
 | Updating existing missions
 |---------------------------
 */
-
 const isMissionValid = (m: Mission) => {
   return m.title.trim().length > 0;
 };
@@ -84,7 +78,6 @@ watch(
 
     const mission = toRaw(localMission) as Mission;
     if (!isMissionValid(mission)) {
-      console.log('XXX');
       localMission.title = props.mission.title;
       return emit('refreshStore');
     }
@@ -99,10 +92,46 @@ watch(
 | Input helpers
 |--------------
 */
-
 const ensureNumberInput = (e: KeyboardEvent) => {
   if (e.ctrlKey || e.altKey || e.metaKey || e.key.length !== 1) return;
   if (isNaN(Number(e.key))) e.preventDefault();
+};
+
+// -----------
+// UI HANDLING
+// -----------
+const priorities = [
+  {
+    label: 'low',
+    iconColorClass: 'fill-surface-auxilary',
+    containerColorClass: 'border-surface-auxilary text-surface-auxilary',
+    IconComponent: LowPriority,
+  },
+  {
+    label: 'medium',
+    iconColorClass: 'fill-auxilary',
+    containerColorClass: 'border-auxilary text-auxilary',
+    IconComponent: MediumPriority,
+  },
+  {
+    label: 'high',
+    iconColorClass: 'fill-primary',
+    containerColorClass: 'border-primary text-primary',
+    IconComponent: HighPriority,
+  },
+  {
+    label: 'no priority',
+    iconColorClass: 'fill-surface-auxilary',
+    containerColorClass: 'border-surface-auxilary text-surface-auxilary',
+    IconComponent: DottedCircle,
+  },
+];
+
+const getIdxFromPriority = (p: number | null) => {
+  if (p === null) {
+    return priorities[3] as (typeof priorities)[number];
+  }
+  return priorities[p] as (typeof priorities)[number];
 };
 </script>
 
