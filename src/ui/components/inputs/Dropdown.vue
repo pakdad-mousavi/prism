@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
 import { motion, AnimatePresence } from 'motion-v';
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { watch, ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 
 const props = defineProps<{
   options: T[];
@@ -13,10 +13,30 @@ const emit = defineEmits<{
 
 const open = ref(false);
 const selectRef = ref<HTMLElement | null>(null);
+const menuRef = ref<HTMLElement | null>(null);
+const placement = ref<'bottom' | 'top'>('bottom');
 
-const toggleDropdown = () => {
+// Update placement based on whether there is enough space for the menu or not
+const updatePlacement = () => {
+  if (!selectRef.value || !menuRef.value) return;
+
+  const rect = selectRef.value.getBoundingClientRect();
+  const menuHeight = menuRef.value.offsetHeight;
+  const spaceBelow = window.innerHeight - rect.bottom;
+
+  placement.value = spaceBelow - menuHeight > 0 ? 'bottom' : 'top';
+};
+
+const toggleDropdown = async () => {
   open.value = !open.value;
 };
+
+watch(open, async (value) => {
+  if (value) {
+    await nextTick();
+    updatePlacement();
+  }
+});
 
 const selectOption = (option: T) => {
   emit('update:modelValue', option);
@@ -66,17 +86,23 @@ onUnmounted(() => {
         :exit="{ opacity: 0, translateY: -10 }"
         :transition="{ duration: 0.1 }"
         v-if="open"
-        class="absolute left-0 mt-1 rounded-md border border-surface-auxilary cut-corners bg-surface-primary shadow-lg z-50 overflow-hidden"
+        class="absolute left-0 bg-surface-primary z-10"
+        :class="placement === 'bottom' ? 'top-full' : 'bottom-full'"
       >
         <div
-          v-for="(option, i) in options"
-          :key="i"
-          @click="selectOption(option)"
-          class="px-2 py-1.5 cursor-pointer hover:bg-surface-tertiary/50 duration-100"
+          class="mt-1 rounded-md border border-surface-auxilary cut-corners bg-surface-primary shadow-lg z-50 overflow-hidden"
+          ref="menuRef"
         >
-          <slot name="option" :option="option">
-            {{ option }}
-          </slot>
+          <div
+            v-for="(option, i) in options"
+            :key="i"
+            @click="selectOption(option)"
+            class="px-2 py-1.5 cursor-pointer hover:bg-surface-tertiary/50 duration-100"
+          >
+            <slot name="option" :option="option">
+              {{ option }}
+            </slot>
+          </div>
         </div>
       </motion.div>
     </AnimatePresence>
