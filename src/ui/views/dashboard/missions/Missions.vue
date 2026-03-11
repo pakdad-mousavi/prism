@@ -61,36 +61,38 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary overflow-hidden">
+      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary">
         <table class="w-full text-md text-left font-tomorrow">
-          <thead class="bg-surface-primary">
+          <thead>
             <tr>
-              <th class="border-b border-surface-tertiary"></th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80">
+              <th class="border-b border-surface-tertiary bg-surface-primary rounded-tl-md cut-corners"></th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80 bg-surface-primary">
                 <div class="flex items-center gap-x-2">
                   <Compass width="20px" class="min-w-5"></Compass>
                   <span class="whitespace-nowrap">MISSION</span>
                 </div>
               </th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
                   <HighPriority width="20px" class="min-w-5 fill-secondary"></HighPriority>
                   <span class="whitespace-nowrap">PRIORITY</span>
                 </div>
               </th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
                   <Type width="20px" class="min-w-5"></Type>
                   <span class="whitespace-nowrap">TYPE</span>
                 </div>
               </th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
                   <Time width="20px" class="min-w-5"></Time>
                   <span class="whitespace-nowrap">EST. MINUTES</span>
                 </div>
               </th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary">
+              <th
+                class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary bg-surface-primary rounded-tr-md cut-corners"
+              >
                 <div class="flex items-center gap-x-2">
                   <Target width="20px" class="min-w-5"></Target>
                   <span class="whitespace-nowrap">TARGET SESSIONS</span>
@@ -141,36 +143,38 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary overflow-hidden">
+      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary">
         <table class="w-full text-md text-left font-tomorrow">
-          <thead class="bg-surface-primary">
+          <thead>
             <tr>
-              <th class="border-b border-surface-tertiary"></th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80">
+              <th class="border-b border-surface-tertiary bg-surface-primary rounded-tl-md cut-corners"></th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80 bg-surface-primary">
                 <div class="flex items-center gap-x-2">
                   <Compass width="20px" class="min-w-5"></Compass>
                   <span class="whitespace-nowrap">MISSION</span>
                 </div>
               </th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
                   <HighPriority width="20px" class="min-w-5 fill-secondary"></HighPriority>
                   <span class="whitespace-nowrap">PRIORITY</span>
                 </div>
               </th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
                   <Type width="20px" class="min-w-5"></Type>
                   <span class="whitespace-nowrap">TYPE</span>
                 </div>
               </th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
                   <Time width="20px" class="min-w-5"></Time>
                   <span class="whitespace-nowrap">EST. MINUTES</span>
                 </div>
               </th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary">
+              <th
+                class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary bg-surface-primary rounded-tr-md cut-corners"
+              >
                 <div class="flex items-center gap-x-2">
                   <Target width="20px" class="min-w-5"></Target>
                   <span class="whitespace-nowrap">TARGET SESSIONS</span>
@@ -221,36 +225,38 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary overflow-hidden">
+      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary">
         <table class="w-full text-md text-left font-tomorrow">
-          <thead class="bg-surface-primary">
+          <thead>
             <tr>
-              <th class="border-b border-surface-tertiary"></th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80">
+              <th class="border-b border-surface-tertiary bg-surface-primary rounded-tl-md cut-corners"></th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80 bg-surface-primary">
                 <div class="flex items-center gap-x-2">
                   <Compass width="20px" class="min-w-5"></Compass>
                   <span class="whitespace-nowrap">MISSION</span>
                 </div>
               </th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
                   <HighPriority width="20px" class="min-w-5 fill-secondary"></HighPriority>
                   <span class="whitespace-nowrap">PRIORITY</span>
                 </div>
               </th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
                   <Type width="20px" class="min-w-5"></Type>
                   <span class="whitespace-nowrap">TYPE</span>
                 </div>
               </th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary">
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
                   <Time width="20px" class="min-w-5"></Time>
                   <span class="whitespace-nowrap">EST. MINUTES</span>
                 </div>
               </th>
-              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary">
+              <th
+                class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary bg-surface-primary rounded-tr-md cut-corners"
+              >
                 <div class="flex items-center gap-x-2">
                   <Target width="20px" class="min-w-5"></Target>
                   <span class="whitespace-nowrap">TARGET SESSIONS</span>
