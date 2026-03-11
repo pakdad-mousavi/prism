@@ -1,20 +1,14 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
 import { motion, AnimatePresence } from 'motion-v';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 
-type Option = {
-  label: string;
-  value: string | number | null;
-};
-
 const props = defineProps<{
-  options: Option[];
-  modelValue: string | number | null;
-  placeholder?: string;
+  options: T[];
+  modelValue: T;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string | number | null): void;
+  (e: 'update:modelValue', value: T): void;
 }>();
 
 const open = ref(false);
@@ -24,12 +18,12 @@ const toggleDropdown = () => {
   open.value = !open.value;
 };
 
-const selectOption = (option: Option) => {
-  emit('update:modelValue', option.value);
+const selectOption = (option: T) => {
+  emit('update:modelValue', option);
   open.value = false;
 };
 
-const selectedOption = computed(() => props.options.find((o) => o.value === props.modelValue));
+const selectedOption = computed(() => props.options.find((o) => o === props.modelValue));
 
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as Node;
@@ -48,31 +42,31 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="selectRef" class="relative select-none w-full">
-    <!-- Selected -->
+  <div ref="selectRef" class="relative select-none">
+    <!-- Selected value -->
     <div
       @click="toggleDropdown"
-      class="flex items-center cursor-pointer rounded-md w-full px-2 py-2"
+      class="flex items-center cursor-pointer rounded-md w-full px-2 py-1"
       :class="{ 'bg-surface-primary': open }"
     >
-      <span v-if="selectedOption">
-        {{ selectedOption.label }}
-      </span>
+      <template v-if="selectedOption !== undefined">
+        <slot name="selected" :option="selectedOption" :open="open">
+          {{ selectedOption }}
+        </slot>
+      </template>
 
-      <span v-else class="text-zinc-400">
-        {{ placeholder ?? 'Select option' }}
-      </span>
+      <span v-else class="text-zinc-400">Select option</span>
     </div>
 
     <!-- Dropdown -->
     <AnimatePresence>
       <motion.div
-        v-if="open"
         :initial="{ opacity: 0, translateY: -10 }"
         :animate="{ opacity: 1, translateY: 0 }"
         :exit="{ opacity: 0, translateY: -10 }"
         :transition="{ duration: 0.1 }"
-        class="absolute left-0 mt-1 rounded-md border border-surface-auxilary cut-corners bg-surface-primary shadow-lg z-50 overflow-hidden min-w-full"
+        v-if="open"
+        class="absolute left-0 mt-1 rounded-md border border-surface-auxilary cut-corners bg-surface-primary shadow-lg z-50 overflow-hidden"
       >
         <div
           v-for="(option, i) in options"
@@ -80,7 +74,9 @@ onUnmounted(() => {
           @click="selectOption(option)"
           class="px-2 py-1.5 cursor-pointer hover:bg-surface-tertiary/50 duration-100"
         >
-          {{ option.label }}
+          <slot name="option" :option="option">
+            {{ option }}
+          </slot>
         </div>
       </motion.div>
     </AnimatePresence>

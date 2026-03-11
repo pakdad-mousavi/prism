@@ -61,7 +61,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary">
+      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary overflow-hidden">
         <table class="w-full text-md text-left font-tomorrow">
           <thead class="bg-surface-primary">
             <tr>
@@ -141,7 +141,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary">
+      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary overflow-hidden">
         <table class="w-full text-md text-left font-tomorrow">
           <thead class="bg-surface-primary">
             <tr>
@@ -221,7 +221,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary">
+      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary overflow-hidden">
         <table class="w-full text-md text-left font-tomorrow">
           <thead class="bg-surface-primary">
             <tr>
