@@ -8,4 +8,5 @@ contextBridge.exposeInMainWorld('electronApi', {
   getMissions: () => ipcRenderer.invoke('mission:getAll'),
   createMission: (m: MissionDraft) => ipcRenderer.invoke('mission:create', m),
   updateMission: (m: Mission) => ipcRenderer.invoke('mission:update', m),
+  deleteMission: (mid: number) => ipcRenderer.invoke('mission:delete', mid),
 });

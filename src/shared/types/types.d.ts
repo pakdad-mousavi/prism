@@ -6,6 +6,7 @@ declare global {
       getMissions: () => Promise<Mission[]>;
       createMission: (m: MissionDraft) => Promise<true | false>;
       updateMission: (m: Mission) => Promise<true | false>;
+      deleteMission: (mid: number) => Promise<true | false>;
     };
   }
 }

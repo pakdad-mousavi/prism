@@ -42,4 +42,15 @@ export const registerMissionHandlers = () => {
     }
     return true;
   });
+
+  ipcMain.handle('mission:delete', async (e, mid: number) => {
+    validateSender(e.senderFrame);
+
+    try {
+      await getDb().delete(mission).where(eq(mission.id, mid));
+    } catch {
+      return false;
+    }
+    return true;
+  });
 };
