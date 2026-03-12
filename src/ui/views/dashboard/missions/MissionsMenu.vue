@@ -3,6 +3,9 @@ import { AnimatePresence, motion } from 'motion-v';
 import Target from '../../../components/icons/Target.vue';
 import { useMissionsStore } from '../../../stores/missions';
 import Trash from '../../../components/icons/Trash.vue';
+import Check from '../../../components/icons/Check.vue';
+import type { Mission } from '../../../../shared/types/mission';
+import { toRaw } from 'vue';
 
 const missionsStore = useMissionsStore();
 
@@ -35,6 +38,26 @@ const itemVariant = {
     x: -5,
   },
 };
+
+const deleteSelectedMissions = async () => {
+  for (const missionId of missionsStore.selectedMissions) {
+    await window.electronApi.deleteMission(missionId);
+  }
+
+  missionsStore.selectedMissions.length = 0;
+  missionsStore.loadMissions();
+};
+
+const markAllAsCompleted = async () => {
+  for (const missionId of missionsStore.selectedMissions) {
+    const mission = toRaw(missionsStore.missions.find((m) => m.id === missionId) as Mission);
+    mission.status = 'completed';
+    await window.electronApi.updateMission(mission);
+  }
+
+  missionsStore.selectedMissions.length = 0;
+  missionsStore.loadMissions();
+};
 </script>
 
 <template>
@@ -55,14 +78,14 @@ const itemVariant = {
           </button>
         </motion.div>
         <motion.div :variants="itemVariant">
-          <button class="menu-button">
+          <button class="menu-button" @click="deleteSelectedMissions">
             <Trash class="w-4 h-4 stroke-[1.5px]"></Trash>
             <span class="uppercase">Delete all</span>
           </button>
         </motion.div>
         <motion.div :variants="itemVariant">
-          <button class="menu-button">
-            <Trash class="w-4 h-4 stroke-[1.5px]"></Trash>
+          <button class="menu-button" @click="markAllAsCompleted">
+            <Check class="w-4 h-4 stroke-2"></Check>
             <span class="uppercase">Mark all as completed</span>
           </button>
         </motion.div>
