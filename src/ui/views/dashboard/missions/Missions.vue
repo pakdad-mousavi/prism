@@ -10,6 +10,7 @@ import Target from '../../../components/icons/Target.vue';
 import MissionRow from '../../../components/missions/MissionRow.vue';
 import { type MissionDraft, type Mission as TMission } from '../../../../shared/types/mission.ts';
 import { useMissionsStore } from '../../../stores/missions';
+import { motion } from 'motion-v';
 
 // ----------------
 // MISSION HANDLING
@@ -29,7 +30,7 @@ const createDraftMission = (status: 'active' | 'on hold' | 'completed') => {
     estimatedMinutes: null,
     targetSessions: null,
     status,
-    priority: 2,
+    priority: 0,
     scale: 'task',
     isAutoMission: false,
   };
@@ -54,7 +55,12 @@ onMounted(async () => {
   <div class="p-4 space-y-10">
     <!-- ACTIVE MISSIONS -->
     <section>
-      <div class="flex gap-2 mb-2 text-xs">
+      <motion.div
+        layout
+        class="flex gap-2 mb-2 text-xs"
+        :initial="{ opacity: 0, translateX: '-5px' }"
+        :animate="{ opacity: 1, translateX: '0' }"
+      >
         <div class="flex items-center gap-2 border rounded-md cut-corners border-primary py-1.5 px-4">
           <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
           <span class="text-primary font-tomorrow">ACTIVE</span>
@@ -62,9 +68,13 @@ onMounted(async () => {
         <div class="flex items-center justify-center py-1.5 px-2.5 border rounded-md cut-corners border-surface-tertiary">
           <span class="text-surface-auxilary font-tomorrow">3</span>
         </div>
-      </div>
+      </motion.div>
 
-      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary">
+      <motion.div
+        class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary"
+        :initial="{ opacity: 0, translateX: '-5px' }"
+        :animate="{ opacity: 1, translateX: '0' }"
+      >
         <table class="w-full text-md text-left font-tomorrow">
           <thead>
             <tr>
@@ -133,12 +143,17 @@ onMounted(async () => {
             </tr>
           </tbody>
         </table>
-      </div>
+      </motion.div>
     </section>
 
     <!-- ON HOLD MISSIONS -->
     <section>
-      <div class="flex gap-2 mb-2 text-xs">
+      <motion.div
+        class="flex gap-2 mb-2 text-xs"
+        :transition="{ delay: 0.08 }"
+        :initial="{ opacity: 0, translateX: '-5px' }"
+        :animate="{ opacity: 1, translateX: '0' }"
+      >
         <div class="flex items-center gap-2 border rounded-md cut-corners border-auxilary py-1.5 px-4">
           <div class="w-2 h-2 rounded-full border border-auxilary animate-pulse"></div>
           <span class="text-auxilary font-tomorrow">ON HOLD</span>
@@ -146,9 +161,14 @@ onMounted(async () => {
         <div class="flex items-center justify-center py-1.5 px-2.5 border rounded-md cut-corners border-surface-tertiary">
           <span class="text-surface-auxilary font-tomorrow">3</span>
         </div>
-      </div>
+      </motion.div>
 
-      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary">
+      <motion.div
+        class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary"
+        :transition="{ delay: 0.08 }"
+        :initial="{ opacity: 0, translateX: '-5px' }"
+        :animate="{ opacity: 1, translateX: '0' }"
+      >
         <table class="w-full text-md text-left font-tomorrow">
           <thead>
             <tr>
@@ -217,12 +237,17 @@ onMounted(async () => {
             </tr>
           </tbody>
         </table>
-      </div>
+      </motion.div>
     </section>
 
     <!-- COMPLETED MISSIONS -->
     <section>
-      <div class="flex gap-2 mb-2 text-xs">
+      <motion.div
+        class="flex gap-2 mb-2 text-xs"
+        :transition="{ delay: 0.16 }"
+        :initial="{ opacity: 0, translateX: '-5px' }"
+        :animate="{ opacity: 1, translateX: '0' }"
+      >
         <div class="flex items-center border gap-2 rounded-md cut-corners border-surface-tertiary py-1.5 px-4">
           <div class="w-2 h-0.5 bg-surface-auxilary rounded-full animate-pulse"></div>
           <span class="text-surface-auxilary font-tomorrow">COMPLETED</span>
@@ -230,9 +255,14 @@ onMounted(async () => {
         <div class="flex items-center justify-center py-1.5 px-2.5 border rounded-md cut-corners border-surface-tertiary">
           <span class="text-surface-auxilary font-tomorrow">3</span>
         </div>
-      </div>
+      </motion.div>
 
-      <div class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary">
+      <motion.div
+        class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary"
+        :transition="{ delay: 0.16 }"
+        :initial="{ opacity: 0, translateX: '-5px' }"
+        :animate="{ opacity: 1, translateX: '0' }"
+      >
         <table class="w-full text-md text-left font-tomorrow">
           <thead>
             <tr>
@@ -301,7 +331,7 @@ onMounted(async () => {
             </tr>
           </tbody>
         </table>
-      </div>
+      </motion.div>
     </section>
   </div>
 </template>

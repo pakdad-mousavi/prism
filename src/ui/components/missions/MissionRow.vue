@@ -8,6 +8,7 @@ import HighPriority from '../icons/HighPriority.vue';
 import DottedCircle from '../icons/DottedCircle.vue';
 import Dropdown from '../inputs/Dropdown.vue';
 import Check from '../icons/Check.vue';
+import { motion } from 'motion-v';
 
 const props = defineProps<{
   isDraft: boolean;
@@ -158,9 +159,14 @@ const getPriorityComponent = (p: number | null) => {
 </script>
 
 <template>
-  <tr
+  <motion.tr
+    :initial="{ opacity: 0, translateX: '-10px' }"
+    :animate="{ opacity: 1, translateX: '0' }"
+    :exit="{ opacity: 0, translateX: '-10px' }"
     class="cursor-pointer select-none hover:bg-surface-primary/50 duration-100 last:[&>td]:border-b-0"
-    :class="{ 'bg-surface-primary/70 hover:bg-surface-primary/70!': isSelected }"
+    :class="{
+      'bg-surface-primary/70 hover:bg-surface-primary/70! translate-x-1 ease-[cubic-bezier(0.1,1,0,1)] duration-300': isSelected,
+    }"
     @focusout="handleDraftBlur"
   >
     <!-- STATUS -->
@@ -260,5 +266,5 @@ const getPriorityComponent = (p: number | null) => {
         v-model.number.lazy="localMission.targetSessions"
       />
     </td>
-  </tr>
+  </motion.tr>
 </template>
