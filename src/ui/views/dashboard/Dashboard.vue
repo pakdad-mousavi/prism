@@ -137,7 +137,7 @@ const enableScroll = ref(true);
       class="w-[calc(100%-256px)] h-full bg-surface-secondary/85 z-10"
       :class="enableScroll ? 'overflow-y-scroll' : 'overflow-hidden'"
     >
-      <RouterView name="menu" class="absolute w-[calc(100%-256px)] h-16 border-b border-surface-tertiary z-999"></RouterView>
+      <RouterView name="menu" class="absolute w-[calc(100%-256px)] h-16 border-b border-surface-tertiary z-10000"></RouterView>
       <main
         class="mt-16 relative min-h-[calc(100vh-64px)] w-full bg-[repeating-radial-gradient(var(--color-surface-primary)_0,var(--color-surface-primary)_1px,transparent_1px,transparent_100%)] bg-size-[20px_20px]"
       >
