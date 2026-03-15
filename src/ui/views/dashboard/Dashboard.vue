@@ -16,8 +16,9 @@ const enableScroll = ref(true);
 </script>
 
 <template>
-  <div class="relative flex w-full h-svh text-secondary">
+  <div class="relative flex w-full h-svh text-secondary overflow-hidden">
     <div class="absolute rounded-full w-60 h-72 bg-primary/60 left-48 top-4 blur-3xl"></div>
+    <div class="absolute rounded-full w-60 h-72 bg-primary/60 -right-4 -bottom-4 blur-3xl"></div>
     <aside class="z-10 h-full border-r w-64 border-surface-tertiary bg-surface-primary/85">
       <div class="flex items-center h-16 gap-4 p-4 border-b border-surface-tertiary">
         <div class="relative">
@@ -136,11 +137,12 @@ const enableScroll = ref(true);
       class="w-[calc(100%-256px)] h-full bg-surface-secondary/85 z-10"
       :class="enableScroll ? 'overflow-y-scroll' : 'overflow-hidden'"
     >
-      <RouterView
-        name="menu"
-        class="absolute w-[calc(100%-256px)] h-16 border-b border-surface-tertiary z-999"
-      ></RouterView>
-      <RouterView class="mt-17 relative" name="main" @toggleScroll="enableScroll = !enableScroll"></RouterView>
+      <RouterView name="menu" class="absolute w-[calc(100%-256px)] h-16 border-b border-surface-tertiary z-999"></RouterView>
+      <main
+        class="mt-16 relative min-h-[calc(100vh-64px)] w-full bg-[repeating-radial-gradient(var(--color-surface-primary)_0,var(--color-surface-primary)_1px,transparent_1px,transparent_100%)] bg-size-[20px_20px]"
+      >
+        <RouterView name="main" @toggleScroll="enableScroll = !enableScroll"></RouterView>
+      </main>
     </main>
   </div>
 </template>
