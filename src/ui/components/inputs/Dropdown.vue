@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
 import { motion, AnimatePresence } from 'motion-v';
-import { watch, ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { watch, ref, computed, onMounted, onUnmounted, nextTick, Teleport } from 'vue';
 
 const props = defineProps<{
   options: T[];
@@ -14,6 +14,10 @@ const emit = defineEmits<{
 const open = ref(false);
 const selectRef = ref<HTMLElement | null>(null);
 const menuRef = ref<HTMLElement | null>(null);
+const menuStyles = ref({
+  top: '0px',
+  left: '0px',
+});
 const placement = ref<'bottom' | 'top'>('bottom');
 
 // Update placement based on whether there is enough space for the menu or not
@@ -25,6 +29,11 @@ const updatePlacement = () => {
   const spaceBelow = window.innerHeight - rect.bottom;
 
   placement.value = spaceBelow - menuHeight > 0 ? 'bottom' : 'top';
+
+  menuStyles.value = {
+    left: rect.left + 'px',
+    top: placement.value === 'bottom' ? rect.bottom + window.scrollY + 'px' : rect.top + window.scrollY - menuHeight + 'px',
+  };
 };
 
 const toggleDropdown = async () => {
@@ -54,15 +63,17 @@ const handleClickOutside = (event: MouseEvent) => {
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
+  window.addEventListener('resize', updatePlacement);
 });
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside);
+  window.removeEventListener('resize', updatePlacement);
 });
 </script>
 
 <template>
-  <div ref="selectRef" class="relative select-none">
+  <div ref="selectRef" class="select-none">
     <!-- Selected value -->
     <div
       @click="toggleDropdown"
@@ -79,32 +90,31 @@ onUnmounted(() => {
     </div>
 
     <!-- Dropdown -->
-    <AnimatePresence>
-      <motion.div
-        :initial="{ opacity: 0, translateY: -10 }"
-        :animate="{ opacity: 1, translateY: 0 }"
-        :exit="{ opacity: 0, translateY: -10 }"
-        :transition="{ duration: 0.1 }"
-        v-if="open"
-        class="absolute left-0 z-10"
-        :class="placement === 'bottom' ? 'top-full' : 'bottom-full'"
-      >
-        <div
-          class="mt-1 rounded-md border border-surface-auxilary cut-corners bg-surface-primary shadow-lg z-50 overflow-hidden"
-          ref="menuRef"
+    <Teleport to="body">
+      <AnimatePresence>
+        <motion.div
+          :initial="{ opacity: 0, translateY: -10 }"
+          :animate="{ opacity: 1, translateY: 0 }"
+          :exit="{ opacity: 0, translateY: -10 }"
+          :transition="{ duration: 0.1 }"
+          v-if="open"
+          class="fixed z-999"
+          :style="menuStyles"
         >
-          <div
-            v-for="(option, i) in options"
-            :key="i"
-            @click="selectOption(option)"
-            class="px-2 py-1.5 cursor-pointer hover:bg-surface-tertiary/50 duration-100"
-          >
-            <slot name="option" :option="option">
-              {{ option }}
-            </slot>
+          <div class="mt-1 rounded-md border border-surface-auxilary cut-corners bg-surface-primary shadow-lg" ref="menuRef">
+            <div
+              v-for="(option, i) in options"
+              :key="i"
+              @click="selectOption(option)"
+              class="px-2 py-1.5 cursor-pointer hover:bg-surface-tertiary/50 duration-100"
+            >
+              <slot name="option" :option="option">
+                {{ option }}
+              </slot>
+            </div>
           </div>
-        </div>
-      </motion.div>
-    </AnimatePresence>
+        </motion.div>
+      </AnimatePresence>
+    </Teleport>
   </div>
 </template>

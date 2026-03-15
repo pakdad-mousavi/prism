@@ -56,7 +56,6 @@ onMounted(async () => {
     <!-- ACTIVE MISSIONS -->
     <section>
       <motion.div
-        layout
         class="flex gap-2 mb-2 text-xs"
         :initial="{ opacity: 0, translateX: '-5px' }"
         :animate="{ opacity: 1, translateX: '0' }"

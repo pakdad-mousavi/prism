@@ -107,18 +107,18 @@ const getStatusStyleFromStatus = (status: string) => {
   switch (status) {
     case 'active':
       return {
-        indicator: 'border-primary bg-primary',
-        label: 'text-primary',
+        indicator: 'border-primary! bg-primary',
+        label: 'text-primary!',
       };
     case 'on hold':
       return {
-        indicator: 'border-auxilary',
-        label: 'text-auxilary',
+        indicator: 'border-auxilary!',
+        label: 'text-auxilary!',
       };
     case 'completed':
       return {
-        indicator: 'border-surface-auxilary w-2! h-0.5!',
-        label: 'text-surface-auxilary',
+        indicator: 'border-surface-auxilary! w-2! h-0.5!',
+        label: 'text-surface-auxilary!',
       };
   }
 };
@@ -179,7 +179,7 @@ const getPriorityComponent = (p: number | null) => {
         >
           <Check
             class="absolute w-3 h-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 stroke-surface-auxilary stroke-2"
-            :class="{ block: isSelected, hidden: !isSelected }"
+            v-if="isSelected"
           ></Check>
         </div>
         <Dropdown :options="['active', 'on hold', 'completed', 'archived']" v-model="localMission.status">
@@ -194,8 +194,15 @@ const getPriorityComponent = (p: number | null) => {
 
           <template #option="{ option }">
             <div class="flex items-center gap-x-2 px-1 py-1 justify-start">
-              <div class="w-2 h-2 rounded-full border animate-pulse" :class="getStatusStyleFromStatus(option)?.indicator"></div>
-              <span class="uppercase" :class="getStatusStyleFromStatus(option)?.label">{{ option }}</span>
+              <div
+                class="w-2 h-2 rounded-full border animate-pulse border-secondary"
+                :class="getStatusStyleFromStatus(option)?.indicator"
+              ></div>
+              <span
+                class="text-sm font-tomorrow uppercase text-secondary font-light"
+                :class="getStatusStyleFromStatus(option)?.label"
+                >{{ option }}</span
+              >
             </div>
           </template>
         </Dropdown>
@@ -224,7 +231,12 @@ const getPriorityComponent = (p: number | null) => {
         </template>
 
         <template #option="{ option }">
-          <div :class="['flex gap-x-1 border p-1 cut-corners rounded-sm pr-2', getPriorityComponent(option).containerColorClass]">
+          <div
+            :class="[
+              'flex gap-x-1 border p-1 cut-corners rounded-sm pr-2 uppercase text-sm font-light font-tomorrow',
+              getPriorityComponent(option).containerColorClass,
+            ]"
+          >
             <component :is="getPriorityComponent(option).IconComponent" :class="getPriorityComponent(option).iconColorClass" />
             <span>
               {{ getPriorityComponent(option).label }}
@@ -238,11 +250,11 @@ const getPriorityComponent = (p: number | null) => {
     <td class="uppercase border-b border-l border-surface-tertiary">
       <Dropdown :options="['task', 'operation']" v-model="localMission.scale">
         <template #selected="{ option }">
-          <div class="py-1">{{ option }}</div>
+          <div class="py-1 text-secondary text-sm font-tomorrow uppercase font-light">{{ option }}</div>
         </template>
 
         <template #option="{ option }">
-          <div class="py-1">{{ option }}</div>
+          <div class="py-1 text-sm font-tomorrow uppercase text-secondary font-light">{{ option }}</div>
         </template>
       </Dropdown>
     </td>
