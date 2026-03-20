@@ -92,13 +92,13 @@ onMounted(async () => {
               </th>
               <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
-                  <Type width="20px" class="min-w-5"></Type>
+                  <Type width="20px" class="min-w-5 fill-secondary"></Type>
                   <span class="whitespace-nowrap">TYPE</span>
                 </div>
               </th>
               <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
-                  <Time width="20px" class="min-w-5"></Time>
+                  <Time width="20px" class="min-w-5 fill-secondary"></Time>
                   <span class="whitespace-nowrap">EST. MINUTES</span>
                 </div>
               </th>
@@ -106,7 +106,7 @@ onMounted(async () => {
                 class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary bg-surface-primary rounded-tr-md cut-corners"
               >
                 <div class="flex items-center gap-x-2">
-                  <Target width="20px" class="min-w-5"></Target>
+                  <Target width="20px" class="min-w-5 stroke-secondary"></Target>
                   <span class="whitespace-nowrap">TARGET SESSIONS</span>
                 </div>
               </th>
@@ -186,13 +186,13 @@ onMounted(async () => {
               </th>
               <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
-                  <Type width="20px" class="min-w-5"></Type>
+                  <Type width="20px" class="min-w-5 fill-secondary"></Type>
                   <span class="whitespace-nowrap">TYPE</span>
                 </div>
               </th>
               <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
-                  <Time width="20px" class="min-w-5"></Time>
+                  <Time width="20px" class="min-w-5 fill-secondary"></Time>
                   <span class="whitespace-nowrap">EST. MINUTES</span>
                 </div>
               </th>
@@ -200,7 +200,7 @@ onMounted(async () => {
                 class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary bg-surface-primary rounded-tr-md cut-corners"
               >
                 <div class="flex items-center gap-x-2">
-                  <Target width="20px" class="min-w-5"></Target>
+                  <Target width="20px" class="min-w-5 stroke-secondary"></Target>
                   <span class="whitespace-nowrap">TARGET SESSIONS</span>
                 </div>
               </th>
@@ -280,13 +280,13 @@ onMounted(async () => {
               </th>
               <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
-                  <Type width="20px" class="min-w-5"></Type>
+                  <Type width="20px" class="min-w-5 fill-secondary"></Type>
                   <span class="whitespace-nowrap">TYPE</span>
                 </div>
               </th>
               <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary">
                 <div class="flex items-center gap-x-2">
-                  <Time width="20px" class="min-w-5"></Time>
+                  <Time width="20px" class="min-w-5 fill-secondary"></Time>
                   <span class="whitespace-nowrap">EST. MINUTES</span>
                 </div>
               </th>
@@ -294,7 +294,7 @@ onMounted(async () => {
                 class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary bg-surface-primary rounded-tr-md cut-corners"
               >
                 <div class="flex items-center gap-x-2">
-                  <Target width="20px" class="min-w-5"></Target>
+                  <Target width="20px" class="min-w-5 stroke-secondary"></Target>
                   <span class="whitespace-nowrap">TARGET SESSIONS</span>
                 </div>
               </th>
