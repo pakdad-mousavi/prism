@@ -12,6 +12,12 @@
   --color-surface-auxilary: #707070;
 }
 
+@property --rotation {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
 @theme {
   /* COLORS */
   --color-primary: var(--color-primary);
@@ -90,5 +96,31 @@
 
   .router-link-exact-active {
     @apply border-primary! bg-surface-tertiary glow;
+  }
+
+  .background-edge-spin::before {
+    background: conic-gradient(
+      from var(--rotation),
+      transparent 0deg,
+      transparent 60deg,
+      var(--color-primary) 90deg,
+      transparent 120deg,
+      transparent 240deg,
+      var(--color-primary) 270deg,
+      transparent 300deg,
+      transparent 360deg
+    );
+    @apply content-[''] absolute top-0 left-0 p-px inset-0 cut-corners rounded-xl;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    animation: rotate-border 5s linear infinite;
+  }
+
+  @keyframes rotate-border {
+    to {
+      --rotation: 360deg;
+    }
   }
 }

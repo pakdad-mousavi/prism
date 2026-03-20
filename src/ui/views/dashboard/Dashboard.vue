@@ -134,12 +134,12 @@ const enableScroll = ref(true);
       </div>
     </aside>
     <main
-      class="w-[calc(100%-256px)] h-full bg-surface-secondary/85 z-10"
+      class="w-[calc(100%-256px)] h-screen bg-surface-secondary/85 z-10 flex flex-col"
       :class="enableScroll ? 'overflow-y-scroll' : 'overflow-hidden'"
     >
       <RouterView name="menu" class="absolute w-[calc(100%-256px)] h-16 border-b border-surface-tertiary z-10000"></RouterView>
       <main
-        class="mt-16 relative min-h-[calc(100vh-64px)] w-full bg-[repeating-radial-gradient(var(--color-surface-primary)_0,var(--color-surface-primary)_1px,transparent_1px,transparent_100%)] bg-size-[20px_20px]"
+        class="mt-16 relative flex flex-col flex-1 min-h-0 w-full bg-[repeating-radial-gradient(var(--color-surface-primary)_0,var(--color-surface-primary)_1px,transparent_1px,transparent_100%)] bg-size-[20px_20px]"
       >
         <RouterView name="main" @toggleScroll="enableScroll = !enableScroll"></RouterView>
       </main>
