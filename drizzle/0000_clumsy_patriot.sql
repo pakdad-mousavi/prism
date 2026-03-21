@@ -12,6 +12,7 @@ CREATE TABLE `focus_run` (
 	`mission_id` integer,
 	`created_at` integer DEFAULT (unixepoch() * 1000) NOT NULL,
 	`started_at` integer NOT NULL,
+	`last_heartbeat_at` integer,
 	`ended_at` integer,
 	`status` text DEFAULT 'running' NOT NULL,
 	`device_id` text NOT NULL,

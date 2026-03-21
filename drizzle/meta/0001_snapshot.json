@@ -1,6 +1,6 @@
 {
-  "id": "f0b4c94e-09c7-4e98-990b-bf124689fa9e",
-  "prevId": "b08bf713-7042-4642-9733-6a29c8bb69da",
+  "id": "3b7caae9-a73f-4952-ae68-e63ffabdc6c5",
+  "prevId": "82e17560-e995-42b1-8829-4215a3595037",
   "version": "6",
   "dialect": "sqlite",
   "tables": {
@@ -88,6 +88,13 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "last_heartbeat_at": {
+          "name": "last_heartbeat_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "ended_at": {
