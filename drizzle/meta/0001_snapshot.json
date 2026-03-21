@@ -1,6 +1,6 @@
 {
-  "id": "0ccbfde6-8a10-4fd5-9fd6-15d0d5cb7e4b",
-  "prevId": "a203827e-d26d-41e3-8ea5-55c61ee38562",
+  "id": "f0b4c94e-09c7-4e98-990b-bf124689fa9e",
+  "prevId": "b08bf713-7042-4642-9733-6a29c8bb69da",
   "version": "6",
   "dialect": "sqlite",
   "tables": {
@@ -95,13 +95,6 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
-        },
-        "planned_minutes": {
-          "name": "planned_minutes",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
           "autoincrement": false
         },
         "status": {
