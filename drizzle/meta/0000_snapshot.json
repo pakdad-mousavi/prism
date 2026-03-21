@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "08e7a406-5ba8-4f81-83a1-6e43c1698e05",
+  "id": "a203827e-d26d-41e3-8ea5-55c61ee38562",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "campaign": {
@@ -294,7 +294,7 @@
           "name": "order_index",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "default": 0
         },

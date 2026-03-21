@@ -41,7 +41,7 @@ CREATE TABLE `mission` (
 	`completed_sessions` integer DEFAULT 0,
 	`priority` integer DEFAULT 0,
 	`status` text DEFAULT 'active' NOT NULL,
-	`order_index` integer DEFAULT 0,
+	`order_index` integer DEFAULT 0 NOT NULL,
 	`created_at` integer DEFAULT (unixepoch() * 1000) NOT NULL,
 	`updated_at` integer NOT NULL,
 	`completed_at` integer DEFAULT (unixepoch() * 1000) NOT NULL,

@@ -8,7 +8,6 @@ export const focusRun = sqliteTable('focus_run', {
   createdAt,
   startedAt: int('started_at', { mode: 'timestamp_ms' }).notNull(),
   endedAt: int('ended_at', { mode: 'timestamp_ms' }),
-  plannedMinutes: int('planned_minutes', { mode: 'number' }).notNull(),
   status: text({ enum: ['running', 'paused', 'completed', 'abandoned'] })
     .notNull()
     .default('running'),
