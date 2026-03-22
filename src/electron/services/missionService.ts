@@ -27,12 +27,21 @@ export class MissionService {
   static async update(newMission: Mission) {
     try {
       // Only update the editable data
+      let completedAt: Date | undefined = newMission.completedAt;
       const { id, createdAt, ...data } = newMission;
+      if (newMission.status === 'completed') {
+        completedAt = new Date();
+      } else {
+        completedAt = undefined;
+      }
 
       // Update the date
       data.updatedAt = new Date();
 
-      await getDb().update(mission).set(data).where(eq(mission.id, id));
+      await getDb()
+        .update(mission)
+        .set({ ...data, completedAt })
+        .where(eq(mission.id, id));
       return true;
     } catch {
       return false;
