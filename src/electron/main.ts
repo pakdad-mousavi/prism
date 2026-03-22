@@ -6,6 +6,7 @@ import { Utils } from './utils.js';
 import { getDb } from './db/db.js';
 import { migrate } from 'drizzle-orm/libsql/migrator';
 import { registerIpcHandlers } from './ipc/index.js';
+import services from './services/index.js';
 import { getPreloadPath } from './pathResolver.js';
 
 const createWindow = () => {
@@ -39,6 +40,13 @@ app.whenReady().then(async () => {
 
   // Register ipc handlers
   registerIpcHandlers();
+
+  // Set up services
+  for (const Service of services) {
+    if ('init' in Service && typeof Service.init === 'function') {
+      Service.init();
+    }
+  }
 
   // Show UI
   createWindow();
