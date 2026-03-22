@@ -1,5 +1,5 @@
 import type { InferSelectModel } from 'drizzle-orm';
-import { mission } from '../../electron/db/schema/mission.sql';
+import { mission } from '../../electron/db/schema/mission.sql.js';
 
 export type Mission = InferSelectModel<typeof mission>;
 
