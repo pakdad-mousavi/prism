@@ -1,15 +1,13 @@
 import { and, eq, isNull } from 'drizzle-orm';
 import { focusRun } from '../db/schema/focusRun.sql.js';
-import { LibSQLDatabase } from 'drizzle-orm/libsql';
+import { getDb } from '../db/db.js';
 
 export class FocusRunService {
-  private interval: NodeJS.Timeout | null = null;
-  private activeRunId: number | null = null;
+  private static interval: NodeJS.Timeout | null = null;
+  private static activeRunId: number | null = null;
 
-  constructor(private db: LibSQLDatabase) {}
-
-  async init() {
-    const [run] = await this.db
+  static async init() {
+    const [run] = await getDb()
       .select()
       .from(focusRun)
       .where(and(isNull(focusRun.endedAt), eq(focusRun.status, 'running')))
@@ -20,8 +18,8 @@ export class FocusRunService {
     }
   }
 
-  async startRun(missionId: number, deviceId: string) {
-    const [run] = await this.db
+  static async startRun(missionId: number, deviceId: string) {
+    const [run] = await getDb()
       .insert(focusRun)
       .values({
         missionId,
@@ -36,7 +34,7 @@ export class FocusRunService {
     return run;
   }
 
-  private startHeartbeat(runId: number) {
+  private static startHeartbeat(runId: number) {
     this.activeRunId = runId;
 
     if (this.interval) clearInterval(this.interval);
@@ -46,29 +44,29 @@ export class FocusRunService {
     }, 15000);
   }
 
-  private async heartbeat() {
+  private static async heartbeat() {
     if (!this.activeRunId) return;
 
-    await this.db.update(focusRun).set({ lastHeartbeatAt: new Date() }).where(eq(focusRun.id, this.activeRunId));
+    await getDb().update(focusRun).set({ lastHeartbeatAt: new Date() }).where(eq(focusRun.id, this.activeRunId));
   }
 
-  async pauseRun() {
+  static async pauseRun() {
     if (!this.activeRunId) return;
 
-    await this.db.update(focusRun).set({ status: 'paused' }).where(eq(focusRun.id, this.activeRunId));
+    await getDb().update(focusRun).set({ status: 'paused' }).where(eq(focusRun.id, this.activeRunId));
 
     this.stopHeartbeat();
   }
 
-  async resumeRun() {
+  static async resumeRun() {
     if (!this.activeRunId) return;
     this.startHeartbeat(this.activeRunId);
   }
 
-  async finishRun() {
+  static async finishRun() {
     if (!this.activeRunId) return;
 
-    await this.db
+    await getDb()
       .update(focusRun)
       .set({
         status: 'completed',
@@ -80,10 +78,10 @@ export class FocusRunService {
     this.activeRunId = null;
   }
 
-  async abandonRun() {
+  static async abandonRun() {
     if (!this.activeRunId) return;
 
-    await this.db
+    await getDb()
       .update(focusRun)
       .set({
         status: 'abandoned',
@@ -95,7 +93,7 @@ export class FocusRunService {
     this.activeRunId = null;
   }
 
-  private stopHeartbeat() {
+  private static stopHeartbeat() {
     if (this.interval) {
       clearInterval(this.interval);
       this.interval = null;
