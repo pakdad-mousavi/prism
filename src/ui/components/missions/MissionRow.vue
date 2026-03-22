@@ -14,6 +14,7 @@ const props = defineProps<{
   isDraft: boolean;
   mission: Mission | MissionDraft;
   isSelected: boolean;
+  isActive: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -166,6 +167,7 @@ const getPriorityComponent = (p: number | null) => {
     class="cursor-pointer select-none hover:bg-surface-primary/50 duration-100 last:[&>td]:border-b-0"
     :class="{
       'bg-surface-primary/70 hover:bg-surface-primary/70! translate-x-1 ease-[cubic-bezier(0.1,1,0,1)] duration-300': isSelected,
+      'active-mission': isActive,
     }"
     @focusout="handleDraftBlur"
   >

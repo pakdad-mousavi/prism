@@ -82,8 +82,8 @@
 }
 
 @layer components {
-  .selected-focus-mission {
-    @apply bg-linear-to-r from-primary/10 to-primary/5;
+  .active-mission {
+    @apply bg-primary/10! hover:bg-primary/15!;
   }
 
   .selected-mission {
