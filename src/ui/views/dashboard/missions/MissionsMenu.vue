@@ -103,9 +103,9 @@ const markAllAsCompleted = async () => {
           :transition="{ delay: 0.08 }"
           v-if="missionsStore.activeMission"
         >
-          <button class="menu-button" @click="missionsStore.activeMission = null">
+          <button class="menu-button" @click="missionsStore.setActiveMissionId(null)">
             <Trash class="w-4 h-4 stroke-[1.5px] stroke-secondary"></Trash>
-            <span class="uppercase">Unselect Active Mission</span>
+            <span class="uppercase">Unselect Focus Run Mission</span>
           </button>
         </motion.div>
       </motion.div>

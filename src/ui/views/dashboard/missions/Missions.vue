@@ -20,7 +20,7 @@ const missionsStore = useMissionsStore();
 const handleMissionSelect = (m: TMission) => {
   if (missionsStore.isSelectActiveMissionMode) {
     missionsStore.isSelectActiveMissionMode = false;
-    missionsStore.activeMission = m;
+    missionsStore.setActiveMissionId(m.id);
     return;
   }
 
@@ -51,7 +51,7 @@ const saveDraft = async (m: MissionDraft) => {
 // Load mission store data
 onMounted(async () => {
   if (!missionsStore.loaded) {
-    await missionsStore.loadMissions();
+    await missionsStore.load();
   }
 });
 </script>
