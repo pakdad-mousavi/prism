@@ -18,9 +18,16 @@ export const useMissionsStore = defineStore('missions', {
   },
 
   actions: {
+    async load() {
+      await this.loadMissions();
+      await this.loadActiveMission();
+    },
     async loadMissions() {
-      this.missions = await window.electronApi.getMissions();
-      this.loaded = true;
+      const res = await window.electronApi.getMissions();
+      if (res) {
+        this.missions = res;
+        this.loaded = true;
+      }
     },
     addSelectedMission(id: number) {
       // Only add the mission id if not already added
@@ -33,6 +40,14 @@ export const useMissionsStore = defineStore('missions', {
       if (index > -1) {
         this.selectedMissions.splice(index, 1);
       }
+    },
+    async loadActiveMission() {
+      const activeMissionId = await window.electronApi.getActiveMissionId();
+      this.activeMission = this.missions.find((m) => m.id === activeMissionId) || null;
+    },
+    async setActiveMissionId(id: number | null) {
+      await window.electronApi.setActiveMissionId(id);
+      this.activeMission = this.missions.find((m) => m.id === id) || null;
     },
   },
 });
