@@ -9,6 +9,7 @@ import DottedCircle from '../icons/DottedCircle.vue';
 import Dropdown from '../inputs/Dropdown.vue';
 import Check from '../icons/Check.vue';
 import { motion } from 'motion-v';
+import { useMissionsStore } from '../../stores/missions';
 
 const props = defineProps<{
   isDraft: boolean;
@@ -23,6 +24,8 @@ const emit = defineEmits<{
   refreshStore: [];
   onToggleSelect: [];
 }>();
+
+const missionsStore = useMissionsStore();
 
 /*
 |----------------
@@ -177,14 +180,18 @@ const getPriorityComponent = (p: number | null) => {
         <div
           class="w-4 h-4 border-surface-tertiary rounded-xs cut-corners border ml-2 relative duration-100"
           @click="emit('onToggleSelect')"
-          :class="{ 'selected-mission': isSelected }"
+          :class="{ 'selected-mission': isSelected, 'pointer-events-none': missionsStore.isSelectActiveMissionMode }"
         >
           <Check
             class="absolute w-3 h-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 stroke-surface-auxilary stroke-2"
             v-if="isSelected"
           ></Check>
         </div>
-        <Dropdown :options="['active', 'on hold', 'completed', 'archived']" v-model="localMission.status">
+        <Dropdown
+          :options="['active', 'on hold', 'completed', 'archived']"
+          v-model="localMission.status"
+          :class="{ 'pointer-events-none': missionsStore.isSelectActiveMissionMode }"
+        >
           <template #selected="{ option }">
             <div class="flex items-center justify-center w-full h-full py-2.5 rounded-none">
               <div
@@ -215,6 +222,7 @@ const getPriorityComponent = (p: number | null) => {
     <td class="font-sans border-b border-l border-surface-tertiary w-80">
       <input
         class="line-clamp-1 px-2 py-2.5 w-full outline-0 focus:bg-surface-primary duration-100"
+        :class="{ 'pointer-events-none': missionsStore.isSelectActiveMissionMode }"
         v-model="localMission.title"
         v-focus="isDraft"
       />
@@ -222,7 +230,11 @@ const getPriorityComponent = (p: number | null) => {
 
     <!-- PRIORITY -->
     <td class="uppercase border-b border-l border-surface-tertiary">
-      <Dropdown v-model.lazy="localMission.priority" :options="[0, 1, 2]">
+      <Dropdown
+        v-model.lazy="localMission.priority"
+        :options="[0, 1, 2]"
+        :class="{ 'pointer-events-none': missionsStore.isSelectActiveMissionMode }"
+      >
         <template #selected="{ option }">
           <div :class="['flex gap-x-1 border p-1 cut-corners rounded-sm pr-2', getPriorityComponent(option).containerColorClass]">
             <component :is="getPriorityComponent(option).IconComponent" :class="getPriorityComponent(option).iconColorClass" />
@@ -250,7 +262,11 @@ const getPriorityComponent = (p: number | null) => {
 
     <!-- TYPE -->
     <td class="uppercase border-b border-l border-surface-tertiary">
-      <Dropdown :options="['task', 'operation']" v-model="localMission.scale">
+      <Dropdown
+        :options="['task', 'operation']"
+        v-model="localMission.scale"
+        :class="{ 'pointer-events-none': missionsStore.isSelectActiveMissionMode }"
+      >
         <template #selected="{ option }">
           <div class="py-1 text-secondary text-sm font-tomorrow uppercase font-light">{{ option }}</div>
         </template>
@@ -265,6 +281,7 @@ const getPriorityComponent = (p: number | null) => {
     <td class="border-b border-l border-surface-tertiary">
       <input
         class="px-2 py-2.5 w-full outline-0 focus:bg-surface-primary duration-100"
+        :class="{ 'pointer-events-none': missionsStore.isSelectActiveMissionMode }"
         inputmode="numeric"
         @keydown="ensureNumberInput"
         v-model.number.lazy="localMission.estimatedMinutes"
@@ -274,6 +291,7 @@ const getPriorityComponent = (p: number | null) => {
     <!-- TARGET SESSIONS -->
     <td class="border-b border-l border-surface-tertiary">
       <input
+        :class="{ 'pointer-events-none': missionsStore.isSelectActiveMissionMode }"
         class="px-2 py-2.5 w-full outline-0 focus:bg-surface-primary duration-100"
         inputmode="numeric"
         @keydown="ensureNumberInput"

@@ -61,12 +61,24 @@ onMounted(async () => {
     <!-- SELECT ACTIVE MISSION HIGHLIGHT -->
     <AnimatePresence>
       <motion.div
-        class="fixed -z-1 bg-radial from-transparent from-70% to-primary/10 w-[calc(100%-256px)] h-[calc(100svh-64px)] right-0 top-16"
+        class="fixed -z-1 bg-radial from-transparent from-50% to-primary/15 w-[calc(100%-256px)] h-[calc(100svh-64px)] right-0 top-16"
         :initial="{ opacity: 0 }"
         :animate="{ opacity: 1 }"
         :exit="{ opacity: 0 }"
         v-if="missionsStore.isSelectActiveMissionMode"
       ></motion.div>
+    </AnimatePresence>
+
+    <AnimatePresence>
+      <motion.div
+        v-if="missionsStore.isSelectActiveMissionMode"
+        class="fixed top-20 left-[calc(50%+100px)] -translate-x-1/2 bg-surface-primary border border-primary px-6 py-3 rounded-md cut-corners shadow-lg z-50"
+        :initial="{ opacity: 0, y: -10 }"
+        :animate="{ opacity: 1, y: 0 }"
+        :exit="{ opacity: 0, y: -10 }"
+      >
+        <span class="text-primary font-tomorrow text-sm"> Select a mission to work on</span>
+      </motion.div>
     </AnimatePresence>
 
     <!-- ACTIVE MISSIONS -->
@@ -87,48 +99,32 @@ onMounted(async () => {
 
       <motion.div
         class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary duration-100"
-        :class="{ 'border-primary!': missionsStore.isSelectActiveMissionMode }"
         :initial="{ opacity: 0, translateX: '-5px' }"
         :animate="{ opacity: 1, translateX: '0' }"
       >
         <table class="w-full text-md text-left font-tomorrow">
           <thead>
             <tr>
-              <th
-                class="border-b border-surface-tertiary bg-surface-primary rounded-tl-md cut-corners duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              ></th>
-              <th
-                class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80 bg-surface-primary duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              >
+              <th class="border-b border-surface-tertiary bg-surface-primary rounded-tl-md cut-corners duration-100"></th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80 bg-surface-primary duration-100">
                 <div class="flex items-center gap-x-2">
                   <Compass width="20px" class="min-w-5"></Compass>
                   <span class="whitespace-nowrap">MISSION</span>
                 </div>
               </th>
-              <th
-                class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              >
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100">
                 <div class="flex items-center gap-x-2">
                   <HighPriority width="20px" class="min-w-5 fill-secondary"></HighPriority>
                   <span class="whitespace-nowrap">PRIORITY</span>
                 </div>
               </th>
-              <th
-                class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              >
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100">
                 <div class="flex items-center gap-x-2">
                   <Type width="20px" class="min-w-5 fill-secondary"></Type>
                   <span class="whitespace-nowrap">TYPE</span>
                 </div>
               </th>
-              <th
-                class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              >
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100">
                 <div class="flex items-center gap-x-2">
                   <Time width="20px" class="min-w-5 fill-secondary"></Time>
                   <span class="whitespace-nowrap">EST. MINUTES</span>
@@ -136,7 +132,6 @@ onMounted(async () => {
               </th>
               <th
                 class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary bg-surface-primary rounded-tr-md cut-corners duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
               >
                 <div class="flex items-center gap-x-2">
                   <Target width="20px" class="min-w-5 stroke-secondary"></Target>
@@ -156,7 +151,8 @@ onMounted(async () => {
               @refreshStore="missionsStore.loadMissions"
               :isSelected="missionsStore.selectedMissions.includes(mission.id)"
               @onToggleSelect="handleMissionSelect(mission)"
-              @click=""
+              @click="missionsStore.isSelectActiveMissionMode ? handleMissionSelect(mission) : ''"
+              :class="{ 'animate-pulse': missionsStore.isSelectActiveMissionMode }"
             ></MissionRow>
             <MissionRow
               :isSelected="false"
@@ -167,7 +163,7 @@ onMounted(async () => {
               @saveDraft="saveDraft"
               @discardDraft="missionsStore.missionDraft = null"
             ></MissionRow>
-            <tr>
+            <tr :class="{ 'opacity-40 pointer-events-none': missionsStore.isSelectActiveMissionMode }" class="duration-200">
               <td colspan="6" class="w-full text-center cursor-pointer" @click="createDraftMission('active')">
                 <div
                   class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-200 hover:bg-surface-primary"
@@ -200,7 +196,6 @@ onMounted(async () => {
 
       <motion.div
         class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary duration-100"
-        :class="{ 'border-primary!': missionsStore.isSelectActiveMissionMode }"
         :transition="{ delay: 0.08 }"
         :initial="{ opacity: 0, translateX: '-5px' }"
         :animate="{ opacity: 1, translateX: '0' }"
@@ -208,41 +203,26 @@ onMounted(async () => {
         <table class="w-full text-md text-left font-tomorrow">
           <thead>
             <tr>
-              <th
-                class="border-b border-surface-tertiary bg-surface-primary rounded-tl-md cut-corners duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              ></th>
-              <th
-                class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80 bg-surface-primary duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              >
+              <th class="border-b border-surface-tertiary bg-surface-primary rounded-tl-md cut-corners duration-100"></th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80 bg-surface-primary duration-100">
                 <div class="flex items-center gap-x-2">
                   <Compass width="20px" class="min-w-5"></Compass>
                   <span class="whitespace-nowrap">MISSION</span>
                 </div>
               </th>
-              <th
-                class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              >
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100">
                 <div class="flex items-center gap-x-2">
                   <HighPriority width="20px" class="min-w-5 fill-secondary"></HighPriority>
                   <span class="whitespace-nowrap">PRIORITY</span>
                 </div>
               </th>
-              <th
-                class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              >
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100">
                 <div class="flex items-center gap-x-2">
                   <Type width="20px" class="min-w-5 fill-secondary"></Type>
                   <span class="whitespace-nowrap">TYPE</span>
                 </div>
               </th>
-              <th
-                class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              >
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100">
                 <div class="flex items-center gap-x-2">
                   <Time width="20px" class="min-w-5 fill-secondary"></Time>
                   <span class="whitespace-nowrap">EST. MINUTES</span>
@@ -250,7 +230,6 @@ onMounted(async () => {
               </th>
               <th
                 class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary bg-surface-primary rounded-tr-md cut-corners duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
               >
                 <div class="flex items-center gap-x-2">
                   <Target width="20px" class="min-w-5 stroke-secondary"></Target>
@@ -270,6 +249,8 @@ onMounted(async () => {
               @refreshStore="missionsStore.loadMissions"
               :isSelected="missionsStore.selectedMissions.includes(mission.id)"
               @onToggleSelect="handleMissionSelect(mission)"
+              @click="missionsStore.isSelectActiveMissionMode ? handleMissionSelect(mission) : ''"
+              :class="{ 'animate-pulse': missionsStore.isSelectActiveMissionMode }"
             ></MissionRow>
             <MissionRow
               :isSelected="false"
@@ -280,7 +261,7 @@ onMounted(async () => {
               @saveDraft="saveDraft"
               @discardDraft="missionsStore.missionDraft = null"
             ></MissionRow>
-            <tr>
+            <tr :class="{ 'opacity-40 pointer-events-none': missionsStore.isSelectActiveMissionMode }" class="duration-200">
               <td colspan="6" class="w-full text-center cursor-pointer" @click="createDraftMission('on hold')">
                 <div
                   class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-200 hover:bg-surface-primary"
@@ -313,7 +294,6 @@ onMounted(async () => {
 
       <motion.div
         class="w-full min-w-200 border rounded-md cut-corners border-surface-tertiary duration-100"
-        :class="{ 'border-primary!': missionsStore.isSelectActiveMissionMode }"
         :transition="{ delay: 0.16 }"
         :initial="{ opacity: 0, translateX: '-5px' }"
         :animate="{ opacity: 1, translateX: '0' }"
@@ -321,41 +301,26 @@ onMounted(async () => {
         <table class="w-full text-md text-left font-tomorrow">
           <thead>
             <tr>
-              <th
-                class="border-b border-surface-tertiary bg-surface-primary rounded-tl-md cut-corners duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              ></th>
-              <th
-                class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80 bg-surface-primary duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              >
+              <th class="border-b border-surface-tertiary bg-surface-primary rounded-tl-md cut-corners duration-100"></th>
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary w-80 bg-surface-primary duration-100">
                 <div class="flex items-center gap-x-2">
                   <Compass width="20px" class="min-w-5"></Compass>
                   <span class="whitespace-nowrap">MISSION</span>
                 </div>
               </th>
-              <th
-                class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              >
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100">
                 <div class="flex items-center gap-x-2">
                   <HighPriority width="20px" class="min-w-5 fill-secondary"></HighPriority>
                   <span class="whitespace-nowrap">PRIORITY</span>
                 </div>
               </th>
-              <th
-                class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              >
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100">
                 <div class="flex items-center gap-x-2">
                   <Type width="20px" class="min-w-5 fill-secondary"></Type>
                   <span class="whitespace-nowrap">TYPE</span>
                 </div>
               </th>
-              <th
-                class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
-              >
+              <th class="px-2 py-1 font-light border-b border-l border-surface-tertiary bg-surface-primary duration-100">
                 <div class="flex items-center gap-x-2">
                   <Time width="20px" class="min-w-5 fill-secondary"></Time>
                   <span class="whitespace-nowrap">EST. MINUTES</span>
@@ -363,7 +328,6 @@ onMounted(async () => {
               </th>
               <th
                 class="px-2 py-1 font-light border-b border-l border-surface-tertiary fill-auxilary bg-surface-primary rounded-tr-md cut-corners duration-100"
-                :class="{ 'bg-primary/20! animate-pulse border-primary!': missionsStore.isSelectActiveMissionMode }"
               >
                 <div class="flex items-center gap-x-2">
                   <Target width="20px" class="min-w-5 stroke-secondary"></Target>
@@ -383,6 +347,8 @@ onMounted(async () => {
               @refreshStore="missionsStore.loadMissions"
               :isSelected="missionsStore.selectedMissions.includes(mission.id)"
               @onToggleSelect="handleMissionSelect(mission)"
+              @click="missionsStore.isSelectActiveMissionMode ? handleMissionSelect(mission) : ''"
+              :class="{ 'animate-pulse': missionsStore.isSelectActiveMissionMode }"
             ></MissionRow>
             <MissionRow
               :isSelected="false"
@@ -393,7 +359,7 @@ onMounted(async () => {
               @saveDraft="saveDraft"
               @discardDraft="missionsStore.missionDraft = null"
             ></MissionRow>
-            <tr>
+            <tr :class="{ 'opacity-40 pointer-events-none': missionsStore.isSelectActiveMissionMode }" class="duration-200">
               <td colspan="6" class="w-full text-center cursor-pointer" @click="createDraftMission('completed')">
                 <div
                   class="border border-surface-auxilary border-dashed cut-corners rounded-b-md w-full text-surface-auxilary duration-200 hover:bg-surface-primary"
