@@ -1,3 +1,9 @@
+CREATE TABLE `active_mission` (
+	`id` integer PRIMARY KEY DEFAULT 1 NOT NULL,
+	`mission_id` integer,
+	FOREIGN KEY (`mission_id`) REFERENCES `mission`(`id`) ON UPDATE no action ON DELETE set null
+);
+--> statement-breakpoint
 CREATE TABLE `campaign` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`title` text NOT NULL,

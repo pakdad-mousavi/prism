@@ -1,9 +1,48 @@
 {
-  "id": "3b7caae9-a73f-4952-ae68-e63ffabdc6c5",
-  "prevId": "82e17560-e995-42b1-8829-4215a3595037",
+  "id": "ab8bb7d0-b150-4241-b5c6-882a764e8ccd",
+  "prevId": "dd14366e-86f9-4ae9-9a5a-b11c7fc6d480",
   "version": "6",
   "dialect": "sqlite",
   "tables": {
+    "active_mission": {
+      "name": "active_mission",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 1
+        },
+        "mission_id": {
+          "name": "mission_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "active_mission_mission_id_mission_id_fk": {
+          "name": "active_mission_mission_id_mission_id_fk",
+          "tableFrom": "active_mission",
+          "columnsFrom": [
+            "mission_id"
+          ],
+          "tableTo": "mission",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "set null"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "campaign": {
       "name": "campaign",
       "columns": {
