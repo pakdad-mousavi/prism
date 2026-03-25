@@ -4,7 +4,7 @@ import { FocusRunService } from '../services/focusRunService.js';
 import { UserLocalService } from '../services/userLocalService.js';
 
 export const registerFocusRunHandlers = () => {
-  ipcMain.handle('focusRun:startRun', async (e, runId: number) => {
+  ipcMain.handle('focusRun:startRun', async (e, runId: number | null) => {
     validateSender(e.senderFrame);
 
     try {
