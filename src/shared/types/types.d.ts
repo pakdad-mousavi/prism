@@ -1,4 +1,5 @@
 import type { Mission, MissionDraft } from './mission';
+import type { ActiveRunState } from './focusRun';
 
 declare global {
   interface Window {
@@ -12,6 +13,14 @@ declare global {
       // ACTIVE MISSIONS
       getActiveMissionId: () => Promise<number | false>;
       setActiveMissionId: (id: number | null) => Promise<true | false>;
+
+      // FOCUS RUNS
+      startRun: (runId: number | null) => Promise<true | false>;
+      pauseRun: () => Promise<true | false>;
+      resumeRun: () => Promise<true | false>;
+      finishRun: () => Promise<true | false>;
+      abandonRun: () => Promise<true | false>;
+      getActiveRunState: () => Promise<ActiveRunState | null | false>;
     };
   }
 }
