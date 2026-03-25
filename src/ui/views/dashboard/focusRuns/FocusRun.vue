@@ -8,8 +8,10 @@ import Type from '../../../components/icons/Type.vue';
 import Time from '../../../components/icons/Time.vue';
 import Progress from '../../../components/icons/Progress.vue';
 import Target from '../../../components/icons/Target.vue';
+import { useFocusRunStore } from '../../../stores/stores';
 
 const missionsStore = useMissionsStore();
+const focusRunStore = useFocusRunStore();
 
 // Inner HUD
 const dottedRingOuter = ref<HTMLElement | null>(null);
@@ -82,7 +84,12 @@ const getPriority = (p: number | undefined | null) => {
 };
 
 onMounted(async () => {
-  missionsStore.selectedMission = missionsStore.missions[2]!;
+  if (focusRunStore.isActiveFocusRun || !focusRunStore.loaded) {
+    if (!missionsStore.loaded) {
+      missionsStore.load();
+    }
+    focusRunStore.updateFocusRun();
+  }
 
   // Update isSpinning ref
   isSpinning.value = true;
@@ -134,53 +141,67 @@ onMounted(async () => {
 <template>
   <div class="flex flex-col flex-1 min-h-0 p-8 overflow-hidden">
     <div class="relative flex w-full items-center justify-center flex-1">
-      <!--  -->
+      <!-- LEFT MISSION DETAILS -->
       <div class="absolute w-1/4 left-4 top-4 flex flex-col gap-4 h-full pb-8">
         <div
+          class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-full cut-corners rounded-xl mb-auto cursor-pointer"
+          v-if="!missionsStore.activeMission"
+          @click="$router.push('/dashboard/missions')"
+        >
+          <div class="flex gap-x-2 justify-center items-center z-10 relative">
+            <h3 class="font-tomorrow uppercase text-xs text-primary text-center">Choose An Active Mission</h3>
+          </div>
+        </div>
+        <div
           class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-full cut-corners rounded-xl mb-auto"
+          v-if="missionsStore.activeMission"
         >
           <div class="flex gap-x-2 items-center mb-2 z-10 relative">
             <Star class="fill-primary w-3 h-3"></Star>
             <h3 class="font-tomorrow uppercase text-xs text-primary">Mission Objective:</h3>
           </div>
-          <p class="line-clamp-3 text-xs cursor-text z-10 relative">{{ missionsStore.selectedMission?.title }}</p>
+          <p class="line-clamp-3 text-xs cursor-text z-10 relative">{{ missionsStore.activeMission.title }}</p>
         </div>
 
         <div
           class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-4/5 cut-corners rounded-xl"
+          v-if="missionsStore.activeMission"
         >
           <div class="flex gap-x-2 items-center mb-2 z-10 relative">
             <HighPriority class="fill-primary w-4 h-4"></HighPriority>
             <h3 class="font-tomorrow uppercase text-xs text-primary">Priority:</h3>
           </div>
           <p class="line-clamp-3 text-xs cursor-text z-10 relative uppercase">
-            {{ getPriority(missionsStore.selectedMission?.priority) }}
+            {{ getPriority(missionsStore.activeMission.priority) }}
           </p>
         </div>
         <div
           class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-4/5 cut-corners rounded-xl"
+          v-if="missionsStore.activeMission"
         >
           <div class="flex gap-x-2 items-center mb-2 z-10 relative">
             <Type class="fill-primary w-4 h-4"></Type>
             <h3 class="font-tomorrow uppercase text-xs text-primary">Scale:</h3>
           </div>
           <p class="line-clamp-3 text-xs cursor-text z-10 relative uppercase">
-            {{ missionsStore.selectedMission?.scale }}
+            {{ missionsStore.activeMission.scale }}
           </p>
         </div>
         <div
           class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-4/5 cut-corners rounded-xl"
+          v-if="missionsStore.activeMission"
         >
           <div class="flex gap-x-2 items-center mb-2 z-10 relative">
             <Time class="fill-primary w-4 h-4"></Time>
             <h3 class="font-tomorrow uppercase text-xs text-primary">Estimated Minutes:</h3>
           </div>
           <p class="line-clamp-3 text-xs cursor-text z-10 relative uppercase">
-            {{ missionsStore.selectedMission?.estimatedMinutes }}m
+            {{ missionsStore.activeMission.estimatedMinutes }}m
           </p>
         </div>
       </div>
 
+      <!-- RIGHT MISSION DETAILS -->
       <div class="absolute w-1/4 right-4 top-4 flex flex-col items-end gap-4 h-full pb-8">
         <div
           class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-full cut-corners rounded-xl mb-auto"
@@ -198,13 +219,14 @@ onMounted(async () => {
 
         <div
           class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-4/5 cut-corners rounded-xl"
+          v-if="missionsStore.activeMission"
         >
           <div class="flex gap-x-2 items-center mb-2 z-10 relative">
             <Target class="stroke-primary w-4 h-4"></Target>
             <h3 class="font-tomorrow uppercase text-xs text-primary">Target Sessions:</h3>
           </div>
           <p class="line-clamp-3 text-xs cursor-text z-10 relative uppercase">
-            {{ missionsStore.selectedMission?.targetSessions }} sessions
+            {{ missionsStore.activeMission.targetSessions }} sessions
           </p>
         </div>
         <!-- <div
@@ -215,7 +237,7 @@ onMounted(async () => {
             <h3 class="font-tomorrow uppercase text-xs text-primary">Scale:</h3>
           </div>
           <p class="line-clamp-3 text-xs cursor-text z-10 relative uppercase">
-            {{ missionsStore.selectedMission?.scale }}
+            {{ missionsStore.activeMission?.scale }}
           </p>
         </div>
         <div
@@ -226,7 +248,7 @@ onMounted(async () => {
             <h3 class="font-tomorrow uppercase text-xs text-primary">Estimated Minutes:</h3>
           </div>
           <p class="line-clamp-3 text-xs cursor-text z-10 relative uppercase">
-            {{ missionsStore.selectedMission?.estimatedMinutes }}m
+            {{ missionsStore.activeMission?.estimatedMinutes }}m
           </p>
         </div> -->
       </div>
@@ -291,7 +313,7 @@ onMounted(async () => {
       <div class="flex-center relative z-100 w-1/5 aspect-square">
         <motion.div
           :initial="{ y: 10, opacity: 0 }"
-          :animate="{ y: 0, opacity: 1, transition: { duration: 0.3, delay: 1 } }"
+          :animate="{ y: 0, opacity: 1, transition: { duration: 1.4, delay: 1 } }"
           class="font-tomorrow uppercase text-primary glow cursor-pointer w-full aspect-square rounded-full text-lg text-center"
           @click="toggleSpin"
         >
