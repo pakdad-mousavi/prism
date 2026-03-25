@@ -11,6 +11,7 @@ export const userLocal = sqliteTable('user_local', {
   theme: text({ enum: ['prismRed'] })
     .notNull()
     .default('prismRed'),
+  focusRunDuration: int('focus_run_duration').notNull().default(25),
   createdAt,
   updatedAt,
 });

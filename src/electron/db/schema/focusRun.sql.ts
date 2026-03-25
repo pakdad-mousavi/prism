@@ -13,6 +13,7 @@ export const focusRun = sqliteTable('focus_run', {
     .notNull()
     .default('running'),
   deviceId: text('device_id').notNull(),
+  plannedMinutes: int('planned_minutes').notNull(),
   offlineCreated: int('offline_created', { mode: 'boolean' }).notNull(),
   syncStatus: text('sync_status', { enum: ['pending', 'synced'] }).default('pending'),
 });

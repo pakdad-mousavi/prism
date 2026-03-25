@@ -22,6 +22,7 @@ CREATE TABLE `focus_run` (
 	`ended_at` integer,
 	`status` text DEFAULT 'running' NOT NULL,
 	`device_id` text NOT NULL,
+	`planned_minutes` integer NOT NULL,
 	`offline_created` integer NOT NULL,
 	`sync_status` text DEFAULT 'pending',
 	FOREIGN KEY (`mission_id`) REFERENCES `mission`(`id`) ON UPDATE no action ON DELETE set null
@@ -86,6 +87,7 @@ CREATE TABLE `user_local` (
 	`last_synced_at` integer,
 	`device_id` text NOT NULL,
 	`theme` text DEFAULT 'prismRed' NOT NULL,
+	`focus_run_duration` integer DEFAULT 25 NOT NULL,
 	`created_at` integer DEFAULT (unixepoch() * 1000) NOT NULL,
 	`updated_at` integer NOT NULL
 );
