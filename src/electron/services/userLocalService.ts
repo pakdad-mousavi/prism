@@ -12,4 +12,13 @@ export class UserLocalService {
       await getDb().insert(userLocal).values({ deviceId, createdAt, updatedAt });
     }
   }
+
+  static async getUserLocalData() {
+    try {
+      const [row] = await getDb().select().from(userLocal).limit(1);
+      return row;
+    } catch {
+      return false;
+    }
+  }
 }
