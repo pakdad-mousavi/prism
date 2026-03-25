@@ -1,4 +1,4 @@
-import { and, eq, isNull } from 'drizzle-orm';
+import { eq, isNull } from 'drizzle-orm';
 import { focusRun } from '../db/schema/focusRun.sql.js';
 import { getDb } from '../db/db.js';
 import { UserLocalService } from './userLocalService.js';
@@ -175,5 +175,19 @@ export class FocusRunService {
       clearInterval(this.finishCheckInterval);
       this.finishCheckInterval = null;
     }
+  }
+
+  static async getActiveRunState() {
+    if (!this.activeRunId) return null;
+
+    const pausedMs = await FocusRunPauseService.getTotalPausedTimeMs(this.activeRunId);
+    const focusedMs = Date.now() - this.runStartedAt.getTime() - pausedMs;
+
+    return {
+      runId: this.activeRunId,
+      plannedMs: this.plannedMs,
+      focusedMs,
+      pausedMs,
+    };
   }
 }
