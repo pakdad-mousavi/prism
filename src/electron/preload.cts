@@ -14,4 +14,12 @@ contextBridge.exposeInMainWorld('electronApi', {
   // ACTIVE MISSION
   getActiveMissionId: () => ipcRenderer.invoke('activeMission:getActiveMissionId'),
   setActiveMissionId: (id: number | null) => ipcRenderer.invoke('activeMission:setActiveMissionId', id),
+
+  // FOCUS RUNS
+  startRun: (runId: number | null) => ipcRenderer.invoke('startRun', runId),
+  pauseRun: () => ipcRenderer.invoke('focusRun:pauseRun'),
+  resumeRun: () => ipcRenderer.invoke('focusRun:resumeRun'),
+  finishRun: () => ipcRenderer.invoke('focusRun:finishRun'),
+  abandonRun: () => ipcRenderer.invoke('focusRun:abandonRun'),
+  getActiveRunState: () => ipcRenderer.invoke('focusRun:getActiveRunState'),
 });
