@@ -8,7 +8,7 @@ import Type from '../../../components/icons/Type.vue';
 import Time from '../../../components/icons/Time.vue';
 import Progress from '../../../components/icons/Progress.vue';
 import Target from '../../../components/icons/Target.vue';
-import { useFocusRunStore } from '../../../stores/stores';
+import { useFocusRunStore } from '../../../stores/focusRuns';
 
 const missionsStore = useMissionsStore();
 const focusRunStore = useFocusRunStore();
@@ -84,11 +84,12 @@ const getPriority = (p: number | undefined | null) => {
 };
 
 onMounted(async () => {
-  if (focusRunStore.isActiveFocusRun || !focusRunStore.loaded) {
-    if (!missionsStore.loaded) {
-      missionsStore.load();
-    }
-    focusRunStore.updateFocusRun();
+  if (!focusRunStore.loaded) {
+    focusRunStore.load();
+  }
+
+  if (!missionsStore.loaded) {
+    missionsStore.load();
   }
 
   // Update isSpinning ref

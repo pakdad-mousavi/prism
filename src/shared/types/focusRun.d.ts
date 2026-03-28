@@ -6,6 +6,7 @@ export type FocusRun = InferSelectModel<typeof focusRun>;
 export type ActiveRunState = {
   runId: number;
   plannedMs: number;
+  status: 'paused' | 'completed' | 'running' | 'abandoned';
   focusedMs: number;
   pausedMs: number;
 };

@@ -180,12 +180,14 @@ export class FocusRunService {
   static async getActiveRunState() {
     if (!this.activeRunId) return null;
 
+    const [run] = await getDb().select().from(focusRun).where(eq(focusRun.id, this.activeRunId));
     const pausedMs = await FocusRunPauseService.getTotalPausedTimeMs(this.activeRunId);
     const focusedMs = Date.now() - this.runStartedAt.getTime() - pausedMs;
 
     return {
       runId: this.activeRunId,
       plannedMs: this.plannedMs,
+      status: run.status,
       focusedMs,
       pausedMs,
     };
