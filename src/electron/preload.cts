@@ -16,7 +16,7 @@ contextBridge.exposeInMainWorld('electronApi', {
   setActiveMissionId: (id: number | null) => ipcRenderer.invoke('activeMission:setActiveMissionId', id),
 
   // FOCUS RUNS
-  startRun: (runId: number | null) => ipcRenderer.invoke('startRun', runId),
+  startRun: (runId: number | null) => ipcRenderer.invoke('focusRun:startRun', runId),
   pauseRun: () => ipcRenderer.invoke('focusRun:pauseRun'),
   resumeRun: () => ipcRenderer.invoke('focusRun:resumeRun'),
   finishRun: () => ipcRenderer.invoke('focusRun:finishRun'),
