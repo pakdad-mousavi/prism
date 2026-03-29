@@ -7,8 +7,8 @@ export const focusRun = sqliteTable('focus_run', {
   missionId: int('mission_id').references(() => mission.id, { onDelete: 'set null' }),
   createdAt,
   startedAt: int('started_at', { mode: 'timestamp_ms' }).notNull(),
-  endedAt: int('last_heartbeat_at', { mode: 'timestamp_ms' }),
-  lastHeartbeatAt: int('ended_at', { mode: 'timestamp_ms' }),
+  endedAt: int('ended_at', { mode: 'timestamp_ms' }),
+  lastHeartbeatAt: int('last_heartbeat_at', { mode: 'timestamp_ms' }),
   status: text({ enum: ['running', 'paused', 'completed', 'abandoned'] })
     .notNull()
     .default('running'),
