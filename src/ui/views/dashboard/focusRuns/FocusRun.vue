@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { animate, motion, type AnimationSequence } from 'motion-v';
 import Star from '../../../components/icons/Star.vue';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useMissionsStore } from '../../../stores/missions';
 import HighPriority from '../../../components/icons/HighPriority.vue';
 import Type from '../../../components/icons/Type.vue';
@@ -9,9 +9,64 @@ import Time from '../../../components/icons/Time.vue';
 import Progress from '../../../components/icons/Progress.vue';
 import Target from '../../../components/icons/Target.vue';
 import { useFocusRunStore } from '../../../stores/focusRuns';
+import parseMilliseconds from 'parse-ms';
 
 const missionsStore = useMissionsStore();
 const focusRunStore = useFocusRunStore();
+
+// -------
+// HELPERS
+// -------
+
+const getPriority = (p: number | undefined | null) => {
+  switch (p) {
+    case 0:
+      return 'low';
+    case 1:
+      return 'medium';
+    case 2:
+      return 'high';
+    default:
+      return '---';
+  }
+};
+
+const percentageFormatter = new Intl.NumberFormat(undefined, {
+  style: 'percent',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
+// ----------
+// FOCUS RUNS
+// ----------
+
+const handleStartOrPause = async () => {
+  console.log(focusRunStore.status);
+
+  toggleSpin();
+  if (!focusRunStore.status) {
+    return await focusRunStore.startRun(missionsStore.activeMission?.id || null);
+  }
+
+  switch (focusRunStore.status) {
+    case 'running':
+      return await focusRunStore.pauseRun();
+    case 'paused':
+      return await focusRunStore.resumeRun();
+    default:
+      return;
+  }
+};
+
+const remainingMsParsed = computed(() => {
+  const parsed = parseMilliseconds(focusRunStore.remainingMs);
+  return `${parsed.minutes}m ${parsed.seconds}s`;
+});
+
+// ----------
+// ANIMATIONS
+// ----------
 
 // Inner HUD
 const dottedRingOuter = ref<HTMLElement | null>(null);
@@ -28,7 +83,7 @@ const leftHudRing = ref<HTMLElement | null>(null);
 
 let outerSpinAnimation: ReturnType<typeof animate> | null = null;
 
-const toggleSpin = async () => {
+const toggleSpin = async (skipStarterSpin?: boolean) => {
   if (!outerHud.value) return;
   if (isSpinning.value) {
     isSpinning.value = !isSpinning.value;
@@ -36,7 +91,7 @@ const toggleSpin = async () => {
     // Redo spin animation
     await animate(
       outerHud.value,
-      { rotate: -270 },
+      { rotate: skipStarterSpin ? 0 : -270 },
       {
         duration: 1.5,
         ease: 'easeInOut',
@@ -70,26 +125,34 @@ const toggleSpin = async () => {
   }
 };
 
-const getPriority = (p: number | undefined | null) => {
-  switch (p) {
-    case 0:
-      return 'low';
-    case 1:
-      return 'medium';
-    case 2:
-      return 'high';
-    default:
-      return '---';
-  }
-};
+watch(
+  () => focusRunStore.status,
+  async (newStatus) => {
+    if (!newStatus) {
+      await toggleSpin();
+    }
+  },
+);
 
 onMounted(async () => {
+  if (
+    !dottedRingOuter.value ||
+    !dottedRingMiddle.value ||
+    !dottedRingInner.value ||
+    !dottedRingDashed.value ||
+    !solidRing.value ||
+    !outerHud.value ||
+    !leftHudRing.value ||
+    !rightHudRing.value
+  )
+    return;
+
   if (!focusRunStore.loaded) {
-    focusRunStore.load();
+    await focusRunStore.load();
   }
 
   if (!missionsStore.loaded) {
-    missionsStore.load();
+    await missionsStore.load();
   }
 
   // Update isSpinning ref
@@ -134,8 +197,33 @@ onMounted(async () => {
     ],
   ];
 
-  animate(outerHudSequence);
-  animate(innerHudSequence);
+  if (focusRunStore.status === null) {
+    animate(outerHudSequence);
+    animate(innerHudSequence);
+  } else {
+    dottedRingOuter.value.style.transform = 'scale(1)';
+    dottedRingMiddle.value.style.transform = 'scale(1)';
+    dottedRingInner.value.style.transform = 'scale(1)';
+    dottedRingDashed.value.style.transform = 'scale(1)';
+    solidRing.value.style.transform = 'scale(1)';
+
+    dottedRingOuter.value.style.opacity = '1';
+    dottedRingMiddle.value.style.opacity = '1';
+    dottedRingInner.value.style.opacity = '1';
+    dottedRingDashed.value.style.opacity = '1';
+    solidRing.value.style.opacity = '0.4';
+
+    leftHudRing.value.style.opacity = '1';
+    rightHudRing.value.style.opacity = '1';
+    leftHudRing.value.style.transform = 'translateY(-80px)';
+    rightHudRing.value.style.transform = 'translateY(80px)';
+
+    if (focusRunStore.status === 'running') {
+      return await toggleSpin(true);
+    } else {
+      animate(outerHud.value, { rotate: 270 }, { duration: 2, ease: 'backInOut' });
+    }
+  }
 });
 </script>
 
@@ -209,12 +297,14 @@ onMounted(async () => {
         >
           <div class="flex gap-x-2 items-center mb-2 z-10 relative">
             <Progress class="stroke-primary w-3 h-3"></Progress>
-            <h3 class="font-tomorrow uppercase text-xs text-primary">Progress: <span class="text-secondary">50%</span></h3>
+            <h3 class="font-tomorrow uppercase text-xs text-primary">
+              Progress: <span class="text-secondary">{{ percentageFormatter.format(focusRunStore.progress) }}</span>
+            </h3>
           </div>
           <div
             class="relative h-2 w-full rounded-xs cut-corners border border-primary bg-[repeating-linear-gradient(315deg,var(--color-primary)_0,var(--color-primary)_1px,transparent_1px,transparent_50%)] bg-size-[10px_10px]"
           >
-            <div class="absolute h-full bg-primary w-1/2"></div>
+            <div class="absolute h-full bg-primary duration-100" :style="`width: ${focusRunStore.progress * 100}%;`"></div>
           </div>
         </div>
 
@@ -313,15 +403,19 @@ onMounted(async () => {
       <!-- MAIN -->
       <div class="flex-center relative z-100 w-1/5 aspect-square">
         <motion.div
-          :initial="{ y: 10, opacity: 0 }"
-          :animate="{ y: 0, opacity: 1, transition: { duration: 1.4, delay: 1 } }"
-          class="font-tomorrow uppercase text-primary glow cursor-pointer w-full aspect-square rounded-full text-lg text-center"
-          @click="toggleSpin"
+          class="font-tomorrow text-primary glow cursor-pointer w-full aspect-square rounded-full text-lg text-center"
+          @click="handleStartOrPause"
         >
           <div
-            class="w-full h-full inset-shadow-[0px_0px_40px_10px] hover:inset-shadow-primary/10 inset-shadow-transparent duration-500 group active:inset-shadow-primary/5 rounded-full flex-center"
+            class="w-full h-full inset-shadow-[0px_0px_40px_10px] hover:inset-shadow-primary/10 inset-shadow-transparent duration-500 group active:inset-shadow-primary/5 rounded-full flex-center flex-col p-4 gap-y-4"
           >
-            Start Focus Run
+            <span v-if="!focusRunStore.status || ['completed', 'abandoned'].includes(focusRunStore.status)" class="uppercase"
+              >Start Focus Run</span
+            >
+            <span v-if="['running', 'paused'].includes(focusRunStore.status as string)"> {{ remainingMsParsed }} REMAINING </span>
+            <span v-if="['running', 'paused'].includes(focusRunStore.status as string)" class="uppercase text-xs">
+              {{ focusRunStore.status }}
+            </span>
           </div>
         </motion.div>
       </div>
