@@ -51,15 +51,7 @@ const enableScroll = ref(true);
               <span>MISSIONS</span>
             </RouterLink>
           </div>
-          <div>
-            <RouterLink
-              class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
-              to="/dashboard/campaigns"
-            >
-              <Flag class="w-5 h-5 mr-2 text-secondary"></Flag>
-              <span>CAMPAIGNS</span>
-            </RouterLink>
-          </div>
+
           <div>
             <RouterLink
               class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
@@ -67,6 +59,16 @@ const enableScroll = ref(true);
             >
               <Bolt class="w-5 h-5 mr-2 text-secondary"></Bolt>
               <span>FOCUS RUN</span>
+            </RouterLink>
+          </div>
+
+          <div>
+            <RouterLink
+              class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+              to="/dashboard/campaigns"
+            >
+              <Flag class="w-5 h-5 mr-2 text-secondary"></Flag>
+              <span>CAMPAIGNS</span>
             </RouterLink>
           </div>
 
