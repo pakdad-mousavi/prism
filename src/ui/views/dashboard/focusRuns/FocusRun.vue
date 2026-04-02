@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { animate, motion, type AnimationSequence } from 'motion-v';
+import { animate, AnimatePresence, motion, type AnimationSequence } from 'motion-v';
 import Star from '../../../components/icons/Star.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useMissionsStore } from '../../../stores/missions';
@@ -407,15 +407,48 @@ onMounted(async () => {
           @click="handleStartOrPause"
         >
           <div
-            class="w-full h-full inset-shadow-[0px_0px_40px_10px] hover:inset-shadow-primary/10 inset-shadow-transparent duration-500 group active:inset-shadow-primary/5 rounded-full flex-center flex-col p-4 gap-y-4"
+            class="w-full h-full inset-shadow-[0px_0px_40px_10px] hover:inset-shadow-primary/10 inset-shadow-transparent duration-500 group active:inset-shadow-primary/5 rounded-full flex-center p-4 gap-y-4"
           >
-            <span v-if="!focusRunStore.status || ['completed', 'abandoned'].includes(focusRunStore.status)" class="uppercase"
-              >Start Focus Run</span
-            >
-            <span v-if="['running', 'paused'].includes(focusRunStore.status as string)"> {{ remainingMsParsed }} REMAINING </span>
-            <span v-if="['running', 'paused'].includes(focusRunStore.status as string)" class="uppercase text-xs">
-              {{ focusRunStore.status }}
-            </span>
+            <AnimatePresence mode="wait">
+              <motion.div
+                :initial="{ y: 20, opacity: 0 }"
+                :animate="{ y: 0, opacity: 1 }"
+                :exit="{ y: -20, opacity: 0 }"
+                v-if="!focusRunStore.status || ['completed', 'abandoned'].includes(focusRunStore.status)"
+              >
+                <span class="uppercase">Start Focus Run </span>
+              </motion.div>
+
+              <motion.div
+                :initial="{ y: 20, opacity: 0 }"
+                :animate="{ y: 0, opacity: 1 }"
+                :exit="{ y: -20, opacity: 0 }"
+                v-if="['running', 'paused'].includes(focusRunStore.status as string)"
+                class="flex-center flex-col gap-y-2"
+              >
+                <span> {{ remainingMsParsed }} REMAINING </span>
+                <div>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      v-if="focusRunStore.status === 'running'"
+                      class="uppercase text-xs"
+                      :initial="{ x: -20, opacity: 0 }"
+                      :animate="{ x: 0, opacity: 1 }"
+                      :exit="{ x: 20, opacity: 0 }"
+                      >Running</motion.div
+                    >
+                    <motion.div
+                      v-if="focusRunStore.status === 'paused'"
+                      class="uppercase text-xs"
+                      :initial="{ x: -20, opacity: 0 }"
+                      :animate="{ x: 0, opacity: 1 }"
+                      :exit="{ x: 20, opacity: 0 }"
+                      >Paused</motion.div
+                    >
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </motion.div>
       </div>
