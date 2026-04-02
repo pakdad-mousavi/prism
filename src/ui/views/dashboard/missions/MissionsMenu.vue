@@ -2,15 +2,17 @@
 import { AnimatePresence, motion } from 'motion-v';
 import { useMissionsStore } from '../../../stores/missions';
 import type { Mission } from '../../../../shared/types/mission';
-import { toRaw } from 'vue';
+import { onMounted, toRaw } from 'vue';
 
 import Target from '../../../components/icons/Target.vue';
 import Trash from '../../../components/icons/Trash.vue';
 import Check from '../../../components/icons/Check.vue';
 import Bolt from '../../../components/icons/Bolt.vue';
 import Exit from '../../../components/icons/Exit.vue';
+import { useFocusRunStore } from '../../../stores/focusRuns';
 
 const missionsStore = useMissionsStore();
+const focusRunStore = useFocusRunStore();
 
 const deleteSelectedMissions = async () => {
   for (const missionId of missionsStore.selectedMissions) {
@@ -31,6 +33,12 @@ const markAllAsCompleted = async () => {
   missionsStore.selectedMissions.length = 0;
   missionsStore.loadMissions();
 };
+
+onMounted(async () => {
+  if (!focusRunStore.loaded) {
+    focusRunStore.load();
+  }
+});
 </script>
 
 <template>
@@ -78,6 +86,7 @@ const markAllAsCompleted = async () => {
           :animate="{ opacity: 1, x: 0 }"
           :exit="{ opacity: 0, x: -5 }"
           :transition="{ delay: 0 }"
+          :title="focusRunStore.isActiveFocusRun ? 'Unavailable During Focus Run' : ''"
         >
           <button
             class="menu-button"
@@ -89,6 +98,7 @@ const markAllAsCompleted = async () => {
           </button>
           <button
             class="menu-button"
+            :class="{ 'opacity-50 pointer-events-none': focusRunStore.isActiveFocusRun }"
             @click="missionsStore.isSelectActiveMissionMode = !missionsStore.isSelectActiveMissionMode"
             v-else
           >
@@ -102,8 +112,13 @@ const markAllAsCompleted = async () => {
           :exit="{ opacity: 0, x: -5 }"
           :transition="{ delay: 0.08 }"
           v-if="missionsStore.activeMission"
+          :title="focusRunStore.isActiveFocusRun ? 'Unavailable During Focus Run' : ''"
         >
-          <button class="menu-button" @click="missionsStore.setActiveMissionId(null)">
+          <button
+            class="menu-button"
+            @click="missionsStore.setActiveMissionId(null)"
+            :class="{ 'opacity-50 pointer-events-none': focusRunStore.isActiveFocusRun }"
+          >
             <Trash class="w-4 h-4 stroke-[1.5px] stroke-secondary"></Trash>
             <span class="uppercase">Unselect Focus Run Mission</span>
           </button>
