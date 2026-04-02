@@ -29,7 +29,8 @@ export const useFocusRunStore = defineStore('focus-runs', {
     },
     progress: (state) => {
       if (!state.plannedMs) return 0;
-      return state.displayFocusedMs / state.plannedMs <= 1 ? state.displayFocusedMs / state.plannedMs : 1;
+      const progress = state.displayFocusedMs / state.plannedMs;
+      return progress > 1 ? 1 : progress;
     },
   },
 
@@ -91,6 +92,7 @@ export const useFocusRunStore = defineStore('focus-runs', {
         this.isActiveFocusRun = false;
         this.runId = null;
         this.status = null;
+        this.displayFocusedMs = 0;
         return;
       }
 
