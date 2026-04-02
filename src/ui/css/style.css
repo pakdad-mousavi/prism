@@ -56,21 +56,10 @@
   corner-shape: superellipse(0);
 }
 
-@utility arc-sm-* {
-  background: conic-gradient(from --value(number)deg, var(--color-primary) 20deg, transparent 20deg 360deg);
-  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), black 0);
-}
-
 @utility arc-md-* {
   background: conic-gradient(from --value(number)deg, var(--color-primary) 35deg, transparent 35deg 360deg);
   mask: radial-gradient(farthest-side, transparent calc(100% - 2px), black 0);
   @apply opacity-50;
-}
-
-@utility arc-lg-* {
-  background: conic-gradient(from --value(number)deg, var(--color-primary) 50deg, transparent 50deg 360deg);
-  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), black 0);
-  @apply glow!;
 }
 
 @utility absolute-center {

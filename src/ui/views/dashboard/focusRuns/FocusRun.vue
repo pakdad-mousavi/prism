@@ -160,8 +160,10 @@ onMounted(async () => {
 
   // Begin outer HUD animation
   const outerHudSequence: AnimationSequence = [
-    [leftHudRing.value, { y: -80 }],
-    [rightHudRing.value, { y: 80 }, { at: 0 }],
+    [leftHudRing.value, { y: 80 }, { duration: 0 }],
+    [rightHudRing.value, { y: -80 }, { at: 0, duration: 0 }],
+    [leftHudRing.value, { y: 0 }, { at: 0 }],
+    [rightHudRing.value, { y: 0 }, { at: 0 }],
     [leftHudRing.value, { opacity: [1, 0, 1, 0, 1, 0, 1] }, { duration: 0.3, times: [0.1, 0.2, 0.4, 0.6, 0.8, 0.9, 1], at: 0 }],
     [rightHudRing.value, { opacity: [1, 0, 1, 0, 1, 0, 1] }, { duration: 0.3, times: [0.1, 0.2, 0.4, 0.6, 0.8, 0.9, 1], at: 0 }],
     [outerHud.value, { rotate: 210 }, { duration: 1, ease: 'anticipate' }],
@@ -346,16 +348,28 @@ onMounted(async () => {
 
       <!-- OUTER HUD -->
       <div class="absolute-center rounded-full w-9/20 aspect-square" ref="outerHud">
-        <div class="w-full h-full absolute -translate-y-20 opacity-0" ref="rightHudRing">
-          <div class="absolute w-full h-full arc-sm-130 rounded-full"></div>
-          <div class="absolute w-full h-full arc-lg-155 rounded-full"></div>
-          <div class="absolute w-full h-full arc-sm-210 rounded-full"></div>
-        </div>
-        <div class="w-full h-full absolute translate-y-20 opacity-0" ref="leftHudRing">
-          <div class="absolute w-full h-full arc-sm-310 rounded-full"></div>
-          <div class="absolute w-full h-full arc-lg-335 rounded-full"></div>
-          <div class="absolute w-full h-full arc-sm-30 rounded-full"></div>
-        </div>
+        <svg viewBox="0 0 500 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <g ref="leftHudRing">
+              <path d="M59.638 100.267C78.2524 78.0835 100.601 59.3242 125.675 44.836" stroke-width="3" class="stroke-primary" />
+              <path d="M374.25 44.7927C399.329 59.2721 421.684 78.0236 440.306 100.201" stroke-width="3" class="stroke-primary" />
+              <path
+                d="M144.979 34.7825C177.654 19.5459 213.253 11.6016 249.306 11.501C285.359 11.4003 321.002 19.1457 353.761 34.1995"
+                class="stroke-primary"
+                stroke-width="3"
+              />
+            </g>
+            <g ref="rightHudRing">
+              <path d="M59.638 419.733C78.2524 441.916 100.601 460.676 125.675 475.164" stroke-width="3" class="stroke-primary" />
+              <path d="M374.25 475.207C399.329 460.728 421.684 441.976 440.306 419.799" stroke-width="3" class="stroke-primary" />
+              <path
+                d="M144.979 485.218C177.654 500.454 213.253 508.398 249.306 508.499C285.359 508.6 321.002 500.854 353.761 485.8"
+                class="stroke-primary"
+                stroke-width="3"
+              />
+            </g>
+          </g>
+        </svg>
       </div>
 
       <motion.div
