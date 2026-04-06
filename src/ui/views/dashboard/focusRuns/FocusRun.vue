@@ -128,7 +128,7 @@ const toggleSpin = async (skipStarterSpin?: boolean) => {
 watch(
   () => focusRunStore.status,
   async (newStatus) => {
-    if (!newStatus) {
+    if (!newStatus && !isSpinning.value) {
       await toggleSpin();
     }
   },
@@ -192,11 +192,7 @@ onMounted(async () => {
       { scale: 1, opacity: 1, rotate: -45 },
       { delay: 0.24, rotate: { duration: 5 }, ease: 'circInOut', at: 0, duration: 0.3 },
     ],
-    [
-      solidRing.value,
-      { scale: 1, opacity: 0.4, rotate: -45 },
-      { delay: 0.24, rotate: { duration: 5 }, ease: 'circInOut', at: 0, duration: 0.3 },
-    ],
+    [solidRing.value, { scale: 1, opacity: 0.4 }, { delay: 0.24, ease: 'circInOut', at: 0, duration: 0.3 }],
   ];
 
   if (focusRunStore.status === null) {
@@ -217,8 +213,6 @@ onMounted(async () => {
 
     leftHudRing.value.style.opacity = '1';
     rightHudRing.value.style.opacity = '1';
-    leftHudRing.value.style.transform = 'translateY(-80px)';
-    rightHudRing.value.style.transform = 'translateY(80px)';
 
     if (focusRunStore.status === 'running') {
       return await toggleSpin(true);
