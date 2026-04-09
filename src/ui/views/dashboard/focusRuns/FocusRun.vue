@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { animate, AnimatePresence, motion, type AnimationSequence } from 'motion-v';
-import Star from '../../../components/icons/Star.vue';
 import { computed, onMounted, ref, watch } from 'vue';
+
 import { useMissionsStore } from '../../../stores/missions';
-import HighPriority from '../../../components/icons/HighPriority.vue';
-import Type from '../../../components/icons/Type.vue';
-import Time from '../../../components/icons/Time.vue';
-import Progress from '../../../components/icons/Progress.vue';
-import Target from '../../../components/icons/Target.vue';
 import { useFocusRunStore } from '../../../stores/focusRuns';
+
+import ProgressBar from '../../../components/misc/ProgressBar.vue';
+import HudBar from '../../../components/focusRuns/HudBar.vue';
+
 import parseMilliseconds from 'parse-ms';
 
 const missionsStore = useMissionsStore();
@@ -134,6 +133,14 @@ watch(
   },
 );
 
+const shouldAnimateHudBar = async () => {
+  if (!focusRunStore.loaded) {
+    await focusRunStore.load();
+  }
+
+  return !focusRunStore.isActiveFocusRun;
+};
+
 onMounted(async () => {
   if (
     !dottedRingOuter.value ||
@@ -224,251 +231,223 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-col flex-1 min-h-0 p-8 overflow-hidden">
-    <div class="relative flex w-full items-center justify-center flex-1">
-      <!-- LEFT MISSION DETAILS -->
-      <div class="absolute w-1/4 left-4 top-4 flex flex-col gap-4 h-full pb-8">
-        <div
-          class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-full cut-corners rounded-xl mb-auto cursor-pointer"
-          v-if="!missionsStore.activeMission"
-          @click="$router.push('/dashboard/missions')"
-        >
-          <div class="flex gap-x-2 justify-center items-center z-10 relative">
-            <h3 class="font-tomorrow uppercase text-xs text-primary text-center">Choose An Active Mission</h3>
-          </div>
-        </div>
-        <div
-          class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-full cut-corners rounded-xl mb-auto"
-          v-if="missionsStore.activeMission"
-        >
-          <div class="flex gap-x-2 items-center mb-2 z-10 relative">
-            <Star class="fill-primary w-3 h-3"></Star>
-            <h3 class="font-tomorrow uppercase text-xs text-primary">Mission Objective:</h3>
-          </div>
-          <p class="line-clamp-3 text-xs cursor-text z-10 relative">{{ missionsStore.activeMission.title }}</p>
-        </div>
-
-        <div
-          class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-4/5 cut-corners rounded-xl"
-          v-if="missionsStore.activeMission"
-        >
-          <div class="flex gap-x-2 items-center mb-2 z-10 relative">
-            <HighPriority class="fill-primary w-4 h-4"></HighPriority>
-            <h3 class="font-tomorrow uppercase text-xs text-primary">Priority:</h3>
-          </div>
-          <p class="line-clamp-3 text-xs cursor-text z-10 relative uppercase">
-            {{ getPriority(missionsStore.activeMission.priority) }}
-          </p>
-        </div>
-        <div
-          class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-4/5 cut-corners rounded-xl"
-          v-if="missionsStore.activeMission"
-        >
-          <div class="flex gap-x-2 items-center mb-2 z-10 relative">
-            <Type class="fill-primary w-4 h-4"></Type>
-            <h3 class="font-tomorrow uppercase text-xs text-primary">Scale:</h3>
-          </div>
-          <p class="line-clamp-3 text-xs cursor-text z-10 relative uppercase">
-            {{ missionsStore.activeMission.scale }}
-          </p>
-        </div>
-        <div
-          class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-4/5 cut-corners rounded-xl"
-          v-if="missionsStore.activeMission"
-        >
-          <div class="flex gap-x-2 items-center mb-2 z-10 relative">
-            <Time class="fill-primary w-4 h-4"></Time>
-            <h3 class="font-tomorrow uppercase text-xs text-primary">Estimated Minutes:</h3>
-          </div>
-          <p class="line-clamp-3 text-xs cursor-text z-10 relative uppercase">
-            {{ missionsStore.activeMission.estimatedMinutes }}m
-          </p>
-        </div>
-      </div>
-
-      <!-- RIGHT MISSION DETAILS -->
-      <div class="absolute w-1/4 right-4 top-4 flex flex-col items-end gap-4 h-full pb-8">
-        <div
-          class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-full cut-corners rounded-xl mb-auto"
-        >
-          <div class="flex gap-x-2 items-center mb-2 z-10 relative">
-            <Progress class="stroke-primary w-3 h-3"></Progress>
-            <h3 class="font-tomorrow uppercase text-xs text-primary">
-              Progress: <span class="text-secondary">{{ percentageFormatter.format(focusRunStore.progress) }}</span>
-            </h3>
-          </div>
-          <div
-            class="relative h-2 w-full rounded-xs cut-corners border border-primary bg-[repeating-linear-gradient(315deg,var(--color-primary)_0,var(--color-primary)_1px,transparent_1px,transparent_50%)] bg-size-[10px_10px]"
-          >
-            <div class="absolute h-full bg-primary duration-100" :style="`width: ${focusRunStore.progress * 100}%;`"></div>
-          </div>
-        </div>
-
-        <div
-          class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-4/5 cut-corners rounded-xl"
-          v-if="missionsStore.activeMission"
-        >
-          <div class="flex gap-x-2 items-center mb-2 z-10 relative">
-            <Target class="stroke-primary w-4 h-4"></Target>
-            <h3 class="font-tomorrow uppercase text-xs text-primary">Target Sessions:</h3>
-          </div>
-          <p class="line-clamp-3 text-xs cursor-text z-10 relative uppercase">
-            {{ missionsStore.activeMission.targetSessions }} sessions
-          </p>
-        </div>
-        <!-- <div
-          class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-4/5 cut-corners rounded-xl"
-        >
-          <div class="flex gap-x-2 items-center mb-2 z-10 relative">
-            <HighPriority class="fill-primary w-4 h-4"></HighPriority>
-            <h3 class="font-tomorrow uppercase text-xs text-primary">Scale:</h3>
-          </div>
-          <p class="line-clamp-3 text-xs cursor-text z-10 relative uppercase">
-            {{ missionsStore.activeMission?.scale }}
-          </p>
-        </div>
-        <div
-          class="bg-white/5 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary w-4/5 cut-corners rounded-xl"
-        >
-          <div class="flex gap-x-2 items-center mb-2 z-10 relative">
-            <HighPriority class="fill-primary w-4 h-4"></HighPriority>
-            <h3 class="font-tomorrow uppercase text-xs text-primary">Estimated Minutes:</h3>
-          </div>
-          <p class="line-clamp-3 text-xs cursor-text z-10 relative uppercase">
-            {{ missionsStore.activeMission?.estimatedMinutes }}m
-          </p>
-        </div> -->
-      </div>
-
-      <!-- OUTER HUD -->
-      <div class="absolute-center rounded-full w-9/20 aspect-square" ref="outerHud">
-        <svg viewBox="0 0 500 520" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g>
-            <g ref="leftHudRing">
-              <path d="M59.638 100.267C78.2524 78.0835 100.601 59.3242 125.675 44.836" stroke-width="3" class="stroke-primary" />
-              <path d="M374.25 44.7927C399.329 59.2721 421.684 78.0236 440.306 100.201" stroke-width="3" class="stroke-primary" />
-              <path
-                d="M144.979 34.7825C177.654 19.5459 213.253 11.6016 249.306 11.501C285.359 11.4003 321.002 19.1457 353.761 34.1995"
-                class="stroke-primary"
-                stroke-width="3"
-              />
-            </g>
-            <g ref="rightHudRing">
-              <path d="M59.638 419.733C78.2524 441.916 100.601 460.676 125.675 475.164" stroke-width="3" class="stroke-primary" />
-              <path d="M374.25 475.207C399.329 460.728 421.684 441.976 440.306 419.799" stroke-width="3" class="stroke-primary" />
-              <path
-                d="M144.979 485.218C177.654 500.454 213.253 508.398 249.306 508.499C285.359 508.6 321.002 500.854 353.761 485.8"
-                class="stroke-primary"
-                stroke-width="3"
-              />
-            </g>
-          </g>
-        </svg>
-      </div>
-
-      <motion.div
-        class="absolute-center w-3/10 aspect-square rounded-full arc-md-225"
-        :initial="{ rotate: 100 }"
-        :animate="{ rotate: 360 }"
-        :transition="{ duration: 4 }"
-      ></motion.div>
-      <motion.div
-        class="absolute-center w-3/10 aspect-square rounded-full arc-md-100"
-        :initial="{ rotate: -100 }"
-        :animate="{ rotate: -360 }"
-        :transition="{ duration: 4 }"
-      ></motion.div>
-
-      <!-- INNER HUD -->
-      <div class="absolute-center flex-center w-full">
-        <div
-          ref="dottedRingOuter"
-          class="absolute-center w-[calc(1/4*100%+12px)] aspect-square border-2 border-primary/50 rounded-full border-dotted glow opacity-0"
-          style="transform: scale(0.8)"
-        ></div>
-        <div
-          ref="dottedRingMiddle"
-          class="absolute-center w-[calc(1/4*100%+20px)] aspect-square rounded-full border-2 border-primary/50 border-dotted opacity-0"
-          style="transform: scale(0.8)"
-        ></div>
-        <div
-          ref="dottedRingInner"
-          class="absolute-center w-[calc(1/4*100%+26px)] aspect-square rounded-full border-2 border-primary/50 border-dotted opacity-0"
-          style="transform: scale(0.8)"
-        ></div>
-        <div
-          ref="dottedRingDashed"
-          class="absolute-center w-1/4 aspect-square rounded-full border-2 border-primary/75 border-dashed rotate-10 opacity-0"
-          style="transform: scale(1.96)"
-        ></div>
-        <div
-          class="absolute-center w-1/5 aspect-square rounded-full border border-primary"
-          style="transform: scale(1.96)"
-          ref="solidRing"
-        ></div>
-      </div>
-
+  <div class="flex flex-col flex-1 min-h-0 p-4 overflow-hidden">
+    <div class="relative flex w-full flex-1 flex-col gap-10">
       <!-- MAIN -->
-      <div class="flex-center relative z-100 w-1/5 aspect-square">
-        <motion.div
-          class="font-tomorrow text-primary glow cursor-pointer w-full aspect-square rounded-full text-lg text-center"
-          @click="handleStartOrPause"
-        >
-          <div
-            class="w-full h-full inset-shadow-[0px_0px_40px_10px] hover:inset-shadow-primary/10 inset-shadow-transparent duration-500 group active:inset-shadow-primary/5 rounded-full flex-center p-4 gap-y-4"
-          >
-            <AnimatePresence mode="wait">
-              <motion.div
-                :initial="{ y: 20, opacity: 0 }"
-                :animate="{ y: 0, opacity: 1 }"
-                :exit="{ y: -20, opacity: 0 }"
-                v-if="!focusRunStore.status || ['completed', 'abandoned'].includes(focusRunStore.status)"
-              >
-                <span class="uppercase">Start Focus Run </span>
-              </motion.div>
-
-              <motion.div
-                :initial="{ y: 20, opacity: 0 }"
-                :animate="{ y: 0, opacity: 1 }"
-                :exit="{ y: -20, opacity: 0 }"
-                v-if="['running', 'paused'].includes(focusRunStore.status as string)"
-                class="flex-center flex-col gap-y-2"
-              >
-                <span> {{ remainingMsParsed }} REMAINING </span>
-                <div>
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      v-if="focusRunStore.status === 'running'"
-                      class="uppercase text-xs"
-                      :initial="{ x: -20, opacity: 0 }"
-                      :animate="{ x: 0, opacity: 1 }"
-                      :exit="{ x: 20, opacity: 0 }"
-                      >Running</motion.div
-                    >
-                    <motion.div
-                      v-if="focusRunStore.status === 'paused'"
-                      class="uppercase text-xs"
-                      :initial="{ x: -20, opacity: 0 }"
-                      :animate="{ x: 0, opacity: 1 }"
-                      :exit="{ x: 20, opacity: 0 }"
-                      >Paused</motion.div
-                    >
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            </AnimatePresence>
+      <div class="flex h-2/3 justify-center relative w-full mt-4">
+        <div class="flex flex-col justify-center gap-y-10 w-60">
+          <div class="font-tomorrow text-xs" v-if="missionsStore.activeMission">
+            <h3 class="text-primary mb-2 uppercase">Mission Objective:</h3>
+            <p class="line-clamp-4">{{ missionsStore.activeMission.title }}</p>
           </div>
-        </motion.div>
+          <div class="font-tomorrow text-xs">
+            <h3 class="text-primary mb-2 uppercase">Mission Progress:</h3>
+            <ProgressBar :progress="0.62"></ProgressBar>
+            <h4 class="text-4xl mt-4 text-primary">62%</h4>
+          </div>
+          <div class="font-tomorrow text-xs">
+            <h3 class="text-primary mb-2 uppercase">Mission Details:</h3>
+            <div class="flex gap-1">
+              <div class="w-2 bg-primary"></div>
+              <div>
+                <div class="border border-primary p-2 uppercase flex gap-10 items-center">
+                  <h3 class="flex-1">Total Time Worked:</h3>
+                  <h4>1h 20m</h4>
+                </div>
+                <div class="flex items-center uppercase mt-1">
+                  <div>
+                    <h3 class="text-3xs">Sessions Done:</h3>
+                    <p>3</p>
+                  </div>
+                  <div class="h-4 mx-2 border-[0.5px] border-surface-auxilary"></div>
+                  <div>
+                    <h3 class="text-3xs">Sessions Left:</h3>
+                    <p>4</p>
+                  </div>
+                  <div class="h-4 mx-2 border-[0.5px] border-surface-auxilary"></div>
+                  <div>
+                    <h3 class="text-3xs">Sessions DONE:</h3>
+                    <p>3</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div></div>
+        </div>
+        <!-- OUTER HUD -->
+        <div class="absolute-center rounded-full w-17/40 aspect-square" ref="outerHud">
+          <svg viewBox="0 0 500 520" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+            <g>
+              <g ref="leftHudRing">
+                <path
+                  d="M59.638 100.267C78.2524 78.0835 100.601 59.3242 125.675 44.836"
+                  stroke-width="3"
+                  class="stroke-primary"
+                />
+                <path
+                  d="M374.25 44.7927C399.329 59.2721 421.684 78.0236 440.306 100.201"
+                  stroke-width="3"
+                  class="stroke-primary"
+                />
+                <path
+                  d="M144.979 34.7825C177.654 19.5459 213.253 11.6016 249.306 11.501C285.359 11.4003 321.002 19.1457 353.761 34.1995"
+                  class="stroke-primary"
+                  stroke-width="3"
+                />
+              </g>
+              <g ref="rightHudRing">
+                <path
+                  d="M59.638 419.733C78.2524 441.916 100.601 460.676 125.675 475.164"
+                  stroke-width="3"
+                  class="stroke-primary"
+                />
+                <path
+                  d="M374.25 475.207C399.329 460.728 421.684 441.976 440.306 419.799"
+                  stroke-width="3"
+                  class="stroke-primary"
+                />
+                <path
+                  d="M144.979 485.218C177.654 500.454 213.253 508.398 249.306 508.499C285.359 508.6 321.002 500.854 353.761 485.8"
+                  class="stroke-primary"
+                  stroke-width="3"
+                />
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <motion.div
+          class="w-1/4 aspect-square rounded-full arc-md-225 absolute-center"
+          :initial="{ rotate: 100 }"
+          :animate="{ rotate: 360 }"
+          :transition="{ duration: 4 }"
+        ></motion.div>
+        <motion.div
+          class="w-1/4 aspect-square rounded-full arc-md-100 absolute-center"
+          :initial="{ rotate: -100 }"
+          :animate="{ rotate: -360 }"
+          :transition="{ duration: 4 }"
+        ></motion.div>
+
+        <!-- INNER HUD -->
+        <div class="absolute-center w-full">
+          <div
+            ref="dottedRingOuter"
+            class="absolute-center w-[calc(1/5*100%+12px)] aspect-square border-2 border-primary/50 rounded-full border-dotted glow opacity-0"
+            style="transform: scale(0.8)"
+          ></div>
+          <div
+            ref="dottedRingMiddle"
+            class="absolute-center w-[calc(1/5*100%+20px)] aspect-square rounded-full border-2 border-primary/50 border-dotted opacity-0"
+            style="transform: scale(0.8)"
+          ></div>
+          <div
+            ref="dottedRingInner"
+            class="absolute-center w-[calc(1/5*100%+26px)] aspect-square rounded-full border-2 border-primary/50 border-dotted opacity-0"
+            style="transform: scale(0.8)"
+          ></div>
+          <div
+            ref="dottedRingDashed"
+            class="absolute-center w-1/5 aspect-square rounded-full border-2 border-primary/75 border-dashed rotate-10 opacity-0"
+            style="transform: scale(1.96)"
+          ></div>
+          <div
+            class="absolute-center w-1/6 aspect-square rounded-full border border-primary opacity-0"
+            style="transform: scale(1.96)"
+            ref="solidRing"
+          ></div>
+        </div>
+
+        <!-- START, PAUSE, AND RESUME BUTTON -->
+        <div class="z-100 w-1/6 aspect-square absolute-center">
+          <motion.div
+            class="font-tomorrow text-primary glow cursor-pointer w-full aspect-square rounded-full text-lg text-center"
+            @click="handleStartOrPause"
+          >
+            <div
+              class="w-full h-full inset-shadow-[0px_0px_40px_10px] hover:inset-shadow-primary/10 inset-shadow-transparent duration-500 group active:inset-shadow-primary/5 rounded-full flex-center p-4 gap-y-4"
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  :initial="{ y: 20, opacity: 0 }"
+                  :animate="{ y: 0, opacity: 1 }"
+                  :exit="{ y: -20, opacity: 0 }"
+                  v-if="!focusRunStore.status || ['completed', 'abandoned'].includes(focusRunStore.status)"
+                >
+                  <span class="uppercase">Start Focus Run </span>
+                </motion.div>
+
+                <motion.div
+                  :initial="{ y: 20, opacity: 0 }"
+                  :animate="{ y: 0, opacity: 1 }"
+                  :exit="{ y: -20, opacity: 0 }"
+                  v-if="['running', 'paused'].includes(focusRunStore.status as string)"
+                  class="flex-center flex-col gap-y-2"
+                >
+                  <span> {{ remainingMsParsed }} REMAINING </span>
+                  <div>
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        v-if="focusRunStore.status === 'running'"
+                        class="uppercase text-xs"
+                        :initial="{ x: -20, opacity: 0 }"
+                        :animate="{ x: 0, opacity: 1 }"
+                        :exit="{ x: 20, opacity: 0 }"
+                        >Running</motion.div
+                      >
+                      <motion.div
+                        v-if="focusRunStore.status === 'paused'"
+                        class="uppercase text-xs"
+                        :initial="{ x: -20, opacity: 0 }"
+                        :animate="{ x: 0, opacity: 1 }"
+                        :exit="{ x: 20, opacity: 0 }"
+                        >Paused</motion.div
+                      >
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        </div>
+
+        <div class="flex flex-col items-end justify-center ml-auto gap-y-4 min-w-60">
+          <motion.div
+            :initial="{ x: 20, opacity: 0 }"
+            :animate="{ x: 0, opacity: 1 }"
+            :transition="{ duration: 0.3, delay: 0 }"
+            class="bg-white/2 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary cut-corners rounded-xl font-tomorrow uppercase w-full"
+          >
+            <h3 class="text-4xl mb-4">3</h3>
+            <h4 class="text-xs text-primary">Sessions Worked Today</h4>
+          </motion.div>
+          <motion.div
+            :initial="{ x: 20, opacity: 0 }"
+            :animate="{ x: 0, opacity: 1 }"
+            :transition="{ duration: 0.3, delay: 0.08 }"
+            class="bg-white/2 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary cut-corners rounded-xl font-tomorrow uppercase w-full"
+          >
+            <h3 class="text-4xl mb-4">13</h3>
+            <h4 class="text-xs text-primary">Mid-run Pauses Today</h4>
+          </motion.div>
+          <motion.div
+            :initial="{ x: 20, opacity: 0 }"
+            :animate="{ x: 0, opacity: 1 }"
+            :transition="{ duration: 0.3, delay: 0.16 }"
+            class="bg-white/2 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary cut-corners rounded-xl font-tomorrow uppercase w-full"
+          >
+            <h3 class="text-4xl mb-4">3h 40m</h3>
+            <h4 class="text-xs text-primary">In Focus Runs</h4>
+          </motion.div>
+        </div>
+      </div>
+
+      <div class="flex h-1/3 w-full">
+        <div class="w-full h-full flex mx-auto">
+          <HudBar class="w-full" :useInitialAnimation="shouldAnimateHudBar"></HudBar>
+        </div>
       </div>
     </div>
   </div>
-  <!-- OUTER BORDER -->
-  <Star class="absolute top-8 left-8 fill-surface-tertiary w-5 h-5 -translate-x-1/2 -translate-y-1/2"></Star>
-  <Star class="absolute top-8 right-8 fill-surface-tertiary w-5 h-5 translate-x-1/2 -translate-y-1/2"></Star>
-  <Star class="absolute bottom-8 left-8 fill-surface-tertiary w-5 h-5 -translate-x-1/2 translate-y-1/2"></Star>
-  <Star class="absolute bottom-8 right-8 fill-surface-tertiary w-5 h-5 translate-x-1/2 translate-y-1/2"></Star>
-  <div class="absolute w-px bg-surface-tertiary left-8 top-0 h-full -translate-x-1/2"></div>
-  <div class="absolute w-px bg-surface-tertiary right-8 top-0 h-full translate-x-1/2"></div>
-  <div class="absolute w-full bg-surface-tertiary left-0 bottom-8 h-px translate-y-1/2"></div>
-  <div class="absolute w-full bg-surface-tertiary left-0 top-8 h-px -translate-y-1/2"></div>
 </template>
