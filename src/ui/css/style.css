@@ -6,6 +6,7 @@
   --color-secondary: #e4e4e4;
   --color-tertiary: #b13bff;
   --color-auxilary: #ffcc00;
+  --color-quaternary: #88304e;
   --color-surface-primary: #161616;
   --color-surface-secondary: #07080d;
   --color-surface-tertiary: #303030;
@@ -23,6 +24,7 @@
   --color-primary: var(--color-primary);
   --color-secondary: var(--color-secondary);
   --color-tertiary: var(--color-tertiary);
+  --color-quaternary: var(--color-quaternary);
   --color-auxilary: var(--color-auxilary);
   --color-surface-primary: var(--color-surface-primary);
   --color-surface-secondary: var(--color-surface-secondary);
@@ -34,8 +36,12 @@
   --font-sans: 'Inter', sans-serif;
 
   /* TEXT SIZES */
+  --text-3xs: 0.5rem;
   --text-2xs: 0.625rem;
   --text-md: 0.8125rem;
+
+  /* BREAKPOINTS */
+  --breakpoint-xxl: 90rem;
 }
 
 @layer base {
