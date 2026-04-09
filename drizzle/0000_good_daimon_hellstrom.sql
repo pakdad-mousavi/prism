@@ -18,8 +18,8 @@ CREATE TABLE `focus_run` (
 	`mission_id` integer,
 	`created_at` integer DEFAULT (unixepoch() * 1000) NOT NULL,
 	`started_at` integer NOT NULL,
-	`last_heartbeat_at` integer,
 	`ended_at` integer,
+	`last_heartbeat_at` integer,
 	`status` text DEFAULT 'running' NOT NULL,
 	`device_id` text NOT NULL,
 	`planned_minutes` integer NOT NULL,
@@ -34,6 +34,14 @@ CREATE TABLE `focus_run_pause` (
 	`paused_at` integer NOT NULL,
 	`resumed_at` integer,
 	FOREIGN KEY (`run_id`) REFERENCES `focus_run`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
+CREATE TABLE `focus_streak` (
+	`id` integer PRIMARY KEY NOT NULL,
+	`bars_filled` integer DEFAULT 0 NOT NULL,
+	`decay_started_at` integer,
+	`decay_ends_at` integer,
+	`last_completed_at` integer
 );
 --> statement-breakpoint
 CREATE TABLE `mission` (
@@ -87,7 +95,7 @@ CREATE TABLE `user_local` (
 	`last_synced_at` integer,
 	`device_id` text NOT NULL,
 	`theme` text DEFAULT 'prismRed' NOT NULL,
-	`focus_run_duration` integer DEFAULT 25 NOT NULL,
+	`focus_run_duration` integer DEFAULT 1 NOT NULL,
 	`created_at` integer DEFAULT (unixepoch() * 1000) NOT NULL,
 	`updated_at` integer NOT NULL
 );

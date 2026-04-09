@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "023b2199-077e-4c15-9e0a-3af15cf6e87e",
+  "id": "c4b99fad-bc14-4207-a3d8-c259dce42c3f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "active_mission": {
@@ -129,15 +129,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "last_heartbeat_at": {
-          "name": "last_heartbeat_at",
+        "ended_at": {
+          "name": "ended_at",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "ended_at": {
-          "name": "ended_at",
+        "last_heartbeat_at": {
+          "name": "last_heartbeat_at",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -249,6 +249,52 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "focus_streak": {
+      "name": "focus_streak",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "bars_filled": {
+          "name": "bars_filled",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "decay_started_at": {
+          "name": "decay_started_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "decay_ends_at": {
+          "name": "decay_ends_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "last_completed_at": {
+          "name": "last_completed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
@@ -606,7 +652,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": 25
+          "default": 1
         },
         "created_at": {
           "name": "created_at",
