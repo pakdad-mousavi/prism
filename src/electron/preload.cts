@@ -22,4 +22,9 @@ contextBridge.exposeInMainWorld('electronApi', {
   finishRun: () => ipcRenderer.invoke('focusRun:finishRun'),
   abandonRun: () => ipcRenderer.invoke('focusRun:abandonRun'),
   getActiveRunState: () => ipcRenderer.invoke('focusRun:getActiveRunState'),
+
+  // FOCUS STREAK
+  fillBarAndStartDecay: () => ipcRenderer.invoke('focusStreak:fillBarAndStartDecay'),
+  stopDecay: () => ipcRenderer.invoke('focusStreak:stopDecay'),
+  getDecayDetails: () => ipcRenderer.invoke('focusStreak:getDecayDetails'),
 });

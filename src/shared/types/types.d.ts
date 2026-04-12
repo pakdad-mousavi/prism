@@ -1,5 +1,6 @@
 import type { Mission, MissionDraft } from './mission';
 import type { ActiveRunState } from './focusRun';
+import type { DecayDetails } from './focusStreak';
 
 declare global {
   interface Window {
@@ -21,6 +22,11 @@ declare global {
       finishRun: () => Promise<true | false>;
       abandonRun: () => Promise<true | false>;
       getActiveRunState: () => Promise<ActiveRunState | null | false>;
+      
+      // FOCUS STREAK
+      fillBarAndStartDecay: () => Promise<true | false>;
+      stopDecay: () => Promise<true | false>;
+      getDecayDetails: () => Promise<DecayDetails | false>;
     };
   }
 }
