@@ -9,9 +9,11 @@ import ProgressBar from '../../../components/misc/ProgressBar.vue';
 import HudBar from '../../../components/focusRuns/HudBar.vue';
 
 import parseMilliseconds from 'parse-ms';
+import { useFocusStreakStore } from '../../../stores/focusStreak';
 
 const missionsStore = useMissionsStore();
 const focusRunStore = useFocusRunStore();
+const focusStreakStore = useFocusStreakStore();
 
 // -------
 // HELPERS
@@ -45,7 +47,8 @@ const handleStartOrPause = async () => {
 
   toggleSpin();
   if (!focusRunStore.status) {
-    return await focusRunStore.startRun(missionsStore.activeMission?.id || null);
+    await focusRunStore.startRun(missionsStore.activeMission?.id || null);
+    return await focusStreakStore.syncWithMain();
   }
 
   switch (focusRunStore.status) {
