@@ -3,6 +3,7 @@ import { focusRun } from '../db/schema/focusRun.sql.js';
 import { getDb } from '../db/db.js';
 import { UserLocalService } from './userLocalService.js';
 import { FocusRunPauseService } from './focusRunPauseService.js';
+import { FocusStreakService } from './focusStreakService.js';
 
 export class FocusRunService {
   private static heartbeatInterval: NodeJS.Timeout | null = null;
@@ -46,6 +47,9 @@ export class FocusRunService {
     if (!userLocal) {
       return false;
     }
+
+    // Stop any decay if needed
+    await FocusStreakService.stopDecay();
 
     this.runStartedAt = new Date();
     this.plannedMs = userLocal.focusRunDuration * 60 * 1000;
@@ -99,6 +103,7 @@ export class FocusRunService {
     // const plannedMs = run.plannedMinutes * 60 * 1000;
 
     if (focusedMs >= this.plannedMs) {
+      await FocusStreakService.fillBarAndStartDecay();
       await this.finishRun();
     }
   }
@@ -124,6 +129,8 @@ export class FocusRunService {
   static async finishRun() {
     if (!this.activeRunId) return;
 
+    await FocusStreakService.startDecay();
+
     const [row] = await getDb().select().from(focusRun).where(eq(focusRun.id, this.activeRunId));
     if (!row || row.status === 'completed' || row.status === 'abandoned') return;
 
@@ -145,6 +152,8 @@ export class FocusRunService {
 
   static async abandonRun() {
     if (!this.activeRunId) return;
+
+    await FocusStreakService.startDecay();
 
     const [row] = await getDb().select().from(focusRun).where(eq(focusRun.id, this.activeRunId));
     if (!row || row.status === 'completed' || row.status === 'abandoned') return;
