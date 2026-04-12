@@ -1,11 +1,12 @@
 import { eq } from 'drizzle-orm';
 import { getDb } from '../db/db.js';
 import { focusStreak } from '../db/schema/focusStreak.sql.js';
+import { type DECAY_DURATION_MS } from '../../shared/types/focusStreak.js';
 
 export class FocusStreakService {
   private static ROW_ID = 1;
   private static TOTAL_BARS = 6;
-  private static DECAY_DURATION_MS = 10 * 60 * 1000;
+  private static DECAY_DURATION_MS: DECAY_DURATION_MS = 600_000;
   private static decayTimeout: NodeJS.Timeout | null = null;
 
   static async init() {
@@ -67,7 +68,7 @@ export class FocusStreakService {
         })
         .where(eq(focusStreak.id, this.ROW_ID));
     } else {
-      return await getDb()
+      await getDb()
         .update(focusStreak)
         .set({
           barsFilled: 1,
@@ -75,6 +76,10 @@ export class FocusStreakService {
           decayEndsAt: new Date(Date.now() + this.DECAY_DURATION_MS),
         })
         .where(eq(focusStreak.id, this.ROW_ID));
+
+      this.decayTimeout = null; // allow restart
+      this.startDecayTimer();
+      return;
     }
 
     // clear decay timeout
@@ -85,10 +90,13 @@ export class FocusStreakService {
   }
 
   static async stopDecay() {
-    await getDb().update(focusStreak).set({
-      decayStartedAt: null,
-      decayEndsAt: null,
-    });
+    await getDb()
+      .update(focusStreak)
+      .set({
+        decayStartedAt: null,
+        decayEndsAt: null,
+      })
+      .where(eq(focusStreak.id, this.ROW_ID));
 
     // clear decay timeout
     if (this.decayTimeout) {
@@ -97,14 +105,44 @@ export class FocusStreakService {
     }
   }
 
+  static async startDecay() {
+    // Only start decay if there is at least one bar
+    const streak = (await getDb().select().from(focusStreak).limit(1))[0];
+    if (streak.barsFilled === 0) return;
+
+    await getDb()
+      .update(focusStreak)
+      .set({
+        decayStartedAt: new Date(),
+        decayEndsAt: new Date(Date.now() + this.DECAY_DURATION_MS),
+      })
+      .where(eq(focusStreak.id, this.ROW_ID));
+
+    // restart decay timeout
+    if (this.decayTimeout) {
+      clearTimeout(this.decayTimeout);
+      this.decayTimeout = null;
+    }
+    this.startDecayTimer();
+  }
+
   static async getDecayDetails() {
     const streak = (await getDb().select().from(focusStreak).limit(1))[0];
+    const isMulti = streak.barsFilled > 1;
+    const decayStage = isMulti ? 'multi' : 'final';
 
-    if (!streak.decayEndsAt || !streak.decayStartedAt) return null;
+    if (!streak.decayEndsAt || !streak.decayStartedAt) {
+      return {
+        barsFilled: streak.barsFilled,
+        decayTimeLeftMs: null,
+        decayStage: 'idle',
+      };
+    }
 
     return {
       barsFilled: streak.barsFilled,
-      decayTimeLeftMs: streak.decayEndsAt.getTime() - streak.decayStartedAt.getTime(),
+      decayTimeLeftMs: Math.max(0, streak.decayEndsAt.getTime() - Date.now()),
+      decayStage,
     };
   }
 }
