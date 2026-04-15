@@ -22,7 +22,6 @@ export const useFocusStreakStore = defineStore('focus-streak', {
 
   actions: {
     async syncWithMain() {
-      console.log('XXX');
       this.startDecayWatcher();
 
       const details = await window.electronApi.getDecayDetails();

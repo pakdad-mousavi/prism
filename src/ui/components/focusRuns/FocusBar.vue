@@ -41,7 +41,6 @@ const statuses = computed(() => {
       break;
   }
 
-  console.log(statuses);
   return statuses;
 });
 

@@ -43,8 +43,6 @@ const percentageFormatter = new Intl.NumberFormat(undefined, {
 // ----------
 
 const handleStartOrPause = async () => {
-  console.log(focusRunStore.status);
-
   toggleSpin();
   if (!focusRunStore.status) {
     await focusRunStore.startRun(missionsStore.activeMission?.id || null);

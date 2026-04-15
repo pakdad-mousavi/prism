@@ -12,7 +12,6 @@ const props = defineProps<{
 const bar = ref<HTMLElement | null>(null);
 
 onMounted(() => {
-  console.log(props.visible);
   if (!bar.value || !props.visible) return;
 
   animate([[bar.value, { x: [-20, 0], opacity: [0, 1] }, { delay: props.loadDelay }]]);
