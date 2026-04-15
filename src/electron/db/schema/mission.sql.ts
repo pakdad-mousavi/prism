@@ -11,7 +11,7 @@ export const mission = sqliteTable('mission', {
   isAutoMission: int('is_auto_mission', { mode: 'boolean' }).notNull(),
   estimatedMinutes: int('estimated_minutes', { mode: 'number' }),
   targetSessions: int('target_sessions', { mode: 'number' }),
-  completedSessions: int('completed_sessions', { mode: 'number' }).default(0),
+  completedSessions: int('completed_sessions', { mode: 'number' }).default(0).notNull(),
   priority: int({ mode: 'number' }).default(0),
   status: text({ enum: ['active', 'on hold', 'completed', 'archived'] })
     .notNull()
