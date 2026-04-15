@@ -159,9 +159,8 @@ onMounted(async () => {
     await focusRunStore.load();
   }
 
-  if (!missionsStore.loaded) {
-    await missionsStore.load();
-  }
+  // Load missionstore everytime to force an update
+  await missionsStore.load();
 
   // Update isSpinning ref
   isSpinning.value = true;
@@ -229,6 +228,17 @@ onMounted(async () => {
     }
   }
 });
+
+const getMissionProgress = computed(() => {
+  if (!missionsStore.activeMission?.targetSessions) return null;
+
+  const prog = missionsStore.activeMission.completedSessions / missionsStore.activeMission.targetSessions;
+
+  return {
+    raw: prog > 1 ? 1 : prog,
+    formatted: percentageFormatter.format(prog > 1 ? 1 : prog),
+  };
+});
 </script>
 
 <template>
@@ -236,17 +246,51 @@ onMounted(async () => {
     <div class="relative flex w-full flex-1 flex-col gap-10">
       <!-- MAIN -->
       <div class="flex h-3/5 justify-center relative w-full mt-4">
-        <div class="flex flex-col justify-center gap-y-10 w-60">
-          <div class="font-tomorrow text-xs" v-if="missionsStore.activeMission">
+        <div class="flex flex-col gap-y-10 w-60" :class="missionsStore.activeMission ? 'justify-center' : ''">
+          <motion.div
+            class="font-tomorrow text-xs"
+            v-if="!missionsStore.activeMission"
+            :initial="{ x: -20, opacity: 0 }"
+            :animate="{ x: 0, opacity: 1 }"
+          >
+            <h3 class="text-primary mb-2 uppercase">No Active Mission</h3>
+            <a
+              href="/dashboard/missions"
+              class="block cut-corners px-10 py-6 bg-surface-primary border border-primary rounded-md uppercase text-center active:bg-surface-secondary hover:bg-surface-primary/50"
+              >Select Active Mission</a
+            >
+          </motion.div>
+          <motion.div
+            class="font-tomorrow text-xs"
+            v-if="missionsStore.activeMission"
+            :initial="{ x: -20, opacity: 0 }"
+            :animate="{ x: 0, opacity: 1 }"
+            :transition="{ delay: 0 }"
+          >
             <h3 class="text-primary mb-2 uppercase">Mission Objective:</h3>
             <p class="line-clamp-4">{{ missionsStore.activeMission.title }}</p>
-          </div>
-          <div class="font-tomorrow text-xs">
+          </motion.div>
+          <motion.div
+            class="font-tomorrow text-xs"
+            v-if="missionsStore.activeMission"
+            :initial="{ x: -20, opacity: 0 }"
+            :animate="{ x: 0, opacity: 1 }"
+            :transition="{ delay: 0.08 }"
+          >
             <h3 class="text-primary mb-2 uppercase">Mission Progress:</h3>
-            <ProgressBar :progress="0.62"></ProgressBar>
-            <h4 class="text-4xl mt-4 text-primary">62%</h4>
-          </div>
-          <div class="font-tomorrow text-xs">
+            <ProgressBar :progress="getMissionProgress !== null ? getMissionProgress.raw : 1"></ProgressBar>
+            <h4 class="text-4xl mt-4 text-primary uppercase" v-if="getMissionProgress">
+              {{ getMissionProgress.formatted }}
+            </h4>
+            <h4 class="text-4xl mt-4 text-primary uppercase" v-else>N/A</h4>
+          </motion.div>
+          <motion.div
+            class="font-tomorrow text-xs"
+            v-if="missionsStore.activeMission"
+            :initial="{ x: -20, opacity: 0 }"
+            :animate="{ x: 0, opacity: 1 }"
+            :transition="{ delay: 0.16 }"
+          >
             <h3 class="text-primary mb-2 uppercase">Mission Details:</h3>
             <div class="flex gap-1">
               <div class="w-2 bg-primary"></div>
@@ -257,23 +301,23 @@ onMounted(async () => {
                 </div>
                 <div class="flex items-center uppercase mt-1">
                   <div>
+                    <h3 class="text-3xs">Priority:</h3>
+                    <p>{{ getPriority(missionsStore.activeMission.priority) }}</p>
+                  </div>
+                  <div class="h-4 mx-2 border-[0.5px] border-surface-auxilary"></div>
+                  <div>
                     <h3 class="text-3xs">Sessions Done:</h3>
-                    <p>3</p>
+                    <p>{{ missionsStore.activeMission.completedSessions }}</p>
                   </div>
                   <div class="h-4 mx-2 border-[0.5px] border-surface-auxilary"></div>
                   <div>
                     <h3 class="text-3xs">Sessions Left:</h3>
-                    <p>4</p>
-                  </div>
-                  <div class="h-4 mx-2 border-[0.5px] border-surface-auxilary"></div>
-                  <div>
-                    <h3 class="text-3xs">Sessions DONE:</h3>
-                    <p>3</p>
+                    <p>{{ missionsStore.activeMission.targetSessions }}</p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
           <div></div>
         </div>
         <!-- OUTER HUD -->
@@ -413,11 +457,12 @@ onMounted(async () => {
           </motion.div>
         </div>
 
+        <!-- FOCUS RUN DETAILS (RIGHT) -->
         <div class="flex flex-col items-end justify-center ml-auto gap-y-4 min-w-60">
           <motion.div
             :initial="{ x: 20, opacity: 0 }"
             :animate="{ x: 0, opacity: 1 }"
-            :transition="{ duration: 0.3, delay: 0 }"
+            :transition="{ delay: 0 }"
             class="bg-white/2 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary cut-corners rounded-xl font-tomorrow uppercase w-full"
           >
             <h3 class="text-4xl mb-4">3</h3>
@@ -426,7 +471,7 @@ onMounted(async () => {
           <motion.div
             :initial="{ x: 20, opacity: 0 }"
             :animate="{ x: 0, opacity: 1 }"
-            :transition="{ duration: 0.3, delay: 0.08 }"
+            :transition="{ delay: 0.08 }"
             class="bg-white/2 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary cut-corners rounded-xl font-tomorrow uppercase w-full"
           >
             <h3 class="text-4xl mb-4">13</h3>
@@ -435,7 +480,7 @@ onMounted(async () => {
           <motion.div
             :initial="{ x: 20, opacity: 0 }"
             :animate="{ x: 0, opacity: 1 }"
-            :transition="{ duration: 0.3, delay: 0.16 }"
+            :transition="{ delay: 0.16 }"
             class="bg-white/2 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary cut-corners rounded-xl font-tomorrow uppercase w-full"
           >
             <h3 class="text-4xl mb-4">3h 40m</h3>

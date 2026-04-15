@@ -4,6 +4,14 @@ import { Mission, MissionDraft } from '../../shared/types/mission.js';
 import { getDb } from '../db/db.js';
 
 export class MissionService {
+  static async get(id: number) {
+    try {
+      return await getDb().select().from(mission).where(eq(mission.id, id));
+    } catch {
+      return false;
+    }
+  }
+
   static async getAll() {
     try {
       return await getDb().select().from(mission).orderBy(desc(mission.priority));

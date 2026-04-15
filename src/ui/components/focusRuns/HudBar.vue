@@ -190,7 +190,7 @@ const updateBarVisibilities = () => {
   }
 };
 
-watch([() => focusRunStore.progress, focusRunStore.status], () => {
+watch([() => focusRunStore.progress, () => focusRunStore.status], () => {
   updateBarVisibilities();
 });
 </script>

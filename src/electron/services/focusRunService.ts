@@ -4,6 +4,7 @@ import { getDb } from '../db/db.js';
 import { UserLocalService } from './userLocalService.js';
 import { FocusRunPauseService } from './focusRunPauseService.js';
 import { FocusStreakService } from './focusStreakService.js';
+import { MissionService } from './missionService.js';
 
 export class FocusRunService {
   private static heartbeatInterval: NodeJS.Timeout | null = null;
@@ -148,6 +149,16 @@ export class FocusRunService {
 
     this.stopHeartbeat();
     this.activeRunId = null;
+
+    // Update mission if needed
+    if (row.missionId) {
+      const mission = await MissionService.get(row.missionId);
+      if (!mission) return;
+      const missionRow = mission[0];
+      missionRow.completedSessions += 1;
+
+      await MissionService.update(missionRow);
+    }
   }
 
   static async abandonRun() {

@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useMissionsStore } from './missions';
 
 export const useFocusRunStore = defineStore('focus-runs', {
   state: () => ({
@@ -8,6 +9,7 @@ export const useFocusRunStore = defineStore('focus-runs', {
     serverFocusedMs: 0,
     serverPausedMs: 0,
     status: null as 'running' | 'paused' | 'abandoned' | 'completed' | null,
+    shouldUpdateMissions: false,
 
     // Local animation
     displayFocusedMs: 0,
@@ -51,6 +53,9 @@ export const useFocusRunStore = defineStore('focus-runs', {
       this.lastSyncTime = Date.now();
       this.isActiveFocusRun = true;
 
+      // Queue a missions update
+      this.queueMissionsUpdate();
+
       // Then sync real data
       await this.syncWithMain();
     },
@@ -69,6 +74,7 @@ export const useFocusRunStore = defineStore('focus-runs', {
     },
 
     async finishRun() {
+      this.queueMissionsUpdate();
       await window.electronApi.finishRun();
       await this.syncWithMain();
     },
@@ -93,6 +99,8 @@ export const useFocusRunStore = defineStore('focus-runs', {
         this.runId = null;
         this.status = null;
         this.displayFocusedMs = 0;
+
+        await this.updateMissions();
         return;
       }
 
@@ -134,6 +142,18 @@ export const useFocusRunStore = defineStore('focus-runs', {
     stop() {
       if (this.pollInterval) clearInterval(this.pollInterval);
       if (this.tickInterval) clearInterval(this.tickInterval);
+    },
+
+    queueMissionsUpdate() {
+      this.shouldUpdateMissions = true;
+    },
+
+    async updateMissions() {
+      // Update missions if needed
+      if (this.shouldUpdateMissions) {
+        await useMissionsStore().load();
+        this.shouldUpdateMissions = false;
+      }
     },
   },
 });
