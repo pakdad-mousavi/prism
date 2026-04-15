@@ -237,7 +237,7 @@ onMounted(async () => {
   <div class="flex flex-col flex-1 min-h-0 p-4 overflow-hidden">
     <div class="relative flex w-full flex-1 flex-col gap-10">
       <!-- MAIN -->
-      <div class="flex h-2/3 justify-center relative w-full mt-4">
+      <div class="flex h-3/5 justify-center relative w-full mt-4">
         <div class="flex flex-col justify-center gap-y-10 w-60">
           <div class="font-tomorrow text-xs" v-if="missionsStore.activeMission">
             <h3 class="text-primary mb-2 uppercase">Mission Objective:</h3>
@@ -279,8 +279,8 @@ onMounted(async () => {
           <div></div>
         </div>
         <!-- OUTER HUD -->
-        <div class="absolute-center rounded-full w-17/40 aspect-square" ref="outerHud">
-          <svg viewBox="0 0 500 520" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+        <div class="absolute-center rounded-full h-[110%] aspect-square" ref="outerHud">
+          <svg viewBox="0 0 500 520" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
             <g>
               <g ref="leftHudRing">
                 <path
@@ -446,7 +446,7 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div class="flex h-1/3 w-full">
+      <div class="flex h-2/5 w-full">
         <div class="w-full h-full flex mx-auto">
           <HudBar class="w-full" :useInitialAnimation="shouldAnimateHudBar"></HudBar>
         </div>

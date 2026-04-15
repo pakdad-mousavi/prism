@@ -117,7 +117,7 @@ watch(
     ></div>
     <div
       ref="dropBodyPrimary"
-      :class="`rounded-sm h-3 w-3 absolute left-1/3 -translate-x-1/2 bottom-1 rotate-45 z-1 ${colorClass}`"
+      :class="`rounded-sm h-2.5 w-2.5 absolute left-1/3 -translate-x-1/2 bottom-1 rotate-45 z-1 ${colorClass}`"
     ></div>
     <div
       ref="dropSecondary"
@@ -125,7 +125,7 @@ watch(
     ></div>
     <div
       ref="dropBodySecondary"
-      :class="`rounded-sm h-3 w-3 absolute left-13/20 -translate-x-1/2 bottom-1 rotate-45 z-1 ${colorClass}`"
+      :class="`rounded-sm h-2.5 w-2.5 absolute left-13/20 -translate-x-1/2 bottom-1 rotate-45 z-1 ${colorClass}`"
     ></div>
   </div>
 </template>

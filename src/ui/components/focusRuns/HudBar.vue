@@ -1,12 +1,18 @@
 <script lang="ts" setup>
 import { animate, motion, type AnimationSequence } from 'motion-v';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
+
+import { useFocusRunStore } from '../../stores/focusRuns';
 import FocusBar from './FocusBar.vue';
+import ProgressCell from './ProgressCell.vue';
 
 const props = defineProps<{
   useInitialAnimation: () => Promise<boolean>;
 }>();
 
+// ----------
+// ANIMATIONS
+// ----------
 const outerPathPrimary = ref<HTMLElement | null>(null);
 const outerPathCircleTopPrimary = ref<HTMLElement | null>(null);
 const outerPathCircleBottomPrimary = ref<HTMLElement | null>(null);
@@ -137,23 +143,64 @@ onMounted(async () => {
     secondaryAnimationSequence.push([detail, { pathLength: [0, 1], pathOffset: [0.5, 0] }, { duration: 2, at: 1 }]);
   }
 
-  // HANDLE BARS
-  for (const [index, bar] of Array.from(progressBars.value.children).entries()) {
-    tertiaryAnimationSequence.push([bar, { opacity: [0, 1], x: [-20, 0] }, { duration: 0.1, delay: 0.06 * index, at: 2 }]);
-  }
-
   animate(primaryAnimationSequence);
   animate(secondaryAnimationSequence);
   await animate(tertiaryAnimationSequence);
 });
+
+// ------------------
+// FOCUS RUN PROGRESS
+// ------------------
+const focusRunStore = useFocusRunStore();
+
+const formattedProgress = computed(() => {
+  const percentageFormatter = new Intl.NumberFormat(undefined, {
+    style: 'decimal',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+
+  const normalizedPercentage = focusRunStore.progress * 100;
+  return percentageFormatter.format(normalizedPercentage);
+});
+
+type BarVisibility = [boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean];
+const barVisibility = ref([true, true, true, true, true, true, true, true, true, true, true, true] as BarVisibility);
+
+const updateBarVisibilities = () => {
+  if (!progressBars.value) return;
+  for (let i = 0; i < progressBars.value.children.length; i++) {
+    // Map range of 0-1 to 1-12
+    const mappedProgress = focusRunStore.progress * (barVisibility.value.length - 1) + 1;
+
+    if (i + 1 <= mappedProgress && !barVisibility.value[i]) {
+      const bar = progressBars.value.children[i];
+      animate([[bar, { x: [-10, 0], opacity: [0, 1] }]]);
+
+      barVisibility.value[i] = true;
+    }
+  }
+
+  if (barVisibility.value.every((v) => v === true)) {
+    barVisibility.value = new Array<boolean>(12).fill(false) as BarVisibility;
+  }
+
+  if (!focusRunStore.status) {
+    barVisibility.value = new Array<boolean>(12).fill(true) as BarVisibility;
+  }
+};
+
+watch([() => focusRunStore.progress, focusRunStore.status], () => {
+  updateBarVisibilities();
+});
 </script>
 
 <template>
-  <div class="flex mx-auto max-w-11/12 xxl:max-w-full relative">
+  <div class="flex mx-auto relative items-end">
     <!-- ------------ -->
     <!-- LEFT PARTIAL -->
     <!-- ------------ -->
-    <svg viewBox="0 0 511 238" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-auto">
+    <svg viewBox="0 0 511 238" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-auto max-w-100 xxl:max-w-120">
       <path
         ref="outerPathPrimary"
         d="M302.025 140H291.025C282.225 140 278.025 136.755 277.025 135.133L221.025 77C209.825 63.3734 197.692 59.9889 193.026 60C135.887 60 68.3565 60 50.0257 60C46.8257 60 44.0257 61.5556 43.0257 62.3334L5.02571 91.8889C1.42571 94.6 0.85904 97.7593 1.02571 99L1.02539 186C0.906251 187.574 1.53945 191.4 5.02539 194.111L42.0254 222.889C43.0254 223.926 46.2254 226 51.0254 226H432.525"
@@ -340,7 +387,7 @@ onMounted(async () => {
     <!-- ------------ -->
     <!-- RIGHT PARTIAL -->
     <!-- ------------ -->
-    <svg viewBox="0 0 511 238" fill="none" xmlns="http://www.w3.org/2000/svg" class="-scale-x-100">
+    <svg viewBox="0 0 511 238" fill="none" xmlns="http://www.w3.org/2000/svg" class="-scale-x-100 max-w-100 xxl:max-w-120">
       <path
         ref="outerPathSecondary"
         d="M302.025 140H291.025C282.225 140 278.025 136.755 277.025 135.133L221.025 77C209.825 63.3734 197.692 59.9889 193.026 60C135.887 60 68.3565 60 50.0257 60C46.8257 60 44.0257 61.5556 43.0257 62.3334L5.02571 91.8889C1.42571 94.6 0.85904 97.7593 1.02571 99L1.02539 186C0.906251 187.574 1.53945 191.4 5.02539 194.111L42.0254 222.889C43.0254 223.926 46.2254 226 51.0254 226H432.525"
@@ -524,70 +571,73 @@ onMounted(async () => {
       </defs>
     </svg>
 
-    <!-- ----------- -->
-    <!-- BOTTOM LINE -->
-    <!-- ----------- -->
-    <div class="absolute bottom-[4%] h-0.5 w-30 left-1/2 -translate-x-1/2 flex gap-2 justify-center">
-      <motion.div
-        class="w-2 h-full bg-primary rounded-xl"
-        :initial="{ width: 0 }"
-        :animate="{ width: 8 }"
-        :transition="{ duration: 2 }"
-      ></motion.div>
-      <motion.div
-        class="w-20 h-full bg-primary rounded-xl"
-        :initial="{ width: 0 }"
-        :animate="{ width: 80 }"
-        :transition="{ duration: 2 }"
-      ></motion.div>
-      <motion.div
-        class="w-2 h-full bg-primary rounded-xl"
-        :initial="{ width: 0 }"
-        :animate="{ width: 8 }"
-        :transition="{ duration: 2 }"
-      ></motion.div>
-    </div>
+    <div class="absolute inset-x-0 bottom-0 flex flex-col items-center">
+      <div class="flex flex-col items-center">
+        <!-- ---------- -->
+        <!-- TITLE TEXT -->
+        <!-- ---------- -->
+        <div class="text-xl xxl:text-2xl mb-4">
+          <h3 class="font-tomorrow uppercase text-primary" ref="titleText">Focus Run Progress</h3>
+        </div>
 
-    <!-- ------------- -->
-    <!-- PROGRESS BARS -->
-    <!-- ------------- -->
-    <div class="absolute-center top-3/5 h-1/3">
-      <svg viewBox="0 0 374 78" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" ref="progressBars">
-        <rect x="0.5" y="0.5" width="21" height="77" class="stroke-primary fill-primary/10" />
-        <rect x="32.5" y="0.5" width="21" height="77" class="stroke-primary fill-primary/10" />
-        <rect x="64.5" y="0.5" width="21" height="77" class="stroke-primary fill-primary/10" />
-        <rect x="96.5" y="0.5" width="21" height="77" class="stroke-primary fill-primary/10" />
-        <rect x="128.5" y="0.5" width="21" height="77" class="stroke-primary fill-primary/10" />
-        <rect x="160.5" y="0.5" width="21" height="77" class="stroke-primary fill-primary/10" />
-        <rect x="192.5" y="0.5" width="21" height="77" class="stroke-primary fill-primary/10" />
-        <rect x="224.5" y="0.5" width="21" height="77" class="stroke-primary fill-primary/10" />
-        <rect x="256.5" y="0.5" width="21" height="77" class="stroke-primary fill-primary/10" />
-        <rect x="288.5" y="0.5" width="21" height="77" class="stroke-primary fill-primary/10" />
-        <rect x="320.5" y="0.5" width="21" height="77" class="stroke-primary fill-primary/10" />
-        <rect x="352.5" y="0.5" width="21" height="77" class="stroke-primary fill-primary/10" />
-      </svg>
-    </div>
+        <!-- ------------- -->
+        <!-- PROGRESS BARS -->
+        <!-- ------------- -->
+        <div class="h-1/3 max-w-70 mb-8">
+          <svg viewBox="0 0 374 78" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" ref="progressBars">
+            <ProgressCell
+              :x="0.5 + 32 * index"
+              :y="0.5"
+              :visible="visibility"
+              :loadDelay="0.06 * index"
+              v-for="(visibility, index) in barVisibility"
+            ></ProgressCell>
+          </svg>
+        </div>
 
-    <!-- ---------- -->
-    <!-- TITLE TEXT -->
-    <!-- ---------- -->
-    <div class="absolute-center top-3/10 text-xl xxl:text-2xl">
-      <h3 class="font-tomorrow uppercase text-primary" ref="titleText">Focus Run Progress</h3>
-    </div>
+        <!-- ----------- -->
+        <!-- BOTTOM LINE -->
+        <!-- ----------- -->
+        <div class="h-0.5 w-30 flex gap-2 justify-center mb-3">
+          <motion.div
+            class="w-2 h-full bg-primary rounded-xl"
+            :initial="{ width: 0 }"
+            :animate="{ width: 8 }"
+            :transition="{ duration: 2 }"
+          ></motion.div>
+          <motion.div
+            class="w-20 h-full bg-primary rounded-xl"
+            :initial="{ width: 0 }"
+            :animate="{ width: 80 }"
+            :transition="{ duration: 2 }"
+          ></motion.div>
+          <motion.div
+            class="w-2 h-full bg-primary rounded-xl"
+            :initial="{ width: 0 }"
+            :animate="{ width: 8 }"
+            :transition="{ duration: 2 }"
+          ></motion.div>
+        </div>
+      </div>
 
-    <!-- ------------------ -->
-    <!-- FOCUS RUN PROGRESS -->
-    <!-- ------------------ -->
-    <div class="absolute left-1/20 top-9/20 xxl:text-5xl">
-      <span class="font-tomorrow uppercase text-primary text-7xl xxl:text-8xl">65</span>
-      <span class="font-tomorrow uppercase text-primary">%</span>
-    </div>
+      <!-- ------------------ -->
+      <!-- FOCUS RUN PROGRESS -->
+      <!-- ------------------ -->
+      <div class="absolute top-1/2 -translate-y-1/2 left-1/20 flex items-end">
+        <div class="w-32">
+          <span class="font-tomorrow uppercase text-primary text-7xl">{{ formattedProgress }}</span>
+        </div>
+        <div>
+          <span class="font-tomorrow uppercase text-primary">%</span>
+        </div>
+      </div>
 
-    <!-- --------- -->
-    <!-- FOCUS BAR -->
-    <!-- --------- -->
-    <div class="absolute right-4 top-3/5 -translate-y-2/5 h-1/3">
-      <FocusBar class="w-45 xxl:w-55"></FocusBar>
+      <!-- --------- -->
+      <!-- FOCUS BAR -->
+      <!-- --------- -->
+      <div class="absolute top-1/2 xxl:top-[40%] -translate-y-1/2 right-4">
+        <FocusBar class="w-40 xxl:w-46"></FocusBar>
+      </div>
     </div>
   </div>
 </template>

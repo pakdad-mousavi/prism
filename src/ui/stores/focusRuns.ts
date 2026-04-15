@@ -128,7 +128,7 @@ export const useFocusRunStore = defineStore('focus-runs', {
         if (this.remainingMs <= this.plannedMs) {
           await this.syncWithMain();
         }
-      }, 1000);
+      }, 100);
     },
 
     stop() {
