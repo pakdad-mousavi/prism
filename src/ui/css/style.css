@@ -77,6 +77,10 @@
 }
 
 @layer components {
+  .title-bar {
+    app-region: drag;
+  }
+
   .active-mission {
     @apply bg-primary/10! hover:bg-primary/15!;
   }

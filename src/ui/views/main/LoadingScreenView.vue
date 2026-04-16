@@ -5,7 +5,10 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const changePage = () => {
-  window.setTimeout(() => router.push('/dashboard/command-center'), 1000);
+  window.setTimeout(() => {
+    router.push('/dashboard/command-center');
+    window.electronApi.showTrafficLights();
+  }, 1000);
 };
 
 const shape = {

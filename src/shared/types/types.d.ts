@@ -5,6 +5,9 @@ import type { DecayDetails } from './focusStreak';
 declare global {
   interface Window {
     electronApi: {
+      // MAIN WINDOW
+      showTrafficLights: () => void;
+
       // MISSIONS
       getMissions: () => Promise<Mission[] | false>;
       createMission: (m: MissionDraft) => Promise<true | false>;

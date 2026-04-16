@@ -11,6 +11,8 @@ import { getPreloadPath } from './pathResolver.js';
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
+    titleBarStyle: 'hidden',
+    trafficLightPosition: { x: 16, y: 7 },
     show: false,
     backgroundColor: '#07080d',
     webPreferences: {
@@ -24,6 +26,11 @@ const createWindow = () => {
     mainWindow.loadFile(path.join(app.getAppPath(), './dist-vue/index.html'));
   }
 
+  mainWindow.setWindowButtonVisibility(false);
+  return mainWindow;
+};
+
+const showWindow = (mainWindow: BrowserWindow) => {
   mainWindow.once('ready-to-show', () => {
     mainWindow.maximize();
     mainWindow.show();
@@ -38,8 +45,11 @@ app.whenReady().then(async () => {
 
   await migrate(getDb(), { migrationsFolder });
 
+  // Create main window
+  const window = createWindow();
+
   // Register ipc handlers
-  registerIpcHandlers();
+  registerIpcHandlers(window);
 
   // Set up services
   for (const Service of services) {
@@ -49,5 +59,5 @@ app.whenReady().then(async () => {
   }
 
   // Show UI
-  createWindow();
+  showWindow(window);
 });
