@@ -47,8 +47,13 @@ const enableScroll = ref(true);
 
         <div class="flex flex-col h-[calc(100%-96px)]">
           <div class="flex flex-col flex-1 p-4 gap-y-2">
-            <span class="text-primary text-xs ml-2.5 block font-medium font-tomorrow">MAIN</span>
-            <div>
+            <motion.span
+              class="text-primary text-xs ml-2.5 block font-medium font-tomorrow"
+              :initial="{ x: -10, opacity: 0 }"
+              :animate="{ x: 0, opacity: 1 }"
+              >MAIN</motion.span
+            >
+            <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.08 }">
               <RouterLink
                 class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
                 to="/dashboard/command-center"
@@ -56,10 +61,16 @@ const enableScroll = ref(true);
                 <Dashboard class="w-5 h-5 mr-2 text-secondary"></Dashboard>
                 <span>COMMAND CENTER</span>
               </RouterLink>
-            </div>
+            </motion.div>
 
-            <span class="text-primary text-xs ml-2.5 block font-medium font-tomorrow mt-6">FOCUS</span>
-            <div>
+            <motion.span
+              class="text-primary text-xs ml-2.5 block font-medium font-tomorrow mt-6"
+              :initial="{ x: -10, opacity: 0 }"
+              :animate="{ x: 0, opacity: 1 }"
+              :transition="{ delay: 0.16 }"
+              >FOCUS</motion.span
+            >
+            <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.24 }">
               <RouterLink
                 class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
                 to="/dashboard/missions"
@@ -67,9 +78,9 @@ const enableScroll = ref(true);
                 <Compass class="w-5 h-5 mr-2 text-secondary"></Compass>
                 <span>MISSIONS</span>
               </RouterLink>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.32 }">
               <RouterLink
                 class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
                 to="/dashboard/focus-run"
@@ -77,9 +88,9 @@ const enableScroll = ref(true);
                 <Bolt class="w-5 h-5 mr-2 text-secondary"></Bolt>
                 <span>FOCUS RUN</span>
               </RouterLink>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.4 }">
               <RouterLink
                 class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
                 to="/dashboard/campaigns"
@@ -87,10 +98,16 @@ const enableScroll = ref(true);
                 <Flag class="w-5 h-5 mr-2 text-secondary"></Flag>
                 <span>CAMPAIGNS</span>
               </RouterLink>
-            </div>
+            </motion.div>
 
-            <span class="text-primary text-xs ml-2.5 block font-medium font-tomorrow mt-6">RECONNAISSANCE</span>
-            <div>
+            <motion.span
+              class="text-primary text-xs ml-2.5 block font-medium font-tomorrow mt-6"
+              :initial="{ x: -10, opacity: 0 }"
+              :animate="{ x: 0, opacity: 1 }"
+              :transition="{ delay: 0.48 }"
+              >RECONNAISSANCE</motion.span
+            >
+            <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.56 }">
               <RouterLink
                 class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
                 to="/dashboard/signals"
@@ -98,8 +115,8 @@ const enableScroll = ref(true);
                 <Signal class="w-5 h-5 mr-2 text-secondary"></Signal>
                 <span>SIGNALS</span>
               </RouterLink>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.64 }">
               <RouterLink
                 class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
                 to="/dashboard/progress"
@@ -107,11 +124,11 @@ const enableScroll = ref(true);
                 <Progress class="w-5 h-5 mr-2 text-secondary"></Progress>
                 <span>PROGRESS</span>
               </RouterLink>
-            </div>
+            </motion.div>
           </div>
 
           <div class="p-4">
-            <div>
+            <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.72 }">
               <RouterLink
                 class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
                 to="/dashboard/settings"
@@ -119,8 +136,8 @@ const enableScroll = ref(true);
                 <Cog class="w-5 h-5 mr-2 text-secondary"></Cog>
                 <span>SETTINGS</span>
               </RouterLink>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.8 }">
               <RouterLink
                 class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
                 to="/dashboard/help"
@@ -128,27 +145,43 @@ const enableScroll = ref(true);
                 <Help class="w-5 h-5 mr-2 text-secondary"></Help>
                 <span>HELP</span>
               </RouterLink>
-            </div>
+            </motion.div>
 
-            <div class="w-full h-px mt-2 mb-4 bg-linear-to-r from-transparent via-surface-auxilary to-transparent"></div>
+            <motion.div
+              class="h-px mt-2 mb-4 mx-auto bg-linear-to-r from-transparent via-surface-auxilary to-transparent"
+              :initial="{ width: 0 }"
+              :animate="{ width: '100%' }"
+              :transition="{ delay: 0.84 }"
+            ></motion.div>
 
             <div class="flex font-tomorrow">
-              <div
+              <motion.div
+                :initial="{ y: -10, opacity: 0 }"
+                :animate="{ y: 0, opacity: 1 }"
+                :transition="{ delay: 0.88 }"
                 class="flex items-center justify-center w-1/2 h-16 border cut-corners rounded-bl-3xl border-primary bg-surface-primary glow"
               >
                 <p>SIGN IN</p>
-              </div>
-              <div
+              </motion.div>
+              <motion.div
+                :initial="{ y: 10, opacity: 0 }"
+                :animate="{ y: 0, opacity: 1 }"
+                :transition="{ delay: 0.88 }"
                 class="flex items-center justify-center w-1/2 h-16 border cut-corners rounded-tr-3xl border-primary bg-surface-primary glow"
               >
                 <p>SIGN UP</p>
-              </div>
+              </motion.div>
             </div>
 
-            <div class="flex mt-4 text-stone-600 text-2xs font-tomorrow">
+            <motion.div
+              class="flex mt-4 text-stone-600 text-2xs font-tomorrow"
+              :initial="{ y: 10, opacity: 0 }"
+              :animate="{ y: 0, opacity: 1 }"
+              :transition="{ delay: 0.96 }"
+            >
               <span class="flex-1">© {{ year }} PRISM, ALL RIGHTS RESERVED.</span>
               <span>V1.0.0</span>
-            </div>
+            </motion.div>
           </div>
         </div>
       </aside>
