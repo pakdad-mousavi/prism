@@ -1,4 +1,4 @@
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, count, eq, gte, isNull, lt } from 'drizzle-orm';
 import { getDb } from '../db/db.js';
 import { focusRunPause } from '../db/schema/focusRunPause.sql.js';
 
@@ -52,5 +52,28 @@ export class FocusRunPauseService {
     } catch {
       return false;
     }
+  }
+
+  static async getTotalMidRunPausesToday() {
+    const now = new Date();
+
+    // start of today
+    const startOfDay = new Date(now);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    // start of tomorrow
+    const endOfDay = new Date(now);
+    endOfDay.setHours(24, 0, 0, 0);
+
+    const res = (
+      await getDb()
+        .select({
+          totalPauses: count(focusRunPause.id).mapWith(Number),
+        })
+        .from(focusRunPause)
+        .where(and(gte(focusRunPause.pausedAt, startOfDay), lt(focusRunPause.pausedAt, endOfDay)))
+    )[0];
+
+    return res.totalPauses ?? 0;
   }
 }

@@ -73,4 +73,34 @@ export const registerFocusRunHandlers = () => {
       return false;
     }
   });
+
+  ipcMain.handle('focusRun:getTotalRunsCompletedToday', async (e) => {
+    validateSender(e.senderFrame);
+
+    try {
+      return await FocusRunService.getTotalRunsCompletedToday();
+    } catch {
+      return false;
+    }
+  });
+
+  ipcMain.handle('focusRun:getTotalMidRunPausesToday', async (e) => {
+    validateSender(e.senderFrame);
+
+    try {
+      return await FocusRunService.getTotalMidRunPausesToday();
+    } catch {
+      return false;
+    }
+  });
+
+  ipcMain.handle('focusRun:getTotalSecondsWorkedToday', async (e) => {
+    validateSender(e.senderFrame);
+
+    try {
+      return await FocusRunService.getTotalSecondsWorkedToday();
+    } catch {
+      return false;
+    }
+  });
 };

@@ -296,8 +296,8 @@ const getMissionProgress = computed(() => {
               <div class="w-2 bg-primary"></div>
               <div>
                 <div class="border border-primary p-2 uppercase flex gap-10 items-center">
-                  <h3 class="flex-1">Total Time Worked:</h3>
-                  <h4>1h 20m</h4>
+                  <h3 class="flex-1">Mission Type:</h3>
+                  <h4>{{ missionsStore.activeMission.scale }}</h4>
                 </div>
                 <div class="flex items-center uppercase mt-1">
                   <div>
@@ -311,7 +311,7 @@ const getMissionProgress = computed(() => {
                   </div>
                   <div class="h-4 mx-2 border-[0.5px] border-surface-auxilary"></div>
                   <div>
-                    <h3 class="text-3xs">Sessions Left:</h3>
+                    <h3 class="text-3xs">Target Sessions:</h3>
                     <p>{{ missionsStore.activeMission.targetSessions }}</p>
                   </div>
                 </div>
@@ -465,7 +465,7 @@ const getMissionProgress = computed(() => {
             :transition="{ delay: 0 }"
             class="bg-white/2 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary cut-corners rounded-xl font-tomorrow uppercase w-full"
           >
-            <h3 class="text-4xl mb-4">3</h3>
+            <h3 class="text-4xl mb-4">{{ focusRunStore.totalRunsCompletedToday }}</h3>
             <h4 class="text-xs text-primary">Sessions Worked Today</h4>
           </motion.div>
           <motion.div
@@ -474,7 +474,7 @@ const getMissionProgress = computed(() => {
             :transition="{ delay: 0.08 }"
             class="bg-white/2 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary cut-corners rounded-xl font-tomorrow uppercase w-full"
           >
-            <h3 class="text-4xl mb-4">13</h3>
+            <h3 class="text-4xl mb-4">{{ focusRunStore.totalMidRunPausesToday }}</h3>
             <h4 class="text-xs text-primary">Mid-run Pauses Today</h4>
           </motion.div>
           <motion.div
@@ -483,7 +483,10 @@ const getMissionProgress = computed(() => {
             :transition="{ delay: 0.16 }"
             class="bg-white/2 backdrop-blur-[2px] background-edge-spin p-4 border border-surface-tertiary cut-corners rounded-xl font-tomorrow uppercase w-full"
           >
-            <h3 class="text-4xl mb-4">3h 40m</h3>
+            <h3 class="text-4xl mb-4">
+              {{ parseMilliseconds(focusRunStore.totalSecondsWorkedToday * 1000).hours }}h
+              {{ parseMilliseconds(focusRunStore.totalSecondsWorkedToday * 1000).minutes }}m
+            </h3>
             <h4 class="text-xs text-primary">In Focus Runs</h4>
           </motion.div>
         </div>

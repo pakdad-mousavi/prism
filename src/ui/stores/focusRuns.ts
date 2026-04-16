@@ -11,6 +11,12 @@ export const useFocusRunStore = defineStore('focus-runs', {
     status: null as 'running' | 'paused' | 'abandoned' | 'completed' | null,
     shouldUpdateMissions: false,
 
+    // Other details
+    totalSecondsWorkedOnMission: 0,
+    totalRunsCompletedToday: 0,
+    totalMidRunPausesToday: 0,
+    totalSecondsWorkedToday: 0,
+
     // Local animation
     displayFocusedMs: 0,
 
@@ -94,6 +100,16 @@ export const useFocusRunStore = defineStore('focus-runs', {
 
     async syncWithMain() {
       const res = await window.electronApi.getActiveRunState();
+      const details = {
+        totalRunsCompletedToday: await window.electronApi.getTotalRunsCompletedToday(),
+        totalMidRunPausesToday: await window.electronApi.getTotalMidRunPausesToday(),
+        totalSecondsWorkedToday: await window.electronApi.getTotalSecondsWorkedToday(),
+      };
+
+      this.totalRunsCompletedToday = details.totalRunsCompletedToday || 0;
+      this.totalMidRunPausesToday = details.totalMidRunPausesToday || 0;
+      this.totalSecondsWorkedToday = details.totalSecondsWorkedToday || 0;
+
       if (!res) {
         this.isActiveFocusRun = false;
         this.runId = null;

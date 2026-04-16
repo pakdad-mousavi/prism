@@ -1,4 +1,4 @@
-import { eq, isNull } from 'drizzle-orm';
+import { and, eq, gte, isNull, lt, count, isNotNull, sql } from 'drizzle-orm';
 import { focusRun } from '../db/schema/focusRun.sql.js';
 import { getDb } from '../db/db.js';
 import { UserLocalService } from './userLocalService.js';
@@ -197,6 +197,7 @@ export class FocusRunService {
     }
   }
 
+  // INFO GETTERS
   static async getActiveRunState() {
     if (!this.activeRunId) return null;
 
@@ -211,5 +212,62 @@ export class FocusRunService {
       focusedMs,
       pausedMs,
     };
+  }
+
+  static async getTotalRunsCompletedToday() {
+    const now = new Date();
+
+    // start of today
+    const startOfDay = new Date(now);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    // start of tomorrow
+    const endOfDay = new Date(now);
+    endOfDay.setHours(24, 0, 0, 0);
+
+    const res = (
+      await getDb()
+        .select({
+          totalRuns: count(focusRun.id).mapWith(Number),
+        })
+        .from(focusRun)
+        .where(and(eq(focusRun.status, 'completed'), gte(focusRun.endedAt, startOfDay), lt(focusRun.endedAt, endOfDay)))
+    )[0];
+
+    return res.totalRuns ?? 0;
+  }
+
+  static async getTotalMidRunPausesToday() {
+    return await FocusRunPauseService.getTotalMidRunPausesToday();
+  }
+
+  static async getTotalSecondsWorkedToday() {
+    const now = new Date();
+
+    // start of today
+    const startOfDay = new Date(now);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    // start of tomorrow
+    const endOfDay = new Date(now);
+    endOfDay.setHours(24, 0, 0, 0);
+
+    const res = (
+      await getDb()
+        .select({
+          totalSeconds: sql<number>`
+        COALESCE(
+          SUM(
+            (${focusRun.endedAt} - ${focusRun.startedAt}) / 1000
+          ),
+          0
+        )
+      `.mapWith(Number),
+        })
+        .from(focusRun)
+        .where(and(eq(focusRun.status, 'completed'), gte(focusRun.endedAt, startOfDay), lt(focusRun.endedAt, endOfDay)))
+    )[0];
+
+    return res.totalSeconds ?? 0;
   }
 }

@@ -22,7 +22,10 @@ declare global {
       finishRun: () => Promise<true | false>;
       abandonRun: () => Promise<true | false>;
       getActiveRunState: () => Promise<ActiveRunState | null | false>;
-      
+      getTotalRunsCompletedToday: () => Promise<number | false>;
+      getTotalMidRunPausesToday: () => Promise<number | false>;
+      getTotalSecondsWorkedToday: () => Promise<number | false>;
+
       // FOCUS STREAK
       fillBarAndStartDecay: () => Promise<true | false>;
       stopDecay: () => Promise<true | false>;
