@@ -55,7 +55,7 @@ const enableScroll = ref(true);
             >
             <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.08 }">
               <RouterLink
-                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200"
                 to="/dashboard/command-center"
               >
                 <Dashboard class="w-5 h-5 mr-2 text-secondary"></Dashboard>
@@ -72,7 +72,7 @@ const enableScroll = ref(true);
             >
             <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.24 }">
               <RouterLink
-                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200"
                 to="/dashboard/missions"
               >
                 <Compass class="w-5 h-5 mr-2 text-secondary"></Compass>
@@ -82,7 +82,7 @@ const enableScroll = ref(true);
 
             <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.32 }">
               <RouterLink
-                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200"
                 to="/dashboard/focus-run"
               >
                 <Bolt class="w-5 h-5 mr-2 text-secondary"></Bolt>
@@ -92,11 +92,12 @@ const enableScroll = ref(true);
 
             <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.4 }">
               <RouterLink
-                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 pointer-events-none text-surface-auxilary"
                 to="/dashboard/campaigns"
               >
-                <Flag class="w-5 h-5 mr-2 text-secondary"></Flag>
+                <Flag class="w-5 h-5 mr-2 text-surface-auxilary"></Flag>
                 <span>CAMPAIGNS</span>
+                <span class="ml-auto text-2xs text-surface-auxilary mt-auto uppercase">(Coming Soon)</span>
               </RouterLink>
             </motion.div>
 
@@ -109,20 +110,22 @@ const enableScroll = ref(true);
             >
             <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.56 }">
               <RouterLink
-                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 pointer-events-none text-surface-auxilary"
                 to="/dashboard/signals"
               >
-                <Signal class="w-5 h-5 mr-2 text-secondary"></Signal>
+                <Signal class="w-5 h-5 mr-2 text-surface-auxilary"></Signal>
                 <span>SIGNALS</span>
+                <span class="ml-auto text-2xs text-surface-auxilary mt-auto uppercase">(Coming Soon)</span>
               </RouterLink>
             </motion.div>
             <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.64 }">
               <RouterLink
-                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 pointer-events-none text-surface-auxilary"
                 to="/dashboard/progress"
               >
-                <Progress class="w-5 h-5 mr-2 text-secondary"></Progress>
+                <Progress class="w-5 h-5 mr-2 text-surface-auxilary"></Progress>
                 <span>PROGRESS</span>
+                <span class="ml-auto text-2xs text-surface-auxilary mt-auto uppercase">(Coming Soon)</span>
               </RouterLink>
             </motion.div>
           </div>
@@ -130,20 +133,22 @@ const enableScroll = ref(true);
           <div class="p-4">
             <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.72 }">
               <RouterLink
-                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 pointer-events-none text-surface-auxilary"
                 to="/dashboard/settings"
               >
-                <Cog class="w-5 h-5 mr-2 text-secondary"></Cog>
+                <Cog class="w-5 h-5 mr-2 text-surface-auxilary"></Cog>
                 <span>SETTINGS</span>
+                <span class="ml-auto text-2xs text-surface-auxilary mt-auto uppercase">(Coming Soon)</span>
               </RouterLink>
             </motion.div>
             <motion.div :initial="{ x: -10, opacity: 0 }" :animate="{ x: 0, opacity: 1 }" :transition="{ delay: 0.8 }">
               <RouterLink
-                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 bg-surface-primary/"
+                class="flex items-center cut-corners rounded-md border border-transparent px-2.5 py-2 font-tomorrow font-light text-sm duration-200 pointer-events-none text-surface-auxilary"
                 to="/dashboard/help"
               >
-                <Help class="w-5 h-5 mr-2 text-secondary"></Help>
+                <Help class="w-5 h-5 mr-2 text-surface-auxilary"></Help>
                 <span>HELP</span>
+                <span class="ml-auto text-2xs text-surface-auxilary mt-auto uppercase">(Coming Soon)</span>
               </RouterLink>
             </motion.div>
 
