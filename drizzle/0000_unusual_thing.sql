@@ -53,7 +53,7 @@ CREATE TABLE `mission` (
 	`is_auto_mission` integer NOT NULL,
 	`estimated_minutes` integer,
 	`target_sessions` integer,
-	`completed_sessions` integer DEFAULT 0,
+	`completed_sessions` integer DEFAULT 0 NOT NULL,
 	`priority` integer DEFAULT 0,
 	`status` text DEFAULT 'active' NOT NULL,
 	`order_index` integer DEFAULT 0 NOT NULL,
@@ -65,16 +65,14 @@ CREATE TABLE `mission` (
 --> statement-breakpoint
 CREATE TABLE `streak_day` (
 	`day` integer PRIMARY KEY NOT NULL,
-	`focused_minutes` integer NOT NULL,
-	`run_count` integer NOT NULL,
+	`focused_minutes` integer DEFAULT 0 NOT NULL,
+	`run_count` integer DEFAULT 0 NOT NULL,
 	`last_run_id` integer,
-	`heatmap_level` integer DEFAULT 0 NOT NULL,
 	`created_at` integer DEFAULT (unixepoch() * 1000) NOT NULL,
 	`updated_at` integer NOT NULL,
 	FOREIGN KEY (`last_run_id`) REFERENCES `focus_run`(`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
-CREATE INDEX `idx_streak_updated` ON `streak_day` (`updated_at`);--> statement-breakpoint
 CREATE TABLE `sync_queue` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`table_name` text NOT NULL,

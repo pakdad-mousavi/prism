@@ -1,6 +1,6 @@
 {
-  "id": "6c3d0ec7-4c52-4656-954e-25de26774bd8",
-  "prevId": "5c2330a7-e419-43e8-afe0-56f5161c6ba1",
+  "id": "d86c34ef-3083-4444-bb9e-f29e046f2326",
+  "prevId": "3759281f-9c2a-443e-a457-76c2b15a915f",
   "version": "6",
   "dialect": "sqlite",
   "tables": {
@@ -362,7 +362,7 @@
           "name": "completed_sessions",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "default": 0
         },
@@ -449,14 +449,16 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": 0
         },
         "run_count": {
           "name": "run_count",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": 0
         },
         "last_run_id": {
           "name": "last_run_id",
@@ -464,14 +466,6 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
-        },
-        "heatmap_level": {
-          "name": "heatmap_level",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -489,15 +483,7 @@
           "autoincrement": false
         }
       },
-      "indexes": {
-        "idx_streak_updated": {
-          "name": "idx_streak_updated",
-          "columns": [
-            "updated_at"
-          ],
-          "isUnique": false
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
         "streak_day_last_run_id_focus_run_id_fk": {
           "name": "streak_day_last_run_id_focus_run_id_fk",
