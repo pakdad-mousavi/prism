@@ -4,6 +4,7 @@ import { ActiveMissionService } from './activeMissionService.js';
 import { FocusStreakService } from './focusStreakService.js';
 import { FocusRunPauseService } from './focusRunPauseService.js';
 import { FocusRunService } from './focusRunService.js';
+import { StreakDayService } from './StreakDayService.js';
 
 export default [
   UserLocalService,
@@ -12,4 +13,5 @@ export default [
   FocusStreakService,
   FocusRunPauseService,
   FocusRunService,
+  StreakDayService,
 ];

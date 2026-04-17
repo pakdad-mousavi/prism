@@ -1,10 +1,11 @@
-import { and, eq, gte, isNull, lt, count, isNotNull, sql } from 'drizzle-orm';
+import { and, eq, gte, isNull, lt, count, sql } from 'drizzle-orm';
 import { focusRun } from '../db/schema/focusRun.sql.js';
 import { getDb } from '../db/db.js';
 import { UserLocalService } from './userLocalService.js';
 import { FocusRunPauseService } from './focusRunPauseService.js';
 import { FocusStreakService } from './focusStreakService.js';
 import { MissionService } from './missionService.js';
+import { StreakDayService } from './StreakDayService.js';
 
 export class FocusRunService {
   private static heartbeatInterval: NodeJS.Timeout | null = null;
@@ -35,6 +36,18 @@ export class FocusRunService {
         await this.pauseRun(true, run.lastHeartbeatAt);
       }
     }
+  }
+
+  private static async upsertStreakDay(upsertData: { lastRunId: number | null; focusedMinutesDelta: number }) {
+    const now = new Date();
+    const day = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    const streakDayDeltas = {
+      day,
+      focusedMinutesDelta: upsertData.focusedMinutesDelta,
+      lastRunId: upsertData.lastRunId,
+    };
+    await StreakDayService.upsertStreakDay(streakDayDeltas);
   }
 
   static async startRun(missionId: number | null, deviceId: string) {
@@ -101,7 +114,6 @@ export class FocusRunService {
 
     const totalPauseTimeMs = await FocusRunPauseService.getTotalPausedTimeMs(this.activeRunId);
     const focusedMs = Date.now() - this.runStartedAt.getTime() - totalPauseTimeMs;
-    // const plannedMs = run.plannedMinutes * 60 * 1000;
 
     if (focusedMs >= this.plannedMs) {
       await FocusStreakService.fillBarAndStartDecay();
@@ -130,25 +142,38 @@ export class FocusRunService {
   static async finishRun() {
     if (!this.activeRunId) return;
 
-    await FocusStreakService.startDecay();
-
+    // Defensive guards
     const [row] = await getDb().select().from(focusRun).where(eq(focusRun.id, this.activeRunId));
     if (!row || row.status === 'completed' || row.status === 'abandoned') return;
 
+    // End pause if needed
     if (row.status === 'paused') {
       await FocusRunPauseService.endPause(this.activeRunId);
     }
+
+    // Update focus run
+    const endedAt = new Date();
 
     await getDb()
       .update(focusRun)
       .set({
         status: 'completed',
-        endedAt: new Date(),
+        endedAt,
       })
       .where(eq(focusRun.id, this.activeRunId));
 
+    // Stop heartbeat and reset active run id
     this.stopHeartbeat();
     this.activeRunId = null;
+
+    // Start focus streak decay
+    await FocusStreakService.startDecay();
+
+    // Update streakDays
+    const startedAt = row.startedAt.getTime();
+    const focusedMs = Math.max(0, endedAt.getTime() - startedAt);
+    const focusedMinutes = Math.round(focusedMs / 1000 / 60);
+    await this.upsertStreakDay({ lastRunId: row.id, focusedMinutesDelta: focusedMinutes });
 
     // Update mission if needed
     if (row.missionId) {
