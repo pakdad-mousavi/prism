@@ -58,12 +58,10 @@ export class FocusRunPauseService {
     const now = new Date();
 
     // start of today
-    const startOfDay = new Date(now);
-    startOfDay.setHours(0, 0, 0, 0);
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     // start of tomorrow
-    const endOfDay = new Date(now);
-    endOfDay.setHours(24, 0, 0, 0);
+    const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
 
     const res = (
       await getDb()
