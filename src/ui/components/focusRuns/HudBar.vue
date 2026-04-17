@@ -583,7 +583,7 @@ watch([() => focusRunStore.progress, () => focusRunStore.status], () => {
         <!-- ------------- -->
         <!-- PROGRESS BARS -->
         <!-- ------------- -->
-        <div class="h-1/3 max-w-70 mb-8">
+        <div class="w-70 xxl:w-85 mb-8 xxl:mb-10">
           <svg viewBox="0 0 374 78" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full" ref="progressBars">
             <ProgressCell
               :x="0.5 + 32 * index"
