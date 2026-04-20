@@ -14,7 +14,7 @@ const focusRunStore = useFocusRunStore();
           :initial="{ opacity: 0, x: -5 }"
           :animate="{ opacity: 1, x: 0 }"
           :exit="{ opacity: 0, x: -5 }"
-          :transition="{ delay: 0.08 }"
+          :transition="{ delay: 0 }"
           class="ml-auto"
         >
           <button class="menu-button" @click="focusRunStore.finishRun">
@@ -26,7 +26,7 @@ const focusRunStore = useFocusRunStore();
           :initial="{ opacity: 0, x: -5 }"
           :animate="{ opacity: 1, x: 0 }"
           :exit="{ opacity: 0, x: -5 }"
-          :transition="{ delay: 0.16 }"
+          :transition="{ delay: 0.08 }"
           class=""
         >
           <button class="menu-button" @click="focusRunStore.abandonRun">
