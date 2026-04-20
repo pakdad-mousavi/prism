@@ -147,10 +147,10 @@ onUnmounted(() => document.addEventListener('pointermove', updateTooltipPosition
 
 const getColor = (value: number) => {
   if (value <= 0) return 'bg-surface-tertiary';
-  else if (value <= 5) return 'bg-primary/20';
-  else if (value <= 25) return 'bg-primary/50';
+  else if (value <= 25) return 'bg-primary/20';
+  else if (value <= 50) return 'bg-primary/50';
   else if (value <= 100) return 'bg-primary';
-  else if (value <= 150) return 'bg-auxilary';
+  else if (value <= 200) return 'bg-auxilary';
   else return 'bg-tertiary';
 };
 

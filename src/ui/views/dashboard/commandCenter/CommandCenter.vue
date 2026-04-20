@@ -197,6 +197,7 @@ const getTimeFromSeconds = (seconds: number) => {
               <div class="w-3 h-3 bg-primary/50 cut-corners rounded-xs"></div>
               <div class="w-3 h-3 bg-primary cut-corners rounded-xs"></div>
               <div class="w-3 h-3 bg-auxilary cut-corners rounded-xs"></div>
+              <div class="w-3 h-3 bg-tertiary cut-corners rounded-xs"></div>
             </div>
             <span>More</span>
           </div>
