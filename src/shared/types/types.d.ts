@@ -1,6 +1,7 @@
 import type { Mission, MissionDraft } from './mission';
 import type { ActiveRunState } from './focusRun';
 import type { DecayDetails } from './focusStreak';
+import type { StreakDay } from './streakDay';
 
 declare global {
   interface Window {
@@ -33,6 +34,12 @@ declare global {
       fillBarAndStartDecay: () => Promise<true | false>;
       stopDecay: () => Promise<true | false>;
       getDecayDetails: () => Promise<DecayDetails | false>;
+
+      // STREAK DAY
+      getCurrentStreakCount: () => Promise<number>;
+      getLongestStreakCountInDateRange: (from: Date, to: Date) => Promise<number>;
+      getStreakDaysInDateRange: (from: Date, to: Date) => Promise<StreakDay[]>;
+      getTotalFocusRunsInDateRange: (from: Date, to: Date) => Promise<number>;
     };
   }
 }

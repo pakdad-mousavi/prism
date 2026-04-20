@@ -33,4 +33,10 @@ contextBridge.exposeInMainWorld('electronApi', {
   fillBarAndStartDecay: () => ipcRenderer.invoke('focusStreak:fillBarAndStartDecay'),
   stopDecay: () => ipcRenderer.invoke('focusStreak:stopDecay'),
   getDecayDetails: () => ipcRenderer.invoke('focusStreak:getDecayDetails'),
+
+  // STREAK DAYS
+  getCurrentStreakCount: () => ipcRenderer.invoke('streakDay:getCurrentStreakCount'),
+  getLongestStreakCountInDateRange: (from: Date, to: Date) => ipcRenderer.invoke('streakDay:getLongestStreakCountInDateRange', from, to),
+  getStreakDaysInDateRange: (from: Date, to: Date) => ipcRenderer.invoke('streakDay:getStreakDaysInDateRange', from, to),
+  getTotalFocusRunsInDateRange: (from: Date, to: Date) => ipcRenderer.invoke('streakDay:getTotalFocusRunsInDateRange', from, to),
 });
