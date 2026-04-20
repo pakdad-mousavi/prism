@@ -1,1 +1,0 @@
-<template>command center</template>

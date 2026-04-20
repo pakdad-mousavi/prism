@@ -45,6 +45,10 @@
 }
 
 @layer base {
+  * {
+    scrollbar-color: var(--color-surface-auxilary) transparent;
+  }
+
   body {
     @apply min-h-svh w-full;
   }
@@ -115,6 +119,11 @@
       linear-gradient(#000 0 0);
     mask-composite: exclude;
     animation: rotate-border 5s linear infinite;
+  }
+
+  .trapezoid-clip {
+    /* Coordinates: (top-left, top-right, bottom-right, bottom-left) */
+    clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 10% 100%);
   }
 
   @keyframes rotate-border {

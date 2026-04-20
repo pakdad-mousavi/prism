@@ -1,6 +1,7 @@
 import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router';
 import Dashboard from '../views/dashboard/Dashboard.vue';
-import CommandCenter from '../views/dashboard/CommandCenter.vue';
+import CommandCenter from '../views/dashboard/commandCenter/CommandCenter.vue';
+import CommandCenterMenu from '../views/dashboard/commandCenter/CommandCenterMenu.vue';
 import Missions from '../views/dashboard/missions/Missions.vue';
 import MissionsMenu from '../views/dashboard/missions/MissionsMenu.vue';
 import FocusRun from '../views/dashboard/focusRuns/FocusRun.vue';
@@ -16,7 +17,10 @@ export const router = createRouter({
       children: [
         {
           path: 'command-center',
-          component: CommandCenter,
+          components: {
+            main: CommandCenter,
+            menu: CommandCenterMenu,
+          },
         },
         {
           path: 'missions',
