@@ -1,4 +1,4 @@
-import { and, asc, gte, lt, sql } from 'drizzle-orm';
+import { and, asc, gte, lt, sql, sum } from 'drizzle-orm';
 import { getDb } from '../db/db.js';
 import { streakDay } from '../db/schema/streakDay.sql.js';
 
@@ -41,15 +41,15 @@ export class StreakDayService {
   static async getLongestStreakCountInDateRange(range: { from: Date; to: Date }) {
     // Get all days in range
     const rows = await getDb()
-      .select({ day: streakDay.day })
+      .select()
       .from(streakDay)
       .where(and(gte(streakDay.day, range.from), lt(streakDay.day, range.to)))
       .orderBy(asc(streakDay.day));
 
     if (rows.length === 0) return 0;
 
-    let longest = 1;
-    let current = 1;
+    let longest = 0;
+    let current = 0;
 
     // Find longest consecutive streak
     for (let i = 1; i < rows.length; i++) {
@@ -59,11 +59,11 @@ export class StreakDayService {
       const diffDays = curr - prev;
 
       // If one day, add to current streak, else reset
-      if (diffDays === 1) {
+      if (diffDays === 1 && rows[i].focusedMinutes >= 0) {
         current++;
         longest = Math.max(longest, current);
       } else {
-        current = 1;
+        current = 0;
       }
     }
 
@@ -72,7 +72,7 @@ export class StreakDayService {
 
   static async getCurrentStreakCount() {
     // Get all days in range
-    const rows = await getDb().select({ day: streakDay.day }).from(streakDay).orderBy(asc(streakDay.day));
+    const rows = await getDb().select().from(streakDay).orderBy(asc(streakDay.day));
 
     if (rows.length === 0) return 0;
 
@@ -81,17 +81,17 @@ export class StreakDayService {
     const lastDay = this.toDayNumber(rows[rows.length - 1].day.getTime());
     if (today - lastDay > 1) return 0;
 
-    let current = 1;
+    let current = 0;
 
     // Find longest consecutive streak
-    for (let i = rows.length - 1; i > 0; i++) {
+    for (let i = rows.length - 1; i > 0; i--) {
       // Compare time between previous and current day
       const curr = this.toDayNumber(rows[i].day.getTime());
       const prev = this.toDayNumber(rows[i - 1].day.getTime());
       const diffDays = curr - prev;
 
       // If one day, add to current streak, else reset
-      if (diffDays === 1) {
+      if (diffDays === 1 && rows[i].focusedMinutes >= 0) {
         current++;
       } else {
         break;
@@ -99,5 +99,15 @@ export class StreakDayService {
     }
 
     return current;
+  }
+
+  static async getTotalFocusRunsInDateRange(range: { from: Date; to: Date }) {
+    // Get all days in range
+    const result = await getDb()
+      .select({ totalFocusRuns: sum(streakDay.runCount) })
+      .from(streakDay)
+      .where(and(gte(streakDay.day, range.from), lt(streakDay.day, range.to)));
+
+    return result[0].totalFocusRuns || 0;
   }
 }
