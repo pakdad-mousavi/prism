@@ -13,6 +13,10 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     titleBarStyle: 'hidden',
     trafficLightPosition: { x: 16, y: 7 },
+    minWidth: 1169,
+    minHeight: 744,
+    maxWidth: 1470,
+    maxHeight: 864,
     show: false,
     backgroundColor: '#07080d',
     webPreferences: {
