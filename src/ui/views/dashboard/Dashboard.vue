@@ -182,7 +182,7 @@ const enableScroll = ref(true);
               :transition="{ delay: 0.96 }"
             >
               <span class="flex-1">© {{ year }} PRISM, ALL RIGHTS RESERVED.</span>
-              <span>V1.0.0</span>
+              <span>V0.0.1</span>
             </motion.div>
           </div>
         </div>
