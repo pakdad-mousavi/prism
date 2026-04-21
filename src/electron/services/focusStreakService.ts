@@ -18,7 +18,7 @@ export class FocusStreakService {
 
     // handle ongoing decays after app relauch
     const streak = results[0];
-    if (!streak.decayStartedAt || !streak.decayEndsAt) return;
+    if (!streak?.decayStartedAt || !streak?.decayEndsAt) return;
 
     const endsAtMs = streak.decayEndsAt.getTime();
     const now = Date.now();
@@ -33,6 +33,8 @@ export class FocusStreakService {
 
   static async fillBarAndStartDecay() {
     const streak = (await getDb().select().from(focusStreak).limit(1))[0];
+    if (!streak) return;
+
     const newBarsFilled = streak.barsFilled >= this.TOTAL_BARS ? this.TOTAL_BARS : streak.barsFilled + 1;
 
     await getDb()
@@ -56,6 +58,7 @@ export class FocusStreakService {
 
   private static async completeDecay(noSecondChance?: boolean) {
     const streak = (await getDb().select().from(focusStreak).limit(1))[0];
+    if (!streak) return;
 
     // Update database
     if (streak.barsFilled <= 1 || noSecondChance) {
@@ -108,7 +111,7 @@ export class FocusStreakService {
   static async startDecay() {
     // Only start decay if there is at least one bar
     const streak = (await getDb().select().from(focusStreak).limit(1))[0];
-    if (streak.barsFilled === 0) return;
+    if (!streak || streak.barsFilled === 0) return;
 
     await getDb()
       .update(focusStreak)
@@ -128,6 +131,8 @@ export class FocusStreakService {
 
   static async getDecayDetails() {
     const streak = (await getDb().select().from(focusStreak).limit(1))[0];
+    if (!streak) return;
+    
     const isMulti = streak.barsFilled > 1;
     const decayStage = isMulti ? 'multi' : 'final';
 

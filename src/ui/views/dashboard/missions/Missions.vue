@@ -8,7 +8,7 @@ import Type from '../../../components/icons/Type.vue';
 import Time from '../../../components/icons/Time.vue';
 import Target from '../../../components/icons/Target.vue';
 import MissionRow from '../../../components/missions/MissionRow.vue';
-import { type MissionDraft, type Mission as TMission } from '../../../../shared/types/mission.ts';
+import { type MissionDraft, type Mission as TMission } from '../../../../shared/types/mission.d.js';
 import { useMissionsStore } from '../../../stores/missions';
 import { AnimatePresence, motion } from 'motion-v';
 

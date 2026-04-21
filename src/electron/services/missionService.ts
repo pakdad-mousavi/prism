@@ -1,6 +1,6 @@
 import { mission } from '../db/schema/mission.sql.js';
 import { desc, eq } from 'drizzle-orm';
-import { Mission, MissionDraft } from '../../shared/types/mission.js';
+import { type Mission, type MissionDraft } from '../../shared/types/mission.js';
 import { getDb } from '../db/db.js';
 
 export class MissionService {

@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import { validateSender } from './validateSender.js';
-import { Mission, MissionDraft } from '../../shared/types/mission.js';
+import { type Mission, type MissionDraft } from '../../shared/types/mission.js';
 import { MissionService } from '../services/missionService.js';
 
 export const registerMissionHandlers = () => {

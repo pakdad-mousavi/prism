@@ -54,12 +54,12 @@ export class StreakDayService {
     // Find longest consecutive streak
     for (let i = 1; i < rows.length; i++) {
       // Compare time between previous and current day
-      const prev = this.toDayNumber(rows[i - 1].day.getTime());
-      const curr = this.toDayNumber(rows[i].day.getTime());
+      const prev = this.toDayNumber(rows[i - 1]!.day.getTime());
+      const curr = this.toDayNumber(rows[i]!.day.getTime());
       const diffDays = curr - prev;
 
       // If one day, add to current streak, else reset
-      if (diffDays === 1 && rows[i].focusedMinutes >= 0) {
+      if (diffDays === 1 && rows[i]!.focusedMinutes >= 0) {
         current++;
         longest = Math.max(longest, current);
       } else {
@@ -78,7 +78,7 @@ export class StreakDayService {
 
     // If the last activity wasn't today or yesterday, then the streak is broken
     const today = this.toDayNumber(Date.now());
-    const lastDay = this.toDayNumber(rows[rows.length - 1].day.getTime());
+    const lastDay = this.toDayNumber(rows[rows.length - 1]!.day.getTime());
     if (today - lastDay > 1) return 0;
 
     let current = 0;
@@ -86,12 +86,12 @@ export class StreakDayService {
     // Find longest consecutive streak
     for (let i = rows.length - 1; i > 0; i--) {
       // Compare time between previous and current day
-      const curr = this.toDayNumber(rows[i].day.getTime());
-      const prev = this.toDayNumber(rows[i - 1].day.getTime());
+      const curr = this.toDayNumber(rows[i]!.day.getTime());
+      const prev = this.toDayNumber(rows[i - 1]!.day.getTime());
       const diffDays = curr - prev;
 
       // If one day, add to current streak, else reset
-      if (diffDays === 1 && rows[i].focusedMinutes >= 0) {
+      if (diffDays === 1 && rows[i]!.focusedMinutes >= 0) {
         current++;
       } else {
         break;
@@ -107,6 +107,8 @@ export class StreakDayService {
       .select({ totalFocusRuns: sum(streakDay.runCount) })
       .from(streakDay)
       .where(and(gte(streakDay.day, range.from), lt(streakDay.day, range.to)));
+
+    if (!result[0]) return 0;
 
     return result[0].totalFocusRuns || 0;
   }

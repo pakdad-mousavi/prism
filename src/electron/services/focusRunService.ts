@@ -82,6 +82,7 @@ export class FocusRunService {
       })
       .returning();
 
+    if (!run) return;
     this.startHeartbeat(run.id);
     return run;
   }
@@ -179,7 +180,7 @@ export class FocusRunService {
     if (row.missionId) {
       const mission = await MissionService.get(row.missionId);
       if (!mission) return;
-      const missionRow = mission[0];
+      const missionRow = mission[0]!;
       missionRow.completedSessions += 1;
 
       await MissionService.update(missionRow);
@@ -227,6 +228,8 @@ export class FocusRunService {
     if (!this.activeRunId) return null;
 
     const [run] = await getDb().select().from(focusRun).where(eq(focusRun.id, this.activeRunId));
+    if (!run) return null;
+
     const pausedMs = await FocusRunPauseService.getTotalPausedTimeMs(this.activeRunId);
     const focusedMs = Date.now() - this.runStartedAt.getTime() - pausedMs;
 
@@ -257,7 +260,7 @@ export class FocusRunService {
         .where(and(eq(focusRun.status, 'completed'), gte(focusRun.endedAt, startOfDay), lt(focusRun.endedAt, endOfDay)))
     )[0];
 
-    return res.totalRuns ?? 0;
+    return res?.totalRuns ?? 0;
   }
 
   static async getTotalMidRunPausesToday() {
@@ -289,6 +292,6 @@ export class FocusRunService {
         .where(and(eq(focusRun.status, 'completed'), gte(focusRun.endedAt, startOfDay), lt(focusRun.endedAt, endOfDay)))
     )[0];
 
-    return res.totalSeconds ?? 0;
+    return res?.totalSeconds ?? 0;
   }
 }

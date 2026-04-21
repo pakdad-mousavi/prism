@@ -72,6 +72,6 @@ export class FocusRunPauseService {
         .where(and(gte(focusRunPause.pausedAt, startOfDay), lt(focusRunPause.pausedAt, endOfDay)))
     )[0];
 
-    return res.totalPauses ?? 0;
+    return res?.totalPauses ?? 0;
   }
 }

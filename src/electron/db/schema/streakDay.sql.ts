@@ -1,4 +1,4 @@
-import { index, int, sqliteTable } from 'drizzle-orm/sqlite-core';
+import { int, sqliteTable } from 'drizzle-orm/sqlite-core';
 import { focusRun } from './focusRun.sql.js';
 import { createdAt, updatedAt } from './columns.helpers.js';
 
