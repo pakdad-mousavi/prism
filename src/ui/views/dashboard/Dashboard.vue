@@ -37,11 +37,8 @@ const enableScroll = ref(true);
       <div class="absolute rounded-full w-60 h-72 bg-primary/60 -right-4 -bottom-4 blur-3xl"></div>
 
       <aside class="z-10 h-full border-r w-64 border-surface-tertiary bg-surface-primary/85">
-        <div class="flex items-center h-16 gap-4 p-4 border-b border-surface-tertiary">
-          <div class="relative">
-            <div class="absolute w-4 h-4 -translate-x-1/2 top-1/2 left-1/2 -translate-y-1/3 bg-primary blur-md"></div>
-            <img src="../../assets/images/logo.svg" alt="Prism Logo" class="w-6" />
-          </div>
+        <div class="flex items-center h-16 gap-2 p-4 border-b border-surface-tertiary">
+          <img src="../../assets/images/logo.svg" alt="Prism Logo" class="w-8" />
           <h1 class="text-xl uppercase font-tomorrow text-primary">Prism</h1>
         </div>
 
