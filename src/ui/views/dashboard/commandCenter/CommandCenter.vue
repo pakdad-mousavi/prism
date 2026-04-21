@@ -143,7 +143,8 @@ const getTimeFromSeconds = (seconds: number) => {
         <div class="w-3/5 absolute-center mb-4">
           <FocusBar></FocusBar>
         </div>
-        <div class="mt-auto flex gap-x-10 px-10 mb-6 font-tomorrow uppercase text-xs">
+        <h2 class="font-tomorrow uppercase text-primary px-10 text-center mt-auto mb-6">Status: Functional</h2>
+        <!-- <div class="mt-auto flex gap-x-10 px-10 mb-6 font-tomorrow uppercase text-xs">
           <div class="w-1/2">
             <h2 class="text-primary">Status:</h2>
             <p class="mt-1">Empty</p>
@@ -152,7 +153,7 @@ const getTimeFromSeconds = (seconds: number) => {
             <h2 class="text-primary">Leakage Time:</h2>
             <p class="mt-1">28m</p>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="col-span-8 p-2 size-full flex-center">
