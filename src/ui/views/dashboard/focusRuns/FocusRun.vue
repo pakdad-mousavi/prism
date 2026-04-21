@@ -254,11 +254,12 @@ const getMissionProgress = computed(() => {
             :animate="{ x: 0, opacity: 1 }"
           >
             <h3 class="text-primary mb-2 uppercase">No Active Mission</h3>
-            <a
-              href="/dashboard/missions"
+            <button
+            @click="$router.push('/dashboard/missions')"
               class="block cut-corners px-10 py-6 bg-surface-primary border border-primary rounded-md uppercase text-center active:bg-surface-secondary hover:bg-surface-primary/50"
-              >Select Active Mission</a
             >
+              Select Active Mission
+            </button>
           </motion.div>
           <motion.div
             class="font-tomorrow text-xs"
