@@ -15,8 +15,14 @@ const missionsStore = useMissionsStore();
 const focusRunStore = useFocusRunStore();
 
 const deleteSelectedMissions = async () => {
+  const missionIds: (number | undefined)[] = [];
   for (const missionId of missionsStore.selectedMissions) {
     await window.electronApi.deleteMission(missionId);
+    missionIds.push(missionId);
+  }
+
+  if (missionIds.includes(missionsStore.activeMission?.id)) {
+    missionsStore.setActiveMissionId(null);
   }
 
   missionsStore.selectedMissions.length = 0;
@@ -28,6 +34,10 @@ const markAllAsCompleted = async () => {
     const mission = toRaw(missionsStore.missions.find((m) => m.id === missionId) as Mission);
     mission.status = 'completed';
     await window.electronApi.updateMission(mission);
+
+    if (missionsStore.activeMission?.id === missionId) {
+      missionsStore.setActiveMissionId(null);
+    }
   }
 
   missionsStore.selectedMissions.length = 0;

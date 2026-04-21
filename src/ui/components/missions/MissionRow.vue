@@ -80,13 +80,17 @@ const isMissionValid = (m: Mission) => {
 
 watch(
   localMission,
-  async () => {
+  async (newMission) => {
     if (props.isDraft) return;
 
     const mission = toRaw(localMission) as Mission;
     if (!isMissionValid(mission)) {
       localMission.title = props.mission.title;
       return emit('refreshStore');
+    }
+
+    if (newMission.status === 'archived' || newMission.status === 'completed') {
+      await missionsStore.setActiveMissionId(null);
     }
     await window.electronApi.updateMission(mission);
     return emit('refreshStore');

@@ -27,7 +27,7 @@ const handleMissionSelect = (m: TMission) => {
   if (missionsStore.selectedMissions.includes(m.id)) {
     return missionsStore.removeSelectedMission(m.id);
   }
-  return missionsStore.addSelectedMission(m.id);
+return missionsStore.addSelectedMission(m.id);
 };
 
 const createDraftMission = (status: 'active' | 'on hold' | 'completed') => {
