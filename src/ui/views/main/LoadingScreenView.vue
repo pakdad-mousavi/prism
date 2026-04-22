@@ -18,6 +18,7 @@ const shape = {
 </script>
 
 <template>
+  <div class="absolute top-0 left-0 z-1000 h-8 w-full title-bar"></div>
   <div class="outline-none flex items-center justify-center w-full h-svh bg-radial from-black to-[#3D0C12]">
     <div class="outline-none absolute top-0 w-full h-16 lg:h-20">
       <div class="outline-none absolute top-0 left-0 flex w-full px-10 py-6">
