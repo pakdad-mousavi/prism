@@ -161,17 +161,19 @@ const enableScroll = ref(true);
                 :initial="{ y: -10, opacity: 0 }"
                 :animate="{ y: 0, opacity: 1 }"
                 :transition="{ delay: 0.88 }"
-                class="flex items-center justify-center w-1/2 h-16 border cut-corners rounded-bl-3xl border-primary bg-surface-primary glow"
+                class="flex flex-col items-center justify-center w-1/2 h-16 border cut-corners rounded-bl-3xl border-primary bg-surface-primary glow text-surface-auxilary"
               >
                 <p>SIGN IN</p>
+                <p class="text-2xs">(Coming Soon)</p>
               </motion.div>
               <motion.div
                 :initial="{ y: 10, opacity: 0 }"
                 :animate="{ y: 0, opacity: 1 }"
                 :transition="{ delay: 0.88 }"
-                class="flex items-center justify-center w-1/2 h-16 border cut-corners rounded-tr-3xl border-primary bg-surface-primary glow"
+                class="flex flex-col items-center justify-center w-1/2 h-16 border cut-corners rounded-tr-3xl border-primary bg-surface-primary glow text-surface-auxilary"
               >
                 <p>SIGN UP</p>
+                <p class="text-2xs">(Coming Soon)</p>
               </motion.div>
             </div>
 
